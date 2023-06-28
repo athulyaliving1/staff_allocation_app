@@ -1,0 +1,1 @@
+export const  URLDevelopment  = 'https://649c04790480757192375016.mockapi.io/articles'
