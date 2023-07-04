@@ -5,7 +5,8 @@ import {
     FETCH_VENDOR_SUCCESS,
     UPDATE_VENDOR_FAILURE,
     UPDATE_VENDOR_SUCCESS,
-    DELETE_VENDOR_SUCCESS,DELETE_VENDOR_FAILURE
+    DELETE_VENDOR_SUCCESS,DELETE_VENDOR_FAILURE,
+    UPDATE_VENDOR
     
 } from './Constants.js'
 
@@ -41,19 +42,29 @@ export const vendorReducer = (state = initialState, action) => {
           loading: false,
           error: null,
         };
-      case UPDATE_VENDOR_SUCCESS:
-        return {
-          ...state,
-          vendorData: state.vendorData.map((vendor) => (vendor.id === action.payload.id ? action.payload : vendor)),
-          loading: false,
-          error: null,
-        };
+        case UPDATE_VENDOR:
+          return {
+            ...state,
+            loading: true,
+            error: null
+          };
+        case UPDATE_VENDOR_SUCCESS:
+          const updatedVendorData = state.vendorData.map(vendor =>
+            vendor.id === action.payload.id ? action.payload : vendor
+          );
+    
+          return {
+            ...state,
+            vendorData: updatedVendorData,
+            loading: false,
+            error: null
+          };
         case UPDATE_VENDOR_FAILURE:
-            return {
-              ...state,
-              loading: false,
-              error: action.payload,
-            };
+          return {
+            ...state,
+            loading: false,
+            error: action.payload
+          };
       case DELETE_VENDOR_SUCCESS:
         return {
           ...state,

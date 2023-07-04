@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components {
+    .pagination{
+      @apply mb-4 text-2xl font-bold   ;
+    }
+    .active{
+        @apply bg-pink-500 ;
+    }
+}
+
+
+

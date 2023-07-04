@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { updateVendor } from "../features/Action";
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { updateVendor } from '../features/Action';
+import { useParams } from 'react-router-dom';
 
-function VendorUpdate({ match, vendorData, updateVendor }) {
+function VendorUpdate({ vendorData, updateVendor }) {
   const [vendor, setVendor] = useState(null);
+  const { vendorId } = useParams();
 
   useEffect(() => {
-    const { vendorId } = match.params;
-    const existingVendor = vendorData.find((vendor) => vendor.id === parseInt(vendorId));
+    const existingVendor = vendorData.find(vendor => vendor.id === parseInt(vendorId));
     setVendor(existingVendor);
-  }, [vendorData, match.params]);
+  }, [vendorData, vendorId]);
 
   const handleUpdate = () => {
-    // Perform validation and update the vendor object
-    updateVendor(vendor.id, vendor);
+    updateVendor(vendorId, vendor);
   };
 
   if (!vendor) {
@@ -27,11 +27,19 @@ function VendorUpdate({ match, vendorData, updateVendor }) {
         {/* Render the form fields and populate them with existing vendor data */}
         <label>
           Vendor Name:
-          <input type="text" value={vendor.name} onChange={(e) => setVendor({ ...vendor, name: e.target.value })} />
+          <input
+            type="text"
+            value={vendor.name}
+            onChange={e => setVendor({ ...vendor, name: e.target.value })}
+          />
         </label>
         <label>
           Vendor Address:
-          <input type="text" value={vendor.address} onChange={(e) => setVendor({ ...vendor, address: e.target.value })} />
+          <input
+            type="text"
+            value={vendor.address}
+            onChange={e => setVendor({ ...vendor, address: e.target.value })}
+          />
         </label>
         {/* Add more form fields as needed */}
 
@@ -41,12 +49,16 @@ function VendorUpdate({ match, vendorData, updateVendor }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  vendorData: state.vendor.vendorData,
+const mapStateToProps = state => ({
+  vendorData: state.vendor.vendorData
 });
 
 const mapDispatchToProps = {
-  updateVendor,
+  updateVendor
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(VendorUpdate);
+
+
+
+

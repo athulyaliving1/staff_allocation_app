@@ -19,6 +19,12 @@ export const CREATE_VENDOR_SUCCESS = 'CREATE_VENDOR_SUCCESS';
 //----------------vendor update-----------------------------
 export const   UPDATE_VENDOR_SUCCESS = 'UPDATE_VENDOR_SUCCESS';
 export const UPDATE_VENDOR_FAILURE = 'UPDATE_VENDOR_FAILURE';
+export const UPDATE_VENDOR = 'UPDATE_VENDOR';
+
+
+
+
+
 
 //----------------vendor delete----------------------------
 export const   DELETE_VENDOR_FAILURE = 'DELETE_POST_FAILURE';

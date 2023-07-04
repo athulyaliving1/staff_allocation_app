@@ -21,7 +21,7 @@ export const fetchvendorlist = () => {
     return async (dispatch) =>{
         try{
        
-          const vendorResponse = await axios.get( `${URLDevelopment}`)
+          const vendorResponse = await axios.get(`${URLDevelopment}`)
           const vendorData = await vendorResponse.data;
           
           dispatch({type: FETCH_VENDOR_SUCCESS, payload: vendorData});
@@ -51,7 +51,7 @@ export const createVendor =(vendor) =>{
   export const updateVendor = (vendorId,updatedVendor) => {
     return async (dispatch) => {
       try {
-        const response = await axios.put(`https://jsonplaceholder.typicode.com/${vendorId}`,updatedVendor); 
+        const response = await axios.put(`${URLDevelopment}/${vendorId}`,updatedVendor); 
         const updatedVendorData = response.data;
         dispatch({ type: UPDATE_VENDOR_SUCCESS, payload: updatedVendorData });
       } catch (error) {
