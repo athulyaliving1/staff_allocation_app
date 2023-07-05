@@ -22,10 +22,12 @@ export const UPDATE_VENDOR_FAILURE = 'UPDATE_VENDOR_FAILURE';
 export const UPDATE_VENDOR = 'UPDATE_VENDOR';
 
 
-
-
-
-
 //----------------vendor delete----------------------------
 export const   DELETE_VENDOR_FAILURE = 'DELETE_POST_FAILURE';
 export const   DELETE_VENDOR_SUCCESS = 'DELETE_POST_SUCCESS';
+
+
+//--------------------- Staff Fetch --------------------------------
+
+export const  FETCH_STAFF_SUCCESS = 'FETCH_STAFF_SUCCESS';
+export const FETCH_STAFF_FAILURE =  'FETCH_STAFF_FAILURE';

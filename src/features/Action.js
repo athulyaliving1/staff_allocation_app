@@ -3,6 +3,7 @@ import {URLDevelopment} from  '../utilities/Url.jsx'
 
 import axios from 'axios';
 import {
+
     CREATE_VENDOR_FAILURE,
     CREATE_VENDOR_SUCCESS,
     FETCH_VENDOR_SUCCESS,
@@ -10,7 +11,9 @@ import {
     DELETE_VENDOR_FAILURE,
     DELETE_VENDOR_SUCCESS,       
     UPDATE_VENDOR_FAILURE,
-    UPDATE_VENDOR_SUCCESS
+    UPDATE_VENDOR_SUCCESS,
+    FETCH_STAFF_FAILURE,
+    FETCH_STAFF_SUCCESS
 
   
 } from './Constants.js'
@@ -80,3 +83,21 @@ export const vendorDelete = (id) => {
       }
     };
   };
+
+
+
+export const fetchstaff = () => {
+  return async (dispatch) => {
+    try{
+
+
+    }
+
+  }
+
+
+}
+
+
+
+

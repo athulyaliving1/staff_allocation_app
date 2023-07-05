@@ -5,6 +5,7 @@ import VendorRegsitration from "./components/VendorRegsitration";
 import VendorUpdate from "./components/VendorUpdate";
 import VendorCreate from "./components/VendorCreate";
 import StaffAllocation from "./components/StaffAllocation";
+import StaffRegister from "./components/Staff/StaffRegister";
 
 
 
@@ -20,6 +21,7 @@ function App() {
             <Route exact path="/staffallocation" element={<StaffAllocation />} />
             <Route exact path="/update-vendor/:vendorId" element={<VendorUpdate />} />
             <Route exact path="/create-vendor" element={<VendorCreate />} />
+            <Route exact path="/staffregister" element={<StaffRegister />}/>
           </Route>
         </Routes>
       </Router>
