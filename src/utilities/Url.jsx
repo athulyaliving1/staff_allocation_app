@@ -1,1 +1,1 @@
-export const  URLDevelopment  = 'http://localhost:4000/getvendor'
+export const  URLDevelopment  = 'http://localhost:4000'
