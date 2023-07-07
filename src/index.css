@@ -10,6 +10,18 @@
     .active{
         @apply bg-pink-500 ;
     }
+    .subheading{
+      @apply text-[#000000] text-3xl text-center font-semibold
+    }
+    .text-customblack{
+      @apply text-[#000000]
+    }
+    .primary-button{
+      @apply px-6 py-3 bg-gray-200 text-black rounded-lg border-b-4 border-b-gray-400 hover:border-b-0 transition-all ease-in-out duration-100 ;
+    }
+    .secondary-button{
+     @apply   px-6 py-3 bg-gray-200 text-black rounded-lg hover:scale-110 active:scale-90 transition-transform ease-in-out duration-200 ;
+    }
 }
 
 

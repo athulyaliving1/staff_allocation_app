@@ -116,105 +116,130 @@ function DependentDropdown() {
   };
 
   return (
-    <div className="relative flex flex-col items-center bg-gray-100 sm:justify-center">
-      <div>
-        <label htmlFor="country">Country:</label>
-        <select
-          id="country"
-          value={selectedCountry}
-          onChange={handleCountryChange}
-        >
-          <option value=" inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            Select Country
-          </option>
-          {countries.map((country) => (
-            <option
-              value={country.branch_country_id}
-              key={country.branch_country_id}
+    <div className="bg-gray-100 h-screen w-screen">
+      <h2 className="subheading">Staff Allocation</h2>
+      <div className="container mx-auto">
+        <div className="grid grid-cols-3 gap-3 py-5">
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label htmlFor="country">Country:</label>
+            <select
+              className="mx-2 flex-1 h-10  form-select w-full"
+              id="country"
+              value={selectedCountry}
+              onChange={handleCountryChange}
             >
-              {country.branch_country}
-            </option>
-          ))}
-        </select>
+              <option value="">Select Country</option>
+              {countries.map((country) => (
+                <option
+                  value={country.branch_country_id}
+                  key={country.branch_country_id}
+                >
+                  {country.branch_country}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <label htmlFor="state">State:</label>
-        <select id="state" value={selectedState} onChange={handleStateChange}>
-          <option value="">Select State</option>
-          {states.map((state) => (
-            <option value={state.branch_state_id} key={state.branch_state_id}>
-              {state.branch_state}
-            </option>
-          ))}
-        </select>
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label htmlFor="state">State:</label>
+            <select
+              className="mx-2 flex-1 h-10  form-select w-full"
+              id="state"
+              value={selectedState}
+              onChange={handleStateChange}
+            >
+              <option value="">Select State</option>
+              {states.map((state) => (
+                <option
+                  value={state.branch_state_id}
+                  key={state.branch_state_id}
+                >
+                  {state.branch_state}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <label htmlFor="city">City:</label>
-        <select id="city">
-          <option value="">Select City</option>
-          {cities.map((city) => (
-            <option value={city.branch_city_id} key={city.branch_city_id}>
-              {city.branch_city}
-            </option>
-          ))}
-        </select>
-
-        <div className="flex w-full p-2 space-x-4 border-2 rounded">
-          <label htmlFor="tower">Tower</label>
-          <input
-            className="w-8/12 text-gray-600 outline-none text-md"
-            type="text"
-            placeholder="Title..."
-          />
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label htmlFor="city">City:</label>
+            <select id="city" className="mx-2 flex-1 h-10  form-select w-full">
+              <option value="">Select City</option>
+              {cities.map((city) => (
+                <option value={city.branch_city_id} key={city.branch_city_id}>
+                  {city.branch_city}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="flex w-full p-2 space-x-4 border-2 rounded">
-          <label htmlFor="floor">Floor</label>
-          <input
-            className="w-8/12 text-gray-600 outline-none text-md"
-            type="text"
-            placeholder="Title..."
-          />
+        <div className="grid grid-cols-3 gap-3">
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label htmlFor="tower">Tower</label>
+            <input
+              className="mx-2 flex-1 h-10  form-select w-full"
+              type="text"
+              placeholder="Title..."
+            />
+          </div>
+
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label htmlFor="floor">Floor</label>
+            <input
+              className="mx-2 flex-1 h-10  form-select w-full"
+              type="text"
+              placeholder="Title..."
+            />
+          </div>
+
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label htmlFor="section">Section</label>
+            <input
+              className="mx-2 flex-1 h-10  form-select w-full"
+              type="text"
+              placeholder="Title..."
+            />
+          </div>
         </div>
 
-        <div className="flex w-full p-2 space-x-4 border-2 rounded">
-          <label htmlFor="section">Section</label>
-          <input
-            className="w-8/12 text-gray-600 outline-none text-md"
-            type="text"
-            placeholder="Title..."
-          />
-        </div>
+        <div className="grid grid-cols-3">
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label className="" htmlFor="duty">
+              Duty
+            </label>
+            <select className="mx-2 flex-1 h-10 form-select w-full" id="duty">
+            <option value="">Select Duty</option>
+              {dutyMaster.map((duty) => (
+                <option value={duty.duty_name} key={duty.id}>
+                  {duty.duty_name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className="flex w-full p-2 space-x-4 border-2 rounded">
-          <label htmlFor="duty">Duty</label>
-          <select id="duty">
-            {dutyMaster.map((duty) => (
-              <option value={duty.duty_name} key={duty.id}>
-                {duty.duty_name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex w-full p-2 space-x-4 border-2 rounded">
-          <label htmlFor="staff">Staff</label>
-
-          <Select
-            className=""
-            name="staff"
-            value={selectedStaff}
-            onChange={handleStaffChange}
-            options={staffOptions}
-          />
-        </div>
-        <div className="flex w-full p-2 space-x-4 border-2 rounded">
-          <label htmlFor="shift">Shift</label>
-          <select id="shift">
-            {shiftoptions.map((shift) => (
-              <option value={shift.shift_name} key={shift.id}>
-                {shift.shift_name}
-              </option>
-            ))}
-          </select>
+          <div className="flex w-full p-2 space-x-4 border-2 rounded">
+            <label htmlFor="staff">Staff</label>
+           
+            <Select
+            
+              className="mx-2 flex-1 h-10  form-select w-full"
+              name="staff"
+              value={selectedStaff}
+              onChange={handleStaffChange}
+              options={staffOptions}
+            />
+          </div>
+          <div className="flex w-full p-2  space-x-4 border-2 rounded">
+            <label htmlFor="shift">Shift</label>
+            <select className="mx-2 flex-1 h-10  form-select w-full" id="shift">
+            <option value="">Select Shift</option>
+              {shiftoptions.map((shift) => (
+                <option value={shift.shift_name} key={shift.id}>
+                  {shift.shift_name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </div>
