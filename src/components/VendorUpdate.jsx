@@ -40,10 +40,10 @@ function VendorUpdate({ vendorData, updateVendor }) {
   }
 
   return (
-    <div className="bg-gray-100 h-screen w-screen">
-      <div className=" ">
+    <div className="w-screen h-screen bg-gray-100">
+      <div className="">
         <h2 className="subheading">Update Vendor</h2>
-        <div className="container mx-auto  grid xl:grid-cols-6 gap-6 py-5">
+        <div className="container grid gap-6 py-5 mx-auto xl:grid-cols-6">
           {/* Render the form fields and populate them with existing vendor data */}
           <div>
             <label

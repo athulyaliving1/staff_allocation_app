@@ -6,13 +6,17 @@ import {
   UPDATE_VENDOR_FAILURE,
   UPDATE_VENDOR_SUCCESS,
   DELETE_VENDOR_SUCCESS, DELETE_VENDOR_FAILURE,
-  UPDATE_VENDOR
+  UPDATE_VENDOR,
+  FETCH_STAFFPROFILE_SUCCESS,
+  FETCH_STAFFPROFILE_FAILURE
+
 
 } from './Constants.js'
 
 
 const initialState = {
   vendorData: [],
+  staffData: null,
   loading: false,
   error: null,
 };
@@ -76,6 +80,30 @@ export const vendorReducer = (state = initialState, action) => {
       };
       
       
+    default:
+      return state;
+  }
+};
+
+
+
+
+export const staffReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_STAFFPROFILE_SUCCESS:
+      return {
+        ...state,
+        staffData: action.payload,
+        loading: false,
+        error: null,
+      };
+    case FETCH_STAFFPROFILE_FAILURE:
+      return {
+        ...state,
+        staffData: null,
+        loading: false,
+        error: action.payload,
+      };
     default:
       return state;
   }

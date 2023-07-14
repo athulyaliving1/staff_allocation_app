@@ -12,9 +12,8 @@ import {
   DELETE_VENDOR_SUCCESS,
   UPDATE_VENDOR_FAILURE,
   UPDATE_VENDOR_SUCCESS,
-  FETCH_STAFF_FAILURE,
-  FETCH_STAFF_SUCCESS
-
+  FETCH_STAFFPROFILE_SUCCESS,
+  FETCH_STAFFPROFILE_FAILURE
 
 } from './Constants.js'
 
@@ -83,8 +82,41 @@ export const vendorDelete = (id) => {
 
 
 
+export const fetchStaff = () => {
+  return async (dispatch) => {
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      // Make API request with the user ID
+      const response = await axios.get(
+        `http://localhost:4000/api/staff/staffprofile/KSC-GC26`,
+        config
+      );
+
+      // Extract the necessary data from the response
+      const userData = response.data.response[0];
+
+      // Dispatch success action with the retrieved data
+      dispatch(fetchStaffSuccess(userData));
+    } catch (error) {
+      // Dispatch failure action if an error occurs
+      dispatch(fetchStaffFailure(error.message));
+    }
+  };
+};
 
 
+export const fetchStaffSuccess = (userData) => ({
+  type: FETCH_STAFFPROFILE_SUCCESS,
+  payload: userData,
+});
 
 
-
+export const fetchStaffFailure = (error) => ({
+  type: FETCH_STAFFPROFILE_FAILURE,
+  payload: error,
+});
