@@ -17,6 +17,7 @@ function ShiftRosterUpdate() {
     staff_payable: "",
     service_payable: "",
   });
+
   const { shiftId } = useParams();
   const navigate = useNavigate();
 
@@ -33,12 +34,64 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch shift data");
       }
       const data = await response.json();
-      console.log(data);
-      setShiftData(data);
+      console.log(data[0]);
+      setShiftData(data[0]);
+      console.log(data[0].branch_id);
     } catch (error) {
       console.error("Error fetching shift data:", error);
     }
   };
+
+  const fetchBranchData = async (branchId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/shift/rosterbranch/${branchId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch branch data");
+      }
+      const data = await response.json();
+      console.log(data);
+      setShiftData((prevState) => ({
+        ...prevState,
+        branch_name: data[0].branch_name,
+      }));
+    } catch (error) {
+      console.error("Error fetching branch data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (shiftData.branch_id) {
+      fetchBranchData(shiftData.branch_id);
+    }
+  }, [shiftData.branch_id]);
+
+  const getMasterDutyData = async (masterId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/shift/rostermasterduty/${masterId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch branch data");
+      }
+      const data = await response.json();
+      console.log(data);
+
+      setShiftData((prevState) => ({
+        ...prevState,
+        duty_name: data[0].duty_name,
+      }));
+    } catch (error) {
+      console.error("Error fetching branch data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (shiftData.duty_type_id) {
+      getMasterDutyData(shiftData.duty_type_id);
+    }
+  }, [shiftData.duty_type_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,7 +106,7 @@ function ShiftRosterUpdate() {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/shift/rosterupdate/${shiftId}`,
+        `http://localhost:4000/api/shift/rosterbranch/${shiftId}`,
         {
           method: "PUT",
           headers: {
@@ -84,20 +137,21 @@ function ShiftRosterUpdate() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-3xl font-bold my-5">Update Shift</h1>
+      <h1 className="my-5 text-3xl font-bold">Update Shift</h1>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="branch_id">Branch ID:</label>
+            <label htmlFor="branch_id">Branch Name:</label>
             <input
               className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
+              type="text"
               id="branch_id"
               name="branch_id"
-              value={shiftData.branch_id}
+              value={shiftData.branch_name}
               onChange={handleChange}
             />
           </div>
+
           <div>
             <label htmlFor="user_id">User ID:</label>
             <input
@@ -113,7 +167,7 @@ function ShiftRosterUpdate() {
             <label htmlFor="room_no">Room No:</label>
             <input
               className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
+              type="text"
               id="room_no"
               name="room_no"
               value={shiftData.room_no}
@@ -127,7 +181,7 @@ function ShiftRosterUpdate() {
               type="text"
               id="duty_type_id"
               name="duty_type_id"
-              value={shiftData.duty_type_id}
+              value={shiftData.duty_name}
               onChange={handleChange}
             />
           </div>
@@ -135,7 +189,7 @@ function ShiftRosterUpdate() {
             <label htmlFor="bed_no">Bed No:</label>
             <input
               className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
+              type="text"
               id="bed_no"
               name="bed_no"
               value={shiftData.bed_no}
@@ -222,7 +276,7 @@ function ShiftRosterUpdate() {
         </div>
         <button
           type="submit"
-          className="my-5 bg-blue-500 text-white px-4 py-2 rounded"
+          className="px-4 py-2 my-5 text-white bg-blue-500 rounded"
         >
           Update Shift
         </button>
