@@ -16,6 +16,11 @@ function ShiftRosterUpdate() {
     shift: "",
     staff_payable: "",
     service_payable: "",
+    employee_id: "",
+    sectionname: "",
+    floor_name: "",
+    section_name: "",
+    bed_name : "",
   });
 
   const { shiftId } = useParams();
@@ -92,6 +97,124 @@ function ShiftRosterUpdate() {
       getMasterDutyData(shiftData.duty_type_id);
     }
   }, [shiftData.duty_type_id]);
+
+  const getMasterShiftData = async (shift) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/shift/rostermastershift/${shift}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch shift data");
+      }
+      const data = await response.json();
+      console.log(data);
+
+      setShiftData((prevState) => ({
+        ...prevState,
+        shiftname: data[0].shiftname,
+      }));
+    } catch (error) {
+      console.error("Error fetching shift data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (shiftData.shift) {
+      getMasterShiftData(shiftData.shift);
+    }
+  }, [shiftData.shift]);
+
+  const getmasterStaffData = async (staff_id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/shift/rostermasterstaff/${staff_id}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch shift data");
+      }
+      const data = await response.json();
+      console.log(data);
+
+      setShiftData((prevState) => ({
+        ...prevState,
+        employee_id: data[0].employee_id,
+      }));
+    } catch (error) {
+      console.error("Error fetching shift data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (shiftData.staff_id) {
+      getmasterStaffData(shiftData.staff_id);
+    }
+  }, [shiftData.staff_id]);
+
+  const getFloorsSectionData = async (floor) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/shift/rosterfloorsection/${floor}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch shift data");
+      }
+      const data = await response.json();
+      console.log(data);
+
+      setShiftData((prevState) => ({
+        ...prevState,
+        floor_name: data[0].floor,
+        section_name: data[0].sectionname,
+      }));
+    } catch (error) {
+      console.error("Error fetching shift data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (shiftData.floor) {
+      getFloorsSectionData(shiftData.floor);
+    }
+  }, [shiftData.floor]);
+
+  const getRoomData = async (bed_no) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/shift/rosterroom/25`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch bed data");
+      }
+      const data = await response.json();
+      console.log(data);
+
+      setShiftData((prevState) => ({
+        ...prevState,
+        bed_name: data[0].room_number,
+      }));
+    } catch (error) {
+      console.error("Error fetching shift data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (shiftData.bed_no) {
+      getRoomData(shiftData.bed_no);
+    }
+  }, [shiftData.bed_no]);
+
+
+
+
+
+
+
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -192,7 +315,7 @@ function ShiftRosterUpdate() {
               type="text"
               id="bed_no"
               name="bed_no"
-              value={shiftData.bed_no}
+              value={shiftData.bed_name}
               onChange={handleChange}
             />
           </div>
@@ -200,10 +323,10 @@ function ShiftRosterUpdate() {
             <label htmlFor="floor">Floor No:</label>
             <input
               className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
+              type="text"
               id="floor"
               name="floor"
-              value={shiftData.floor}
+              value={shiftData.floor_name}
               onChange={handleChange}
             />
           </div>
@@ -211,10 +334,10 @@ function ShiftRosterUpdate() {
             <label htmlFor="section_id">Section ID:</label>
             <input
               className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
+              type="text"
               id="section_id"
               name="section_id"
-              value={shiftData.section_id}
+              value={shiftData.section_name}
               onChange={handleChange}
             />
           </div>
@@ -222,10 +345,10 @@ function ShiftRosterUpdate() {
             <label htmlFor="staff_id">Staff ID:</label>
             <input
               className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
+              type="text"
               id="staff_id"
               name="staff_id"
-              value={shiftData.staff_id}
+              value={shiftData.employee_id}
               onChange={handleChange}
             />
           </div>
@@ -244,10 +367,10 @@ function ShiftRosterUpdate() {
             <label htmlFor="shift">Shift:</label>
             <input
               className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
+              type="text"
               id="shift"
               name="shift"
-              value={shiftData.shift}
+              value={shiftData.shiftname}
               onChange={handleChange}
             />
           </div>
