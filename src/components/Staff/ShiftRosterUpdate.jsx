@@ -20,7 +20,7 @@ function ShiftRosterUpdate() {
     sectionname: "",
     floor_name: "",
     section_name: "",
-    bed_name : "",
+    bed_name: "",
   });
 
   const { shiftId } = useParams();
@@ -177,13 +177,14 @@ function ShiftRosterUpdate() {
   useEffect(() => {
     if (shiftData.floor) {
       getFloorsSectionData(shiftData.floor);
+      console.log(shiftData.floor);
     }
   }, [shiftData.floor]);
 
-  const getRoomData = async (bed_no) => {
+  const getBedData = async (bed_no) => {
     try {
       const response = await fetch(
-        `http://localhost:4000/api/shift/rosterroom/25`
+        `http://localhost:4000/api/shift/rosterbed/${bed_no}`
       );
 
       if (!response.ok) {
@@ -194,7 +195,7 @@ function ShiftRosterUpdate() {
 
       setShiftData((prevState) => ({
         ...prevState,
-        bed_name: data[0].room_number,
+        bed_name: data[0].bed_number,
       }));
     } catch (error) {
       console.error("Error fetching shift data:", error);
@@ -203,18 +204,38 @@ function ShiftRosterUpdate() {
 
   useEffect(() => {
     if (shiftData.bed_no) {
-      getRoomData(shiftData.bed_no);
+      getBedData(shiftData.bed_no);
+      console.log(shiftData.bed_no);
     }
   }, [shiftData.bed_no]);
 
+  const getRoomData = async (room_no) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/shift/rosterroom/${room_no}`
+      );
 
+      if (!response.ok) {
+        throw new Error("Failed to fetch bed data");
+      }
+      const data = await response.json();
+      console.log(data);
 
+      setShiftData((prevState) => ({
+        ...prevState,
+        bed_name: data[0].bed_number,
+      }));
+    } catch (error) {
+      console.error("Error fetching shift data:", error);
+    }
+  };
 
-
-
-
-
-  
+  useEffect(() => {
+    if (shiftData.room_no) {
+      getRoomData(shiftData.room_no);
+      console.log(shiftData.room_no);
+    }
+  }, [shiftData.room_no]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
