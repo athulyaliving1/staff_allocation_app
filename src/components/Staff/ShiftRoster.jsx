@@ -58,6 +58,7 @@ function ShiftRoster() {
   const fetcher = async (url) => {
     const response = await fetch(url);
     const data = await response.json();
+    console.log(data);
     return data;
   };
 
@@ -65,6 +66,19 @@ function ShiftRoster() {
     "http://localhost:4000/api/shift/roster",
     fetcher
   );
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
   if (error) {
     return (

@@ -122,6 +122,13 @@ function DependentDropdown() {
       );
       const data = await response.json();
       setFloorInfo(data);
+
+      // Logging branch_id values from the data array
+      // data.forEach((item) => {
+      //   console.log("branch_id:", item.branch_id);
+      //   fetchSectionInfo(item.floor, item.branch_id);
+      // });
+
       console.log(data);
     } catch (error) {
       console.error("Error fetching floor info:", error);
@@ -130,11 +137,12 @@ function DependentDropdown() {
 
   //---------------------------------------------------------------Section data Fetching--------------------------------------------------------------------
 
-  const fetchSectionInfo = async (floorId) => {
+  const fetchSectionInfo = async (floorId, branchId) => {
     console.log(floorId);
+    console.log(branchId);
     try {
       const response = await fetch(
-        `${URLDevelopment}/api/branches/section?branch_id=${floorId}`
+        `${URLDevelopment}/api/branches/section?branch_id=${branchId}&floor=${floorId}`
       );
       const data = await response.json();
       setSectionInfo(data);
@@ -164,6 +172,7 @@ function DependentDropdown() {
     try {
       const response = await fetch(`${URLDevelopment}/api/staff/staffsearch`);
       const data = await response.json();
+      console.log(data);
       const staffOptions = data.map((staff) => ({
         value: staff.employee_id,
         label: staff.full_name,
@@ -237,17 +246,29 @@ function DependentDropdown() {
   //--------------------------------------------------------------- Get Floor Id --------------------------------------------------------------------------------
   const handleFloorsChange = (e) => {
     const floorId = e.target.value;
+    const branchId = locationId; // Use the selected locationId as the branchId
+  
     setFloorId(floorId);
-    fetchSectionInfo(floorId);
+    fetchSectionInfo(floorId, branchId); // Fetch section info with the selected floorId and branchId
+  
+    console.log(branchId);
     console.log(floorId);
   };
+  
 
   //--------------------------------------------------------------- Get Section Id --------------------------------------------------------------------------------
   const handleSectionChange = (e) => {
-    const sectionId = e.target.value;
-    setSectionId(sectionId);
+    const floorId = e.target.value;
+    const branchId = e.target.value;
+    setSectionId(floorId); // Update the sectionId state with the selected floorId
+    fetchBranchLocations(branchId);
 
-    console.log(sectionId);
+    // Fetch section information based on the selected floorId and branchId
+    fetchSectionInfo(floorId);
+
+    // Assuming locationId is the selected branchId
+
+    console.log(floorId);
   };
 
   //--------------------------------------------------------------- Staff Section Id --------------------------------------------------------------------------------
@@ -410,7 +431,7 @@ function DependentDropdown() {
               >
                 <option value="">Select Branch Floor</option>
                 {floorInfo.map((flr) => (
-                  <option key={flr.id} value={flr.branch_id}>
+                  <option key={flr.id} value={flr.floor}>
                     {flr.floor}
                   </option>
                 ))}
@@ -426,9 +447,9 @@ function DependentDropdown() {
                 id="section"
               >
                 <option value="">Select Branch Floor</option>
-                {sectioninfo.map((section) => (
-                  <option key={section.id} value={section.section}>
-                    {section.section}
+                {sectioninfo.map((sec) => (
+                  <option key={sec.id} value={sec.section}>
+                    {sec.section}
                   </option>
                 ))}
               </select>
