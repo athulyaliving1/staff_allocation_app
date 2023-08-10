@@ -1,27 +1,27 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
+// import { styled } from "@mui/material/styles";
+// import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
+// import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
-import ShiftRosterUpdate from "./ShiftRosterUpdate";
-import MasterDuty from "./../MasterDuty";
+// import ShiftRosterUpdate from "./ShiftRosterUpdate";
+// import MasterDuty from "./../MasterDuty";
 import { URLDevelopment } from "../../utilities/Url";
 import Dashboard from "../Dashboard";
 import NavBar from "../Basic/NavBar";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+// const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+//   "& .MuiDialogContent-root": {
+//     padding: theme.spacing(2),
+//   },
+//   "& .MuiDialogActions-root": {
+//     padding: theme.spacing(1),
+//   },
+// }));
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -53,7 +53,7 @@ BootstrapDialogTitle.propTypes = {
 };
 
 function ShiftRoster() {
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   // State to store the branches data
   const [branches, setBranches] = React.useState([]);
@@ -64,8 +64,8 @@ function ShiftRoster() {
   const [beds, setBedData] = React.useState([]);
   const [sections, setSectionData] = React.useState([]);
 
-  const handleClose = () => setOpen(false);
-  const handleClickOpen = () => setOpen(true);
+  // const handleClose = () => setOpen(false);
+  // const handleClickOpen = () => setOpen(true);
 
   const fetcher = async (url) => {
     const response = await fetch(url);
@@ -79,7 +79,7 @@ function ShiftRoster() {
     fetcher
   );
 
-  const { data: branchesData, error: branchesError } = useSWR(
+  const { data: branchesData } = useSWR(
     `${URLDevelopment}/api/shift/masterbranches`,
     fetcher
   );
@@ -99,7 +99,7 @@ function ShiftRoster() {
     return matchingBranch ? matchingBranch.branch_name : "Unknown Branch";
   }
 
-  const { data: staffData, error: StaffError } = useSWR(
+  const { data: staffData } = useSWR(
     `${URLDevelopment}/api/staff/staffsearch`,
     fetcher
   );
@@ -120,7 +120,7 @@ function ShiftRoster() {
     return matchingStaff ? matchingStaff.full_name : "Unknown Staff";
   }
 
-  const { data: shiftData, error: ShiftError } = useSWR(
+  const { data: shiftData } = useSWR(
     `${URLDevelopment}/api/shift/shiftsearch`,
     fetcher
   );
@@ -143,7 +143,7 @@ function ShiftRoster() {
     return matchingShift ? matchingShift.shift_name : "Unknown Shift";
   }
 
-  const { data: dutyData, error: DutyError } = useSWR(
+  const { data: dutyData } = useSWR(
     `${URLDevelopment}/api/floor/masterduty`,
     fetcher
   );
@@ -175,7 +175,7 @@ function ShiftRoster() {
     return matchingduty ? matchingduty.duty_name : "Unknown duty";
   }
 
-  const { data: floorData, error: FloorError } = useSWR(
+  const { data: floorData } = useSWR(
     `${URLDevelopment}/api/shiftroster/masterfloor`,
     fetcher
   );
@@ -196,7 +196,7 @@ function ShiftRoster() {
     return matchingFloor ? matchingFloor.floor : "Unknown Floor";
   }
 
-  const { data: sectionData, error: SectionError } = useSWR(
+  const { data: sectionData } = useSWR(
     `${URLDevelopment}/api/shift/masterSection`,
     fetcher
   );
@@ -220,7 +220,7 @@ function ShiftRoster() {
     return matchingSection ? matchingSection.section_name : "Unknown Section";
   }
 
-  const { data: bedData, error: BedError } = useSWR(
+  const { data: bedData } = useSWR(
     `${URLDevelopment}/api/shift/masterbeds`,
     fetcher
   );

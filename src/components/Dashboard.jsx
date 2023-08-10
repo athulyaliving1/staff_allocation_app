@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useState } from "react";
 
 const Menu = (props) => {
   const { children, items } = props;

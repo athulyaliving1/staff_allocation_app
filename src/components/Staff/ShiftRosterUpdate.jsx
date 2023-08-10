@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 // import Swal from "sweetalert2";
 import Select from "react-select";
 import { URLDevelopment } from "../../utilities/Url";
