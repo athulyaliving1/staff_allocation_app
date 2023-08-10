@@ -60,7 +60,7 @@ function ShiftRoster() {
   const [staffs, setStaffData] = React.useState([]);
   const [shifts, setShiftData] = React.useState([]);
   const [dutys, setDutyData] = React.useState([]);
-  const [floors, setFloorData] = React.useState([]);
+  const [floor, setFloorData] = React.useState([]);
   const [beds, setBedData] = React.useState([]);
   const [sections, setSectionData] = React.useState([]);
 
@@ -116,7 +116,7 @@ function ShiftRoster() {
       return "Unknown Staff";
     }
 
-    const matchingStaff = staffData.find((staff) => staff.id === staffId);
+    const matchingStaff = staffs.find((staff) => staff.id === staffId);
     return matchingStaff ? matchingStaff.full_name : "Unknown Staff";
   }
 
@@ -191,7 +191,7 @@ function ShiftRoster() {
       return "Unknown Floor";
     }
 
-    const matchingFloor = floorData.find((flr) => flr.id === floorId);
+    const matchingFloor = floor.find((flr) => flr.id === floorId);
 
     return matchingFloor ? matchingFloor.floor : "Unknown Floor";
   }
@@ -214,7 +214,7 @@ function ShiftRoster() {
       return "Unknown Section";
     }
 
-    const matchingSection = sectionData.find(
+    const matchingSection = sections.find(
       (sec) => sec.id === parseInt(sectionId)
     );
     return matchingSection ? matchingSection.section_name : "Unknown Section";
