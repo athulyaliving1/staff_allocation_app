@@ -136,7 +136,7 @@ const Dashboard = () => {
 
   const navsFooter = [
     {
-      href: "javascript:void(0)",
+      href: "dummuy",
       name: "Help",
       icon: (
         <svg
@@ -156,7 +156,7 @@ const Dashboard = () => {
       ),
     },
     {
-      href: "javascript:void(0)",
+      href: "dummuy",
       name: "Settings",
       icon: (
         <svg
@@ -183,23 +183,23 @@ const Dashboard = () => {
   ];
 
   const nestedNav = [
-    { name: "Cards", href: "javascript:void(0)", icon: "" },
-    { name: "Chekouts", href: "javascript:void(0)", icon: "" },
-    { name: "Payments", href: "javascript:void(0)", icon: "" },
-    { name: "Get paid", href: "javascript:void(0)", icon: "" },
+    { name: "Cards", href: "dummuy", icon: "" },
+    { name: "Chekouts", href: "dummuy", icon: "" },
+    { name: "Payments", href: "dummuy", icon: "" },
+    { name: "Get paid", href: "dummuy", icon: "" },
   ];
 
-  const profileRef = useRef();
+  // const profileRef = useRef();
 
-  const [isProfileActive, setIsProfileActive] = useState(false);
+  // const [isProfileActive, setIsProfileActive] = useState(false);
 
-  useEffect(() => {
-    const handleProfile = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target))
-        setIsProfileActive(false);
-    };
-    document.addEventListener("click", handleProfile);
-  }, []);
+  // useEffect(() => {
+  //   const handleProfile = (e) => {
+  //     if (profileRef.current && !profileRef.current.contains(e.target))
+  //       setIsProfileActive(false);
+  //   };
+  //   document.addEventListener("click", handleProfile);
+  // }, []);
 
   return (
     <>
@@ -245,7 +245,7 @@ const Dashboard = () => {
                         alivika@gmail.com
                       </span>
                       <a
-                        href="javascript:void(0)"
+                        href="dummuy"
                         className="block w-full p-2 text-left duration-150 rounded-md hover:bg-gray-50 active:bg-gray-100"
                       >
                         Add another account

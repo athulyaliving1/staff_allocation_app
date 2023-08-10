@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import Select from "react-select";
 import { URLDevelopment } from "../../utilities/Url";
 
@@ -25,8 +25,8 @@ function ShiftRosterUpdate() {
     bed_name: "",
   });
   const [dutyOptions, setDutyOptions] = useState([]);
-  const [selectedValue, setSelectedValue] = useState("");
-  const [selectedContent, setSelectedContent] = useState("");
+  // const [selectedValue, setSelectedValue] = useState("");
+  // const [selectedContent, setSelectedContent] = useState("");
   const [staffOptions, setStaffOptions] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
 
@@ -34,7 +34,7 @@ function ShiftRosterUpdate() {
   console.log(dutyOptions);
 
   const { shiftId } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     fetchShiftData(shiftId);
@@ -426,7 +426,7 @@ function ShiftRosterUpdate() {
                   //     {option.duty_name}
                   //   </option>
 
-                  option.duty_name == shiftData.duty_name ? (
+                  option.duty_name === shiftData.duty_name ? (
                     <option key={option.id} value={option.id} selected>
                       {option.duty_name}
                     </option>

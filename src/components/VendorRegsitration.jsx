@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   createVendor,
   updateVendor,
@@ -10,7 +10,7 @@ import {
 
 import Swal from "sweetalert2";
 import Dashboard from "./Dashboard";
-import NavBar from "./Basic/NavBar";
+// import NavBar from "./Basic/NavBar";
 
 function VendorRegistration({
   createVendor,

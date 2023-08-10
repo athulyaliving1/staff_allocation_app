@@ -4,7 +4,7 @@ import { URLDevelopment } from "../utilities/Url";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Dashboard from "./Dashboard";
-import NavBar from "./Basic/NavBar";
+// import NavBar from "./Basic/NavBar";
 
 function DependentDropdown() {
   const [countries, setCountries] = useState([]);

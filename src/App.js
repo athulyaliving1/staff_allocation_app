@@ -8,10 +8,10 @@ import StaffAllocation from "./components/StaffAllocation";
 import StaffRegister from "./components/Staff/StaffRegister";
 import StaffProfile from "./components/Staff/StaffProfile";
 import ShiftRoster from "./components/Staff/ShiftRoster";
-import ShiftRosterEdit from "./components/Staff/ShiftRosterEditModal";
+// import ShiftRosterEdit from "./components/Staff/ShiftRosterEditModal";
 import ShiftRosterUpdate from "./components/Staff/ShiftRosterUpdate";
 import MasterDuty from "./components/MasterDuty";
-import Dashboard from "./components/Dashboard";
+// import Dashboard from "./components/Dashboard";
 import NavBar from "./components/Basic/NavBar";
 
 function App() {
