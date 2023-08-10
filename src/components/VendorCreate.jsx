@@ -26,12 +26,11 @@ const VendorCreate = ({ createVendor }) => {
   };
 
   return (
-    <div className=" ">
-      <div className="grid grid-cols-3 w-6/12">
+    <div className="">
+      <div className="grid w-6/12 grid-cols-3">
         <form onSubmit={handleSubmit}>
           <input
-            className="text-md block px-3 py-2 rounded-lg w-full
-        bg-white border-2 border-gray-300 placeholder-gray-600 shadow-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none"
+            className="block w-full px-3 py-2 placeholder-gray-600 bg-white border-2 border-gray-300 rounded-lg shadow-md text-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none"
             type="text"
             name="id"
             value={vendorData.id}
@@ -40,8 +39,7 @@ const VendorCreate = ({ createVendor }) => {
             required
           />
           <input
-            className="text-md block px-3 py-2 rounded-lg w-full
-      bg-white border-2 border-gray-300 placeholder-gray-600 shadow-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none"
+            className="block w-full px-3 py-2 placeholder-gray-600 bg-white border-2 border-gray-300 rounded-lg shadow-md text-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none"
             type="text"
             name="title"
             value={vendorData.title}
@@ -50,8 +48,7 @@ const VendorCreate = ({ createVendor }) => {
             required
           />
           <input
-            className="text-md block px-3 py-2 rounded-lg w-full
-      bg-white border-2 border-gray-300 placeholder-gray-600 shadow-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none"
+            className="block w-full px-3 py-2 placeholder-gray-600 bg-white border-2 border-gray-300 rounded-lg shadow-md text-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none"
             type="text"
             name="body"
             value={vendorData.body}
@@ -61,9 +58,7 @@ const VendorCreate = ({ createVendor }) => {
           />
           {/* Add more input fields for other vendor data */}
           <button
-            className="mt-3 text-lg font-semibold
-            bg-gray-800 w-full text-white rounded-lg
-            px-6 py-3 block shadow-xl hover:text-white hover:bg-black"
+            className="block w-full px-6 py-3 mt-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
             type="submit"
           >
             Create Vendor

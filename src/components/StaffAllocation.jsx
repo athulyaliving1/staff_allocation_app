@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { URLDevelopment } from "../utilities/Url";
+import axios from "axios";
+import Swal from "sweetalert2";
+import Dashboard from "./Dashboard";
+import NavBar from "./Basic/NavBar";
 
 function DependentDropdown() {
   const [countries, setCountries] = useState([]);
@@ -21,6 +25,13 @@ function DependentDropdown() {
   const [towerId, setTowerId] = useState("");
   const [sectionId, setSectionId] = useState("");
   const [sectioninfo, setSectionInfo] = useState([]);
+  const [selectedDuty, setSelectedDuty] = useState("");
+  const [selectedShift, setSelectedShift] = useState("");
+  const [selectedVendorId, setSelectedVendorId] = useState("");
+  const [vendordata, setVendordata] = useState([]);
+  const [payableInput, SetPayableInput] = useState([]);
+  const [payable, setPayable] = useState([]);
+  const [payVendorId, SetPayablevendorId] = useState([]);
 
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
   useEffect(() => {
@@ -29,9 +40,18 @@ function DependentDropdown() {
     fetchEmployees();
     fetchShifts();
     fetchBranchesTower();
-    fetchFloorInfo();
-    fetchSectionInfo();
-  }, []);
+    fetchFloorInfo(locationId);
+    fetchSectionInfo(floorId, locationId);
+    fetchvendor(selectedVendorId);
+    // Pass locationId as a parameter to fetchFloorInfo
+  }, [locationId, floorId, selectedVendorId]);
+
+  // useEffect(() => {
+  //   // Check if floorId and locationId are not empty before calling fetchSectionInfo
+  //   if (floorId && locationId) {
+  //     fetchSectionInfo(floorId, locationId); // Pass floorId and locationId as parameters to fetchSectionInfo
+  //   }
+  // }, [floorId, locationId]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
 
@@ -142,11 +162,11 @@ function DependentDropdown() {
     console.log(branchId);
     try {
       const response = await fetch(
-        `${URLDevelopment}/api/branches/section?branch_id=${branchId}&floor=${floorId}`
+        `${URLDevelopment}/api/branches/section/${branchId}/${floorId}`
       );
       const data = await response.json();
-      setSectionInfo(data);
-      console.log(data);
+      console.log("API Response:", data); // Log the response data to see its structure
+      setSectionInfo(data); // Make sure data is an array with 'section' property
     } catch (error) {
       console.error("Error fetching floor info:", error);
     }
@@ -175,7 +195,8 @@ function DependentDropdown() {
       console.log(data);
       const staffOptions = data.map((staff) => ({
         value: staff.employee_id,
-        label: staff.full_name,
+        label: `${staff.employee_id} - ${staff.full_name}`,
+        vendorid: `${staff.vendor_id}`,
       }));
       setStaffOptions(staffOptions);
     } catch (error) {
@@ -189,10 +210,30 @@ function DependentDropdown() {
     try {
       const response = await fetch(`${URLDevelopment}/api/shift/shiftsearch`);
       const data = await response.json();
+
       setShiftOptions(data);
       console.log(data);
     } catch (error) {
       console.log("Error fetching shifts:", error);
+    }
+  };
+
+  const fetchvendor = async (vendorId) => {
+    console.log(vendorId);
+
+    try {
+      const response = await fetch(
+        `${URLDevelopment}/api/shift/vendorsearch/${vendorId}`
+      );
+      const data = await response.json();
+      setVendordata(data);
+
+      SetPayableInput(data[0].name);
+      SetPayablevendorId(data[0].id);
+
+      console.log(data[0].name);
+    } catch (error) {
+      console.error("Error fetching vendor:", error);
     }
   };
 
@@ -247,257 +288,428 @@ function DependentDropdown() {
   const handleFloorsChange = (e) => {
     const floorId = e.target.value;
     const branchId = locationId; // Use the selected locationId as the branchId
-  
+
     setFloorId(floorId);
     fetchSectionInfo(floorId, branchId); // Fetch section info with the selected floorId and branchId
-  
+
     console.log(branchId);
     console.log(floorId);
   };
-  
+
+  // ...existing code...
+
+  //--------------------------------------------------------------- Get Duty Id --------------------------------------------------------------------------------
+  const handleDutyChange = (e) => {
+    const dutyId = e.target.value;
+    setSelectedDuty(dutyId);
+    console.log(dutyId);
+  };
+
+  //--------------------------------------------------------------- Get Shift Id --------------------------------------------------------------------------------
+  const handleShiftChange = (e) => {
+    const shiftId = e.target.value;
+    setSelectedShift(shiftId);
+    console.log(shiftId);
+  };
+
+  // ...existing code...
 
   //--------------------------------------------------------------- Get Section Id --------------------------------------------------------------------------------
   const handleSectionChange = (e) => {
     const floorId = e.target.value;
-    const branchId = e.target.value;
+    // const branchId = e.target.value;
     setSectionId(floorId); // Update the sectionId state with the selected floorId
-    fetchBranchLocations(branchId);
+    // fetchBranchLocations(branchId);
 
     // Fetch section information based on the selected floorId and branchId
-    fetchSectionInfo(floorId);
+    // fetchSectionInfo(floorId);
 
     // Assuming locationId is the selected branchId
 
     console.log(floorId);
   };
 
+  // const handleVendorChange = (e) => {
+  //   const vendorId = e.target.value;
+  //   setSelectedVendorId(vendorId); // Update the selectedVendorId state with the selected vendorId
+  //   console.log(vendorId); // Log the selected vendorId
+  // };
+
+  const handleChange = (e) => {
+    // If payableInput is "Athulya", set the value to "0", otherwise use the user's input
+    const inputValue = payableInput === "Athulya" ? "0" : e.target.value;
+    setPayable(inputValue);
+  };
+
   //--------------------------------------------------------------- Staff Section Id --------------------------------------------------------------------------------
   const handleStaffChange = (selectedOption) => {
     setSelectedStaff(selectedOption);
+    console.log(selectedOption.vendorid);
+    setSelectedVendorId(selectedOption.vendorid);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault();
 
-    // Gather the selected values from the state
-    const branchId = locationId;
-    const userId = selectedStaff.value; // Assuming the selectedStaff is an object with a value property
-    const roomNo = ""; // Get the value from the input field for room number
-    const bedNo = ""; // Get the value from the input field for bed number
-    const dutyTypeId = ""; // Get the selected duty type value from the dropdown
-    const selectedFloor = floorInfo.find((flr) => flr.id === floorId);
-    const floor = selectedFloor ? selectedFloor.floor : "";
+    const formData = new FormData();
+    formData.append("branch_id", locationId);
+    formData.append("tower", towerId);
+    formData.append("floor", floorId);
+    formData.append("section", sectionId);
+    formData.append("duty", selectedDuty); // Replace with the actual duty type value
+    formData.append("emp_id", selectedStaff.value);
+    formData.append("shift", selectedShift); // Replace with the actual shift name value
+    formData.append("vendor", payVendorId);
+    formData.append("staff_payable", payableInput);
 
-    // Create the data object to send in the request
-    const data = {
-      branch_id: branchId,
-      user_id: userId,
-      room_no: roomNo,
-      bed_no: bedNo,
-      duty_type_id: dutyTypeId,
-      floor: floor,
-    };
+    // Convert formData to a regular JSON object
+    const jsonData = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value;
+    });
 
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/staff_allocation",
+      const response = await axios.post(
+        `${URLDevelopment}/api/shiftallocation/floorallocation`,
+        jsonData, // Use the jsonData as the request body
         {
-          method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json", // Set the content type to JSON
           },
-          body: JSON.stringify(data),
         }
       );
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log("Data inserted successfully");
         // Reset the form or clear the input fields if needed
+
+        // Show SweetAlert2 success message
+        Swal.fire({
+          icon: "success",
+          title: "Data Inserted Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else if (response.status === 204) {
+        console.log(" already Record exists.");
+        // Reset the form or clear the input fields if needed
+
+        // Show SweetAlert2 success message
+        Swal.fire({
+          icon: "error",
+          title: "already Record exists",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } else {
         console.error("Failed to insert data");
+
+        // Show SweetAlert2 error message
+        Swal.fire({
+          icon: "error",
+          title: "Data Not Inserted ",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } catch (error) {
       console.error("Error inserting data:", error);
+      // Show SweetAlert2 error message
+      Swal.fire({
+        icon: "error",
+        title: "Error inserting data",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
-
   return (
-    <div className="w-screen h-screen bg-gray-100">
-      <h2 className="subheading">Staff Allocation</h2>
-      <div className="container mx-auto">
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-3 gap-3 py-5">
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="country">Country:</label>
-              <select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                id="country"
-                value={selectedCountry}
-                onChange={handleCountryChange}
-              >
-                <option value="">Select Country</option>
-                {countries.map((country) => (
-                  <option
-                    value={country.branch_country_id}
-                    key={country.branch_country_id}
-                  >
-                    {country.branch_country}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="state">State:</label>
-              <select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                id="state"
-                value={selectedState}
-                onChange={handleStateChange}
-              >
-                <option value="">Select State</option>
-                {states.map((state) => (
-                  <option
-                    value={state.branch_state_id}
-                    key={state.branch_state_id}
-                  >
-                    {state.branch_state}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="city">City:</label>
-              <select
-                value={selectedCity}
-                onChange={handleCityChange}
-                id="city"
-                className="flex-1 w-full h-10 mx-2 form-select"
-              >
-                <option value="">Select City</option>
-                {cities.map((city) => (
-                  <option value={city.branch_city_id} key={city.branch_city_id}>
-                    {city.branch_city}
-                  </option>
-                ))}
-              </select>
-            </div>
+    <div className="bg-gray-100">
+      <div className="w-screen h-screen ">
+        <div className="container mx-auto lg:pl-60 xl:pl-20">
+          <Dashboard />
+          <div>
+            <h5 className="pt-44 subheading">Staff Duty Allocation</h5>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="branchLocation">Branch Location:</label>
-              <select
-                value={locationId}
-                onChange={handleLocationChange}
-                id="branchLocation"
-                className="flex-1 w-full h-10 mx-2 form-select"
-              >
-                <option value="">Select Branch Location</option>
-                {branchLocations.map((location) => (
-                  <option key={location.id} value={location.id}>
-                    {location.branch_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Country:
+                </div>
+                <label
+                  className="block mb-2 text-sm text-gray-600"
+                  htmlFor="country"
+                />
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="tower">Tower</label>
-              <select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                value={towerId}
-                onChange={handleTowerChange}
-                id="tower"
-              >
-                <option value="">Select Branch Tower</option>
-                {towerInfo.map((tower) => (
-                  <option key={tower.id} value={tower.id}>
-                    {tower.tower}
-                  </option>
-                ))}
-              </select>
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  id="country"
+                  value={selectedCountry}
+                  onChange={handleCountryChange}
+                >
+                  <option value="">Select Country</option>
+                  {countries.map((country) => (
+                    <option
+                      value={country.branch_country_id}
+                      key={country.branch_country_id}
+                    >
+                      {country.branch_country}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  State:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="state" />
+
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  id="state"
+                  value={selectedState}
+                  onChange={handleStateChange}
+                >
+                  <option value="">Select State</option>
+                  {states.map((state) => (
+                    <option
+                      value={state.branch_state_id}
+                      key={state.branch_state_id}
+                    >
+                      {state.branch_state}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  City:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="city" />
+
+                <select
+                  value={selectedCity}
+                  onChange={handleCityChange}
+                  id="city"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                >
+                  <option value="">Select City</option>
+                  {cities.map((city) => (
+                    <option
+                      value={city.branch_city_id}
+                      key={city.branch_city_id}
+                    >
+                      {city.branch_city}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Branch:
+                </div>
+                <label
+                  className="block mb-2 text-sm font-xl"
+                  htmlFor="branchLocation"
+                />
+
+                <select
+                  value={locationId}
+                  onChange={handleLocationChange}
+                  id="branchLocation"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                >
+                  <option value="">Select Branch Location</option>
+                  {branchLocations.map((location) => (
+                    <option key={location.id} value={location.id}>
+                      {location.branch_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Tower:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="tower" />
+
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  value={towerId}
+                  onChange={handleTowerChange}
+                  id="tower"
+                >
+                  <option value="">Select Branch Tower</option>
+                  {towerInfo.map((tower) => (
+                    <option key={tower.id} value={tower.id}>
+                      {tower.tower}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Floor:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="floor" />
+
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  value={floorId}
+                  onChange={handleFloorsChange}
+                  id="floor"
+                >
+                  <option value="">Select Branch Floor</option>
+                  {floorInfo.map((flr) => (
+                    <option key={flr.id} value={flr.floor}>
+                      {flr.floor}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Section:
+                </div>
+                <label
+                  className="block mb-2 text-sm font-xl"
+                  htmlFor="section"
+                />
+
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  value={sectionId}
+                  onChange={handleSectionChange}
+                  id="section"
+                >
+                  <option value="">Select Branch Floor</option>
+                  {sectioninfo.map((sec) => (
+                    <option key={sec.id} value={sec.section}>
+                      {sec.section}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Staff:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="staff" />
+
+                <Select
+                  className="w-full "
+                  name="staff"
+                  value={selectedStaff}
+                  onChange={handleStaffChange}
+                  options={staffOptions}
+                />
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Vendor:
+                </div>
+                <label
+                  className="block mb-2 text-sm font-xl"
+                  htmlFor="staffvendor"
+                />
+
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  value={selectedVendorId}
+                >
+                  <option value="">Vendor</option>
+                  {vendordata.map((vdr) => (
+                    <option value={vdr.id} key={vdr.id}>
+                      {vdr.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Payable:
+                </div>
+                <label
+                  className="block mb-2 text-sm font-xl"
+                  htmlFor="staffpayable"
+                />
+
+                <input
+                  placeholder="type here"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 "
+                  type="text"
+                  name="staffpayable"
+                  disabled={payableInput === "Athulya"}
+                  value={payable}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Duty:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="duty" />
+
+                <select
+                  value={selectedDuty}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  id="duty"
+                  onChange={handleDutyChange}
+                >
+                  <option value="">Select Duty</option>
+                  {dutyMaster.map((duty) => (
+                    <option value={duty.id} key={duty.id}>
+                      {duty.duty_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                  Shift:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="shift" />
+
+                <select
+                  value={selectedShift}
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  id="shift"
+                  onChange={handleShiftChange}
+                >
+                  <option value="">Select Shift</option>
+                  {shiftOptions.map((shift) => (
+                    <option value={shift.id} key={shift.id}>
+                      {shift.shift_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="floor">Floor</label>
-              <select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                value={floorId}
-                onChange={handleFloorsChange}
-                id="floor"
-              >
-                <option value="">Select Branch Floor</option>
-                {floorInfo.map((flr) => (
-                  <option key={flr.id} value={flr.floor}>
-                    {flr.floor}
-                  </option>
-                ))}
-              </select>
+            <div className="flex justify-center">
+              <div>
+                <button
+                  type="submit"
+                  className="group [transform:translateZ(0)] px-6 py-3 rounded-lg overflow-hidden bg-gray-300 relative before:absolute before:bg-sky-600 before:top-1/2 before:left-1/2 before:h-8 before:w-8 before:-translate-y-1/2 before:-translate-x-1/2 before:rounded-full before:scale-[0] before:opacity-0 hover:before:scale-[6] hover:before:opacity-100 before:transition before:ease-in-out before:duration-500"
+                >
+                  <span className="relative z-0 text-black transition duration-500 ease-in-out group-hover:text-gray-200">
+                    Submit
+                  </span>
+                </button>
+              </div>
             </div>
-
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="section">Section</label>
-              <select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                value={sectionId}
-                onChange={handleSectionChange}
-                id="section"
-              >
-                <option value="">Select Branch Floor</option>
-                {sectioninfo.map((sec) => (
-                  <option key={sec.id} value={sec.section}>
-                    {sec.section}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3">
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label className="" htmlFor="duty">
-                Duty
-              </label>
-              <select className="flex-1 w-full h-10 mx-2 form-select" id="duty">
-                <option value="">Select Duty</option>
-                {dutyMaster.map((duty) => (
-                  <option value={duty.duty_name} key={duty.id}>
-                    {duty.duty_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="staff">Staff</label>
-
-              <Select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                name="staff"
-                value={selectedStaff}
-                onChange={handleStaffChange}
-                options={staffOptions}
-              />
-            </div>
-            <div className="flex w-full p-2 space-x-4 border-2 rounded">
-              <label htmlFor="shift">Shift</label>
-              <select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                id="shift"
-              >
-                <option value="">Select Shift</option>
-                {shiftOptions.map((shift) => (
-                  <option value={shift.shift_name} key={shift.id}>
-                    {shift.shift_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

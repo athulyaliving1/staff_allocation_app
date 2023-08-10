@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { URLDevelopment } from "../utilities/Url";
 
 function MasterDuty() {
   const [dutyData, setDutyData] = useState([]);
@@ -10,7 +11,7 @@ function MasterDuty() {
 
   const fetchDutyData = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/floor/masterduty");
+      const response = await fetch(`${ URLDevelopment}/api/floor/masterduty`);
       if (!response.ok) {
         throw new Error("Failed to fetch duty data");
       }
@@ -25,7 +26,7 @@ function MasterDuty() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-3xl font-bold my-5">Master Duty</h1>
+      <h1 className="my-5 text-3xl font-bold">Master Duty</h1>
       {isLoading ? (
         <p>Loading duty data...</p>
       ) : (

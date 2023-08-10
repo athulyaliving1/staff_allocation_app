@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -9,6 +9,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Link, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import ShiftRosterUpdate from "./ShiftRosterUpdate";
+import MasterDuty from "./../MasterDuty";
+import { URLDevelopment } from "../../utilities/Url";
+import Dashboard from "../Dashboard";
+import NavBar from "../Basic/NavBar";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -51,6 +55,14 @@ BootstrapDialogTitle.propTypes = {
 function ShiftRoster() {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  // State to store the branches data
+  const [branches, setBranches] = React.useState([]);
+  const [staffs, setStaffData] = React.useState([]);
+  const [shifts, setShiftData] = React.useState([]);
+  const [dutys, setDutyData] = React.useState([]);
+  const [floors, setFloorData] = React.useState([]);
+  const [beds, setBedData] = React.useState([]);
+  const [sections, setSectionData] = React.useState([]);
 
   const handleClose = () => setOpen(false);
   const handleClickOpen = () => setOpen(true);
@@ -63,22 +75,182 @@ function ShiftRoster() {
   };
 
   const { data: shiftRoster, error } = useSWR(
-    "http://localhost:4000/api/shift/roster",
+    `${URLDevelopment}/api/shift/roster`,
     fetcher
   );
 
+  const { data: branchesData, error: branchesError } = useSWR(
+    `${URLDevelopment}/api/shift/masterbranches`,
+    fetcher
+  );
 
+  useEffect(() => {
+    if (branchesData) {
+      setBranches(branchesData);
+    }
+  }, [branchesData]);
 
+  function getBranchName(branchId) {
+    if (!branches || branches.length === 0) {
+      return "Unknown Branch";
+    }
 
+    const matchingBranch = branches.find((branch) => branch.id === branchId);
+    return matchingBranch ? matchingBranch.branch_name : "Unknown Branch";
+  }
 
+  const { data: staffData, error: StaffError } = useSWR(
+    `${URLDevelopment}/api/staff/staffsearch`,
+    fetcher
+  );
 
+  useEffect(() => {
+    if (staffData) {
+      setStaffData(staffData);
+    }
+  }, [staffData]);
 
+  function getStaff(staffId) {
+    console.log(staffId);
+    if (!staffData || staffData.length === 0) {
+      return "Unknown Staff";
+    }
 
+    const matchingStaff = staffData.find((staff) => staff.id === staffId);
+    return matchingStaff ? matchingStaff.full_name : "Unknown Staff";
+  }
 
+  const { data: shiftData, error: ShiftError } = useSWR(
+    `${URLDevelopment}/api/shift/shiftsearch`,
+    fetcher
+  );
 
+  useEffect(() => {
+    if (shiftData) {
+      setShiftData(shiftData);
+    }
+  }, [shiftData]);
 
+  function getshift(shiftId) {
+    console.log(shiftId);
+    console.log(shifts);
 
-  
+    if (!shiftData || shiftData.length === 0) {
+      return "Unknown Shift";
+    }
+
+    const matchingShift = shifts.find((shift) => shift.id === shiftId);
+    return matchingShift ? matchingShift.shift_name : "Unknown Shift";
+  }
+
+  const { data: dutyData, error: DutyError } = useSWR(
+    `${URLDevelopment}/api/floor/masterduty`,
+    fetcher
+  );
+
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
+
+  useEffect(() => {
+    if (dutyData) {
+      setDutyData(dutyData);
+    }
+  }, [dutyData]);
+
+  function getdutyname(dutyId) {
+    console.log(dutyId);
+
+    if (!dutyData || dutyData.length === 0) {
+      return "Unknown dutydata";
+    }
+
+    const matchingduty = dutys.find((duty) => duty.id === dutyId);
+    return matchingduty ? matchingduty.duty_name : "Unknown duty";
+  }
+
+  const { data: floorData, error: FloorError } = useSWR(
+    `${URLDevelopment}/api/shiftroster/masterfloor`,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (floorData) {
+      setFloorData(floorData);
+    }
+  }, [floorData]);
+
+  function getfloorData(floorId) {
+    if (!floorData || floorData.length === 0) {
+      return "Unknown Floor";
+    }
+
+    const matchingFloor = floorData.find((flr) => flr.id === floorId);
+
+    return matchingFloor ? matchingFloor.floor : "Unknown Floor";
+  }
+
+  const { data: sectionData, error: SectionError } = useSWR(
+    `${URLDevelopment}/api/shift/masterSection`,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (sectionData) {
+      setSectionData(sectionData);
+    }
+  }, [sectionData]);
+
+  function getsection(sectionId) {
+    console.log(sectionId);
+    console.log(sectionData);
+    if (!sectionData || sectionData.length === 0) {
+      return "Unknown Section";
+    }
+
+    const matchingSection = sectionData.find(
+      (sec) => sec.id === parseInt(sectionId)
+    );
+    return matchingSection ? matchingSection.section_name : "Unknown Section";
+  }
+
+  const { data: bedData, error: BedError } = useSWR(
+    `${URLDevelopment}/api/shift/masterbeds`,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (bedData) {
+      setBedData(bedData);
+    }
+  }, [bedData]);
+
+  function getBed(BedId) {
+    if (!bedData || bedData.length === 0) {
+      return "Unknown Bed";
+    }
+    console.log(BedId);
+    console.log(beds);
+    console.log(bedData);
+
+    const matchingBed = beds.find((bed) => bed.id === BedId);
+
+    console.log(matchingBed);
+
+    return matchingBed ? matchingBed.bed_number : "Unknown Bed";
+  }
+
+  useEffect(() => {
+    if (bedData) {
+      setBedData(bedData);
+    }
+  }, [bedData]);
 
   if (error) {
     return (
@@ -124,7 +296,7 @@ function ShiftRoster() {
     return (
       <div>
         <section className="bg-white ">
-          <div className="container flex flex-col items-center justify-between p-6 mx-auto space-y-4 animate-pulse sm:space-y-0 sm:flex-row">
+          <div className="container flex flex-col items-center justify-between p-6 mx-auto space-y- animate-pulse sm:space-y-0 sm:flex-row">
             <p className="w-32 h-2 bg-gray-200 rounded-lg "></p>
             <div className="flex flex-wrap items-center justify-center gap-6 mt-10">
               <p className="w-20 h-2 bg-gray-200 rounded-lg "></p>
@@ -281,181 +453,200 @@ function ShiftRoster() {
     navigate(`/shiftrosterupdate/${shiftId}`);
   };
   return (
-    <div>
-      <div className="m-5 border border-gray-200 rounded-lg shadow-md table-auto">
-        <table className="w-full text-sm font-semibold text-left bg-white border-collapse text-customblack">
-          <thead className="text-xl bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Id
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Branch Id
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                User Id
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Room No
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Floor
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Section Id
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Staff Id
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Section ID
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Staff ID
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Staff Source
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Staff Payable
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Staff Source
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Service Payable
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Schedule Date
-              </th>
-
-              <th
-                scope="col"
-                className="px-6 py-4 font-semibold text-customblack"
-              >
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-            {shiftRoster.map((shift) => (
-              <tr key={shift.id} className="hover:bg-gray-50 odd:bg-gray-100">
-                <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
-                  <div className="text-sm">
-                    <div className="font-medium text-gray-700">{shift.id}</div>
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.branch_id}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.user_id}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.room_no}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.bed_no}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.floor}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.section_id}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.staff_id}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.staff_source}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.shift}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.staff_payable}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.service_payable}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <span className="font-medium text-customblack">
-                    {shift.schedule_date}
-                  </span>
-                </td>
-
-                <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
-                  <button
-                    className="w-full px-5 py-2 mt-4 shadow-lg xl:text-xl primary-button rounded-xl"
-                    onClick={() => handleUpdateShiftRoster(shift.id)}
+    <div className="">
+      <NavBar />
+      <Dashboard />
+      <div className="">
+        <div className="py-24 xl:py-36 pl-60">
+          <div>
+            <h1 className=" pb-14 subheading">Staff Registration</h1>
+          </div>
+          <div className="border border-gray-200 rounded-lg shadow-md table-auto ">
+            <table className="w-full text-sm font-semibold text-left bg-white border-collapse text-customblack">
+              <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
                   >
-                    Edit
-                  </button>
-                  {/* <BootstrapDialog
+                    Id
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Branch Id
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    User Id
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Room No
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Bed Number
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Duty
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Floor
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Section Id
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Id
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Source
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Shift
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Payable
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Service Payable
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Schedule Date
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="border-t border-gray-300 divide-y divide-gray-100">
+                {shiftRoster.map((shift) => (
+                  <tr
+                    key={shift.id}
+                    className="hover:bg-gray-50 odd:bg-gray-100"
+                  >
+                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
+                      <div className="text-sm">
+                        <div className="font-medium text-gray-700">
+                          {shift.id}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getBranchName(shift.branch_id)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {shift.user_id}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {shift.room_no}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getBed(shift.bed_id)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getdutyname(shift.duty_type_id)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getfloorData(shift.floor)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getsection(shift.section_id)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getStaff(shift.staff_id)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {shift.staff_source}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getshift(shift.shift)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {shift.staff_payable}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {shift.service_payable}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {formatDate(shift.schedule_date)}
+                      </span>
+                    </td>
+
+                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
+                      <button
+                        className="w-full px-5 py-2 mt-4 shadow-lg xl:text-xl primary-button rounded-xl"
+                        onClick={() => handleUpdateShiftRoster(shift.id)}
+                      >
+                        Edit
+                      </button>
+                      {/* <BootstrapDialog
                     onClose={handleClose}
                     aria-labelledby="customized-dialog-title"
                     open={open}
@@ -478,11 +669,13 @@ function ShiftRoster() {
                       
                     </DialogContent>
                   </BootstrapDialog> */}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

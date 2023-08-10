@@ -1,29 +1,39 @@
 import React from "react";
+import Dashboard from "../Dashboard";
 
 function StaffRegister() {
   return (
-    <div>
+    <div className="bg-gray-100">
       StaffRegister
-      <div class="mt-8 p-4">
+      <div class="mt-8 p-4 container mx-auto lg:pl-60 xl:pl-20 ">
+        <Dashboard />
+
         <div>
-          <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
-            Full Name
-          </div>
+          <h5 className="pt-20 subheading">Staff Register</h5>
+        </div>
+        <div>
+        
           <div class="flex flex-col md:flex-row">
-            <div class="w-full flex-1 mx-2 svelte-1l8159u">
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+         
+          <div class="w-full flex-1 mx-2 svelte-1l8159u">
+              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+               First Name
+              </div>
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="First Name"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="FirstName"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
-
             <div class="w-full flex-1 mx-2 svelte-1l8159u">
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+                Last Name
+              </div>
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
                   placeholder="Last Name"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -34,10 +44,10 @@ function StaffRegister() {
                 {" "}
                 Designation
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
                   placeholder="Just a hint.."
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -46,10 +56,10 @@ function StaffRegister() {
                 {" "}
                 D.O.B
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -60,10 +70,10 @@ function StaffRegister() {
                 {" "}
                 Employee Id
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
                   placeholder="Just a hint.."
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -72,10 +82,10 @@ function StaffRegister() {
                 {" "}
                 D.O.B
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -87,10 +97,10 @@ function StaffRegister() {
                 {" "}
                 Gender
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -99,10 +109,10 @@ function StaffRegister() {
                 {" "}
                 Blood Group
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -114,10 +124,10 @@ function StaffRegister() {
                 {" "}
                 Marital Status
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -127,10 +137,10 @@ function StaffRegister() {
                 {" "}
                 Religion
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -142,10 +152,10 @@ function StaffRegister() {
                 {" "}
                 Food Habits
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -155,10 +165,10 @@ function StaffRegister() {
                 {" "}
                 Mobile Number
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -170,10 +180,10 @@ function StaffRegister() {
                 {" "}
                 Email
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -183,10 +193,10 @@ function StaffRegister() {
                 {" "}
                 personal Email
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -197,10 +207,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Current Address
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -209,10 +219,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Current Area
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -223,10 +233,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Current city
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -235,10 +245,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Current Pin code
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -249,10 +259,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Current State
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -261,10 +271,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Current country
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -275,10 +285,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Permanent address
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -287,10 +297,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Permanent city
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -301,10 +311,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Permanent pin code
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -313,10 +323,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Permanent state
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -326,10 +336,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Permanent country
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class="my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
@@ -338,10 +348,10 @@ function StaffRegister() {
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
                 Permanent area
               </div>
-              <div class="bg-white my-2 p-1 flex border border-gray-200 rounded svelte-1l8159u">
+              <div class=" my-2  flex  svelte-1l8159u">
                 <input
-                  placeholder="jhon@doe.com"
-                  class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+                  placeholder="john"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
