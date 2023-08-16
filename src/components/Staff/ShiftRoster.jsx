@@ -7,12 +7,13 @@ import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
-import useSWR from "swr";
 // import ShiftRosterUpdate from "./ShiftRosterUpdate";
 // import MasterDuty from "./../MasterDuty";
 import { URLDevelopment } from "../../utilities/Url";
 import Dashboard from "../Dashboard";
 import NavBar from "../Basic/NavBar";
+import useSWR, { mutate } from "swr";
+import Swal from "sweetalert2";
 
 // const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 //   "& .MuiDialogContent-root": {
@@ -74,15 +75,32 @@ function ShiftRoster() {
     return data;
   };
 
+  // UseSWR to fetch initial data and set up revalidations
   const { data: shiftRoster, error } = useSWR(
     `${URLDevelopment}/api/shift/roster`,
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 10000, // Revalidate every 60 seconds
+    }
   );
 
   const { data: branchesData } = useSWR(
     `${URLDevelopment}/api/shift/masterbranches`,
     fetcher
   );
+
+  // // Function to perform a mutation and trigger revalidation
+  // const performMutationAndUpdate = async () => {
+  //   // Perform your mutation on the server
+  //   // ...
+
+  //   // After the mutation, trigger a re-fetch and update the data using 'mutate'
+  //   const url = `${URLDevelopment}/api/shift/roster`;
+  //   await mutate(url); // This will fetch and update the data for the specified URL
+  // };
+
+  // // Call the mutation function when your component mounts or as needed
+  // performMutationAndUpdate();
 
   useEffect(() => {
     if (branchesData) {
@@ -452,6 +470,49 @@ function ShiftRoster() {
   const handleUpdateShiftRoster = (shiftId) => {
     navigate(`/shiftrosterupdate/${shiftId}`);
   };
+
+  const handleDeleteShiftRoster = async (shiftId) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You will not be able to recover this shift roster!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
+        const response = await fetch(
+          `${URLDevelopment}/api/shift/shiftrosterdelete/${shiftId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              // Add any other headers if needed
+            },
+          }
+        );
+
+        if (response === 'Shift deleted') {
+          // Successful deletion
+          Swal.fire(
+            "Deleted!",
+            "The shift roster has been deleted.",
+            "success"
+          );
+          // You can perform additional actions like updating the UI or refetching data
+        } else {
+          // Handle error cases
+          Swal.fire("Error", "Error deleting shift roster", "error");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="">
       <NavBar />
@@ -459,10 +520,10 @@ function ShiftRoster() {
       <div className="">
         <div className="py-24 xl:py-36 pl-60">
           <div>
-            <h1 className=" pb-14 subheading">Staff Registration</h1>
+            <h1 className=" pb-14 subheading">Daily Staff Duty Roster</h1>
           </div>
-          <div className="border border-gray-200 rounded-lg shadow-md table-auto ">
-            <table className="w-full text-sm font-semibold text-left bg-white border-collapse text-customblack">
+          <div className="border border-gray-200 rounded-lg shadow-md ">
+            <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
               <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
                 <tr>
                   <th
@@ -646,6 +707,14 @@ function ShiftRoster() {
                       >
                         Edit
                       </button>
+
+                      <button
+                        onClick={() => handleDeleteShiftRoster(shift.id)}
+                        className="w-full px-5 py-2 mt-4 shadow-lg xl:text-xl primary-button rounded-xl"
+                      >
+                        Delete
+                      </button>
+
                       {/* <BootstrapDialog
                     onClose={handleClose}
                     aria-labelledby="customized-dialog-title"

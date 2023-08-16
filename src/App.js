@@ -13,6 +13,7 @@ import ShiftRosterUpdate from "./components/Staff/ShiftRosterUpdate";
 import MasterDuty from "./components/MasterDuty";
 // import Dashboard from "./components/Dashboard";
 import NavBar from "./components/Basic/NavBar";
+import Staffallocationbulkupdate from './components/Staff/Staffallocationbulkupdate';
 
 function App() {
   return (
@@ -46,7 +47,11 @@ function App() {
               exact
               path="/shiftrosterupdate/:shiftId"
               element={<ShiftRosterUpdate />}
+  
             />
+                <Route exact path="/staffallocationupdate" element={<Staffallocationbulkupdate />} />
+                
+
             <Route exact path="/masterduty" element={<MasterDuty />} />
           </Route>
         </Routes>

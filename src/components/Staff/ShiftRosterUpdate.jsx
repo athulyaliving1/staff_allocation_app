@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-// import Swal from "sweetalert2";
+
 import Select from "react-select";
 import { URLDevelopment } from "../../utilities/Url";
+import Dashboard from "../Dashboard";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function ShiftRosterUpdate() {
   const [shiftData, setShiftData] = useState({
@@ -29,16 +32,20 @@ function ShiftRosterUpdate() {
   // const [selectedContent, setSelectedContent] = useState("");
   const [staffOptions, setStaffOptions] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
-
+  const [vendordata, setVendordata] = useState([]);
+  const [selectedVendorId, setSelectedVendorId] = useState("");
+   
+  console.log(shiftData.bed_name)
   console.log(selectedStaff);
   console.log(dutyOptions);
 
   const { shiftId } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    fetchvendor(selectedVendorId);
     fetchShiftData(shiftId);
-  }, [shiftId]);
+  }, [shiftId, selectedVendorId]);
 
   const fetchShiftData = async (shiftId) => {
     try {
@@ -162,6 +169,28 @@ function ShiftRosterUpdate() {
     }
   }, [shiftData.staff_id]);
 
+  const fetchvendor = async (vendorId) => {
+    console.log(vendorId);
+
+    try {
+      const response = await fetch(
+        `${URLDevelopment}/api/shift/vendorsearch/${vendorId}`
+      );
+      const data = await response.json();
+      setVendordata(data);
+
+      console.log(data[0].name);
+    } catch (error) {
+      console.error("Error fetching vendor:", error);
+    }
+  };
+
+  const handleStaffChange = (selectedOption) => {
+    setSelectedStaff(selectedOption);
+    console.log(selectedOption.vendorid);
+    setSelectedVendorId(selectedOption.vendorid);
+  };
+
   const getFloorsSectionData = async (floor) => {
     try {
       const response = await fetch(
@@ -192,6 +221,7 @@ function ShiftRosterUpdate() {
   }, [shiftData.floor]);
 
   const getBedData = async (bed_no) => {
+    console.log(bed_no);
     try {
       const response = await fetch(
         `${URLDevelopment}/api/shift/rosterbed/${bed_no}`
@@ -214,15 +244,17 @@ function ShiftRosterUpdate() {
 
   useEffect(() => {
     if (shiftData.bed_id) {
+      console.log(shiftData.bed_id);
       getBedData(shiftData.bed_id);
       console.log(shiftData.bed_id);
     }
   }, [shiftData.bed_id]);
 
-  const getRoomData = async (room_no) => {
+  const getRoomData = async (id) => {
+    console.log(id);
     try {
       const response = await fetch(
-        `${URLDevelopment}/api/shift/rosterroom/${room_no}`
+        `${URLDevelopment}/api/shift/rosterroom/${id}`
       );
 
       if (!response.ok) {
@@ -233,7 +265,7 @@ function ShiftRosterUpdate() {
 
       setShiftData((prevState) => ({
         ...prevState,
-        bed_name: data[0].bed_number,
+        bed_name: data,
       }));
     } catch (error) {
       console.error("Error fetching shift data:", error);
@@ -241,11 +273,11 @@ function ShiftRosterUpdate() {
   };
 
   useEffect(() => {
-    if (shiftData.room_no) {
-      getRoomData(shiftData.room_no);
-      console.log(shiftData.room_no);
+    if (shiftData.id) {
+      getRoomData(shiftData.id);
+      console.log(shiftData.id);
     }
-  }, [shiftData.room_no]);
+  }, [shiftData.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -304,10 +336,6 @@ function ShiftRosterUpdate() {
     fetchEmployees();
   }, []);
 
-  const handleStaffChange = (selectedOption) => {
-    setSelectedStaff(selectedOption);
-  };
-
   // const handleDutyChange = (e) => {
   //   const newValue = e.target.value;
   //   setSelectedValue(newValue);
@@ -330,23 +358,42 @@ function ShiftRosterUpdate() {
     };
 
     try {
-      const response = await fetch(
-        `${URLDevelopment}/api/shiftallocation/floorallocationupdate/${shiftId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedData),
+      const result = await Swal.fire({
+        title: "Confirm Update",
+        text: "Are you sure you want to update this shift?",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, update it!",
+      });
+
+      if (result.isConfirmed) {
+        const response = await fetch(
+          `${URLDevelopment}/api/shiftallocation/floorallocationupdate/${shiftId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedData),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to update shift");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Failed to update shift");
+        console.log("Shift updated successfully!");
+        Swal.fire(
+          "Updated!",
+          "The shift has been updated successfully.",
+          "success"
+        );
+
+        // Navigate to shiftroster page
+        navigate("/shiftroster");
       }
-
-      console.log("Shift updated successfully!");
-      // ... rest of the code, e.g., show success message, redirect, etc.
     } catch (error) {
       console.error("Error updating shift:", error);
       // ... handle error, e.g., show error message to the user
@@ -354,49 +401,72 @@ function ShiftRosterUpdate() {
   };
 
   return (
-    <div className="container mx-auto">
-      <h1 className="my-5 text-3xl font-bold">Update Shift</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="branch_id">Branch Name:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="branch_id"
-              name="branch_id"
-              value={shiftData.branch_name}
-              onChange={handleChange}
-            />
-          </div>
+    <div className="w-screen h-screen bg-gray-100">
+      <div className="container mx-auto">
+        <Dashboard />
+        <div>
+          <h5 className="pt-44 subheading ">Staff Allocation Update</h5>
+        </div>
 
-          <div>
-            <label htmlFor="user_id">User ID:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
-              id="user_id"
-              name="user_id"
-              value={shiftData.user_id}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="room_no">Room No:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="room_no"
-              name="room_no"
-              value={shiftData.room_no}
-              onChange={handleChange}
-            />
-          </div>
+        <form onSubmit={handleSubmit}>
+          <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Branch Name:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="branch_id"
+              />
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="text"
+                id="branch_id"
+                name="branch_id"
+                value={shiftData.branch_name}
+                onChange={handleChange}
+              />
+            </div>
 
-          {/* <div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                User ID:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="user_id"
+              />
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="number"
+                id="user_id"
+                name="user_id"
+                value={shiftData.user_id}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Room No:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="room_no"
+              />
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="text"
+                id="room_no"
+                name="room_no"
+                value={shiftData.room_no}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* <div>
             <label htmlFor="duty_type_id">Duty Type:</label>
             <select
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
               id="duty_type_id"
               value={shiftData.duty_name}
               onChange={handleDutyChange}
@@ -412,37 +482,43 @@ function ShiftRosterUpdate() {
             {selectedContent && <div>Content for {selectedContent}</div>}
           </div> */}
 
-          <div>
-            <label htmlFor="duty_type_id">Duty Type:</label>
-            <select
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              id="duty_type_id"
-              onChange={handleDutyChange}
-            >
-              {/* <option value={shiftData.duty_name}>{shiftData.duty_name}</option> */}
-              {dutyOptions.map(
-                (option, index) =>
-                  //   <option key={option.id} value={option.id} selected>
-                  //     {option.duty_name}
-                  //   </option>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Duty Type:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="duty_type_id"
+              />
+              <select
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                id="duty_type_id"
+                onChange={handleDutyChange}
+              >
+                {/* <option value={shiftData.duty_name}>{shiftData.duty_name}</option> */}
+                {dutyOptions.map(
+                  (option, index) =>
+                    //   <option key={option.id} value={option.id} selected>
+                    //     {option.duty_name}
+                    //   </option>
 
-                  option.duty_name === shiftData.duty_name ? (
-                    <option key={option.id} value={option.id} selected>
-                      {option.duty_name}
-                    </option>
-                  ) : (
-                    <option key={option.id} value={option.id}>
-                      {option.duty_name}
-                    </option>
-                  )
-                //option.duty_name===shiftData.duty_name?(<option>test</option>):(<option>ttt</option>);
-              )}
-            </select>
+                    option.duty_name === shiftData.duty_name ? (
+                      <option key={option.id} value={option.id} selected>
+                        {option.duty_name}
+                      </option>
+                    ) : (
+                      <option key={option.id} value={option.id}>
+                        {option.duty_name}
+                      </option>
+                    )
+                  //option.duty_name===shiftData.duty_name?(<option>test</option>):(<option>ttt</option>);
+                )}
+              </select>
 
-            {/* {selectedContent && <div>Content for {selectedContent}</div>} */}
-          </div>
-          {/* <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+              {/* {selectedContent && <div>Content for {selectedContent}</div>} */}
+            </div>
+            {/* <input
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
               type="text"
               id="duty_type_id"
               name="duty_type_id"
@@ -450,72 +526,68 @@ function ShiftRosterUpdate() {
               onChange={handleChange}
             /> */}
 
-          <div>
-            <label htmlFor="bed_name">Bed No:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="bed_name"
-              name="bed_name"
-              value={shiftData.bed_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="floor">Floor No:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="floor"
-              name="floor"
-              value={shiftData.floor_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="section_id">Section ID:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="section_id"
-              name="section_id"
-              value={shiftData.section_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="staff_id">Staff ID:</label>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Bed No:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="bed_name"
+              />
 
-            <Select
-              className="flex-1 w-full h-10 mx-2 form-select"
-              name="staff"
-              value={selectedStaff}
-              onChange={handleStaffChange}
-              options={staffOptions}
-            />
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="text"
+                id="bed_name"
+                name="bed_name"
+                value={shiftData.bed_name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Floor No:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="floor"
+              />
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="text"
+                id="floor"
+                name="floor"
+                value={shiftData.floor_name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Section ID:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="section_id"
+              />
 
-            {/* <select>
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="text"
+                id="section_id"
+                name="section_id"
+                value={shiftData.section_name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Staff ID:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="staff_id"
+              />
 
-            
-              {staffOptions.map(
-              (options,index) => (
-                
-                     options.employee_id == shiftData.employee_id  ?  (             
-                      <option key={options.id} value={options.id} selected>
-                        {options.employee_id}</option>
-                     
-                      
-                     )  : (
-                       
-                      <option key={options.id} value={options.id}>
-                        {options.employee_id}</option>                                            
-                     )                                               
-              )
-                  )}    
-
-            </select> */}
-
-            {/* {staffOptions == null ? (
               <Select
                 className="flex-1 w-full h-10 mx-2 form-select"
                 name="staff"
@@ -523,78 +595,91 @@ function ShiftRosterUpdate() {
                 onChange={handleStaffChange}
                 options={staffOptions}
               />
-            ) : (
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Staff Source:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="staff_source"
+              />
+
+              <select
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                value={selectedVendorId}
+              >
+                <option value="">Vendor</option>
+                {vendordata.map((vdr) => (
+                  <option value={vdr.id} key={vdr.id}>
+                    {vdr.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Shift:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="shift"
+              />
+
               <input
-                className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 type="text"
-                id="staff_id"
-                name="staff_id"
-                value={shiftData.employee_id}
+                id="shift"
+                name="shift"
+                value={shiftData.shiftname}
                 onChange={handleChange}
               />
-            )} */}
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Staff Payable:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="staff_payable"
+              />
 
-            {/* <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="staff_id"
-              name="staff_id"
-              value={shiftData.employee_id}
-              onChange={handleChange}
-            /> */}
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="number"
+                id="staff_payable"
+                name="staff_payable"
+                value={shiftData.staff_payable}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-4">
+              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                Service Payable:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="service_payable"
+              />
+
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="number"
+                id="service_payable"
+                name="service_payable"
+                value={shiftData.service_payable}
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          <div>
-            <label htmlFor="staff_source">Staff Source:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="staff_source"
-              name="staff_source"
-              value={shiftData.staff_source}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="shift">Shift:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="text"
-              id="shift"
-              name="shift"
-              value={shiftData.shiftname}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="staff_payable">Staff Payable:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
-              id="staff_payable"
-              name="staff_payable"
-              value={shiftData.staff_payable}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="service_payable">Service Payable:</label>
-            <input
-              className="px-4 py-2 transition duration-300 border border-gray-300 rounded focus:border-transparent focus:outline-none focus:ring-4 focus:ring-blue-200"
-              type="number"
-              id="service_payable"
-              name="service_payable"
-              value={shiftData.service_payable}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-        <button
-          type="submit"
-          className="px-4 py-2 my-5 text-white bg-blue-500 rounded"
-        >
-          Update Shift
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="px-4 py-2 my-5 text-white bg-blue-500 rounded"
+          >
+            Update Shift
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

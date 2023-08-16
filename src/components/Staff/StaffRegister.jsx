@@ -9,15 +9,13 @@ function StaffRegister() {
         <Dashboard />
 
         <div>
-          <h5 className="pt-20 subheading">Staff Register</h5>
+          <h5 className="pt-24 subheading">Staff Register</h5>
         </div>
         <div>
-        
           <div class="flex flex-col md:flex-row">
-         
-          <div class="w-full flex-1 mx-2 svelte-1l8159u">
+            <div class="w-full flex-1 mx-2 svelte-1l8159u">
               <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
-               First Name
+                First Name
               </div>
               <div class="my-2  flex  svelte-1l8159u">
                 <input

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import { URLDevelopment } from "../utilities/Url";
+import { URLDevelopment } from "../../utilities/Url";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Dashboard from "./Dashboard";
-import { useNavigate } from "react-router-dom";
+import Dashboard from "../Dashboard";
 
-function DependentDropdown() {
+function Staffallocationbulkupdate() {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -32,8 +31,6 @@ function DependentDropdown() {
   const [payableInput, SetPayableInput] = useState([]);
   const [payable, setPayable] = useState([]);
   const [payVendorId, SetPayablevendorId] = useState([]);
-
-  const navigate = useNavigate();
 
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
   useEffect(() => {
@@ -127,7 +124,6 @@ function DependentDropdown() {
         `${URLDevelopment}/api/branches/getTowers?branch_id=${branchId}`
       );
       const data = await response.json();
-      console.log(data);
       setTowerInfo(data);
       console.log(data);
     } catch (error) {
@@ -393,9 +389,6 @@ function DependentDropdown() {
           showConfirmButton: false,
           timer: 1500,
         });
-
-        // Navigate to shiftroster page
-        navigate("/shiftroster");
       } else if (response.status === 204) {
         console.log(" already Record exists.");
         // Reset the form or clear the input fields if needed
@@ -429,18 +422,19 @@ function DependentDropdown() {
       });
     }
   };
+
   return (
     <div className="w-screen h-screen bg-gray-100 ">
       <div className="">
         <div className="container mx-auto lg:pl-60 xl:pl-20">
           <Dashboard />
           <div>
-            <h5 className="pt-44 subheading">Staff Duty Allocation</h5>
+            <h5 className="pt-44 subheading">Staff Duty Allocation Bulk Update</h5>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
               <div className="mb-4">
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   Country:
                 </div>
                 <label
@@ -467,7 +461,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   State:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="state" />
@@ -551,7 +545,7 @@ function DependentDropdown() {
                 >
                   <option value="">Select Branch Tower</option>
                   {towerInfo.map((tower) => (
-                    <option key={tower.id} value={tower.mfs_tower}>
+                    <option key={tower.id} value={tower.id}>
                       {tower.tower}
                     </option>
                   ))}
@@ -619,7 +613,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   Vendor:
                 </div>
                 <label
@@ -641,7 +635,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   Payable:
                 </div>
                 <label
@@ -661,7 +655,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   Duty:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="duty" />
@@ -681,7 +675,7 @@ function DependentDropdown() {
                 </select>
               </div>
               <div className="mb-4">
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   Shift:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="shift" />
@@ -721,4 +715,4 @@ function DependentDropdown() {
   );
 }
 
-export default DependentDropdown;
+export default Staffallocationbulkupdate;
