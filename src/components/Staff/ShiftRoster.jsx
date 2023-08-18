@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { URLDevelopment } from "../../utilities/Url";
 import Dashboard from "../Dashboard";
 import NavBar from "../Basic/NavBar";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import Swal from "sweetalert2";
 
 // const BootstrapDialog = styled(Dialog)(({ theme }) => ({
