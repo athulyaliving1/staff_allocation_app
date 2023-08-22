@@ -13,7 +13,7 @@ jobs:
     env:
       BUCKET: staff-allocation-web-server
       DIST: build
-      REGION: Asia Pacific (Mumbai) ap-south-1
+      REGION: ap-south-1
       DIST_ID: EJGF78HNQCEI4
 
     steps:
@@ -25,7 +25,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+          aws-region: ${{ env.REGION }}
 
       - name: Install Dependencies
         run: |
@@ -37,13 +37,12 @@ jobs:
 
       - name: Copy files to production website with the AWS CLI
         run: |
-          aws s3 sync --delete ${{ env.DIST_ID }} s3://${{ env.BUCKET }}
+          aws s3 sync --delete ${{ env.DIST }} s3://${{ env.BUCKET }}
 
-          - name: Invalidate CloudFront Cache
-          if: success()
-          run: |
-            aws cloudfront create-invalidation \
-              --distribution-id ${{ env.DIST_ID }} \
-              --paths "/*"
+      - name: Invalidate CloudFront Cache
+        if: success()
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.DIST_ID }} \
+            --paths "/*"
         shell: /usr/bin/bash -e {0}
-        
