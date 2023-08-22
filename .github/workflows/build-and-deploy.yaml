@@ -39,8 +39,10 @@ jobs:
         run: |
           aws s3 sync --delete EJGF78HNQCEI4 s3://staff-allocation-web-server
 
-      - name: Invalidate CloudFront Cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id EJGF78HNQCEI4 \
-            --paths "/*"
+          - name: Invalidate CloudFront Cache
+          if: success()
+          run: |
+            aws cloudfront create-invalidation \
+              --distribution-id EJGF78HNQCEI4 \
+              --paths "/*"
+        
