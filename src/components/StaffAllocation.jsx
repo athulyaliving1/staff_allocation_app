@@ -432,7 +432,7 @@ function DependentDropdown() {
   return (
     <div className="w-screen h-screen bg-gray-100 ">
       <div className="">
-        <div className="container mx-auto lg:pl-60 xl:pl-20">
+        <div className="container mx-auto lg:pl-60 xl:pl-60">
           <Dashboard />
           <div>
             <h5 className="pt-44 subheading">Staff Duty Allocation</h5>

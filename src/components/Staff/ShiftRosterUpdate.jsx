@@ -25,7 +25,7 @@ function ShiftRosterUpdate() {
     sectionname: "",
     floor_name: "",
     section_name: "",
-    bed_name: "",
+    bed_number: "",
   });
   const [dutyOptions, setDutyOptions] = useState([]);
   // const [selectedValue, setSelectedValue] = useState("");
@@ -34,9 +34,9 @@ function ShiftRosterUpdate() {
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [vendordata, setVendordata] = useState([]);
   const [selectedVendorId, setSelectedVendorId] = useState("");
-   
-  console.log(shiftData.bed_name)
-  console.log(selectedStaff);
+
+  console.log(shiftData.bed_number);
+  // console.log(selectedStaff);
   console.log(dutyOptions);
 
   const { shiftId } = useParams();
@@ -56,9 +56,9 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch shift data");
       }
       const data = await response.json();
-      console.log(data[0]);
+      // console.log(data[0]);
       setShiftData(data[0]);
-      console.log(data[0].branch_id);
+      // console.log(data[0].branch_id);
     } catch (error) {
       console.error("Error fetching shift data:", error);
     }
@@ -73,7 +73,7 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch branch data");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setShiftData((prevState) => ({
         ...prevState,
         branch_name: data[0].branch_name,
@@ -98,11 +98,11 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch branch data");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       setShiftData((prevState) => ({
         ...prevState,
-        duty_name: data[0].duty_name,
+        duty_type_id: data[0].duty_name,
       }));
     } catch (error) {
       console.error("Error fetching branch data:", error);
@@ -125,7 +125,7 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch shift data");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       setShiftData((prevState) => ({
         ...prevState,
@@ -152,7 +152,7 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch shift data");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       setShiftData((prevState) => ({
         ...prevState,
@@ -201,7 +201,7 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch shift data");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       setShiftData((prevState) => ({
         ...prevState,
@@ -232,10 +232,12 @@ function ShiftRosterUpdate() {
       }
       const data = await response.json();
       console.log(data);
+      console.log(data[0].bed_number);
 
       setShiftData((prevState) => ({
         ...prevState,
-        bed_name: data[0].bed_number,
+        bed_number: data[0].bed_number,
+        // bed_name:'C Block Bed 102',
       }));
     } catch (error) {
       console.error("Error fetching shift data:", error);
@@ -292,7 +294,7 @@ function ShiftRosterUpdate() {
       try {
         const response = await fetch(`${URLDevelopment}/api/floor/masterduty`);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setDutyOptions(data);
       } catch (error) {
         console.error("Error fetching duty options:", error);
@@ -320,7 +322,7 @@ function ShiftRosterUpdate() {
       try {
         const response = await fetch(`${URLDevelopment}/api/staff/staffsearch`);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         const staffOptions = data.map((staff) => ({
           employee_id: staff.id,
           value: staff.employee_id,
@@ -411,7 +413,7 @@ function ShiftRosterUpdate() {
         <form onSubmit={handleSubmit}>
           <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Branch Name:
               </div>
               <label
@@ -429,7 +431,7 @@ function ShiftRosterUpdate() {
             </div>
 
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 User ID:
               </div>
               <label
@@ -446,7 +448,7 @@ function ShiftRosterUpdate() {
               />
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Room No:
               </div>
               <label
@@ -483,7 +485,7 @@ function ShiftRosterUpdate() {
           </div> */}
 
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Duty Type:
               </div>
               <label
@@ -527,7 +529,7 @@ function ShiftRosterUpdate() {
             /> */}
 
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Bed No:
               </div>
               <label
@@ -540,12 +542,12 @@ function ShiftRosterUpdate() {
                 type="text"
                 id="bed_name"
                 name="bed_name"
-                value={shiftData.bed_name}
+                value={shiftData.bed_number}
                 onChange={handleChange}
               />
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Floor No:
               </div>
               <label
@@ -562,7 +564,7 @@ function ShiftRosterUpdate() {
               />
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Section ID:
               </div>
               <label
@@ -580,7 +582,7 @@ function ShiftRosterUpdate() {
               />
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Staff ID:
               </div>
               <label
@@ -594,10 +596,11 @@ function ShiftRosterUpdate() {
                 value={selectedStaff}
                 onChange={handleStaffChange}
                 options={staffOptions}
+                required
               />
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Staff Source:
               </div>
               <label
@@ -618,7 +621,7 @@ function ShiftRosterUpdate() {
               </select>
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Shift:
               </div>
               <label
@@ -636,7 +639,7 @@ function ShiftRosterUpdate() {
               />
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Staff Payable:
               </div>
               <label
@@ -654,7 +657,7 @@ function ShiftRosterUpdate() {
               />
             </div>
             <div className="mb-4">
-              <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Service Payable:
               </div>
               <label

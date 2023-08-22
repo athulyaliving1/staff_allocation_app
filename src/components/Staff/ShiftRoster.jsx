@@ -495,7 +495,7 @@ function ShiftRoster() {
           }
         );
 
-        if (response === 'Shift deleted') {
+        if (response === "Shift deleted") {
           // Successful deletion
           Swal.fire(
             "Deleted!",
@@ -520,7 +520,7 @@ function ShiftRoster() {
       <div className="">
         <div className="py-24 xl:py-36 pl-60">
           <div>
-            <h1 className=" pb-14 subheading">Daily Staff Duty Roster</h1>
+            <h1 className="pb-14 subheading">Daily Staff Duty Roster</h1>
           </div>
           <div className="border border-gray-200 rounded-lg shadow-md ">
             <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">

@@ -4,8 +4,9 @@ import { URLDevelopment } from "../../utilities/Url";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Dashboard from "../Dashboard";
+import { useNavigate } from "react-router-dom";
 
-function Staffallocationbulkupdate() {
+function DependentDropdown() {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -31,6 +32,8 @@ function Staffallocationbulkupdate() {
   const [payableInput, SetPayableInput] = useState([]);
   const [payable, setPayable] = useState([]);
   const [payVendorId, SetPayablevendorId] = useState([]);
+
+  const navigate = useNavigate();
 
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
   useEffect(() => {
@@ -124,6 +127,7 @@ function Staffallocationbulkupdate() {
         `${URLDevelopment}/api/branches/getTowers?branch_id=${branchId}`
       );
       const data = await response.json();
+      console.log(data);
       setTowerInfo(data);
       console.log(data);
     } catch (error) {
@@ -141,6 +145,8 @@ function Staffallocationbulkupdate() {
       );
       const data = await response.json();
       setFloorInfo(data);
+
+      console.log(data);
 
       // Logging branch_id values from the data array
       // data.forEach((item) => {
@@ -368,8 +374,8 @@ function Staffallocationbulkupdate() {
     });
 
     try {
-      const response = await axios.post(
-        `${URLDevelopment}/api/shiftallocation/floorallocation`,
+      const response = await axios.put(
+        `${URLDevelopment}/api/shiftallocation/floorallocationupdate`,
         jsonData, // Use the jsonData as the request body
         {
           headers: {
@@ -389,6 +395,9 @@ function Staffallocationbulkupdate() {
           showConfirmButton: false,
           timer: 1500,
         });
+
+        // Navigate to shiftroster page
+        navigate("/shiftroster");
       } else if (response.status === 204) {
         console.log(" already Record exists.");
         // Reset the form or clear the input fields if needed
@@ -422,19 +431,18 @@ function Staffallocationbulkupdate() {
       });
     }
   };
-
   return (
     <div className="w-screen h-screen bg-gray-100 ">
       <div className="">
-        <div className="container mx-auto lg:pl-60 xl:pl-20">
+        <div className="container mx-auto lg:pl-60 xl:pl-60">
           <Dashboard />
           <div>
-            <h5 className="pt-44 subheading">Staff Duty Allocation Bulk Update</h5>
+            <h5 className="pt-44 subheading">STAFF DUTY ALLOCATION BULK UPDATE</h5>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Country:
                 </div>
                 <label
@@ -461,7 +469,7 @@ function Staffallocationbulkupdate() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   State:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="state" />
@@ -545,7 +553,7 @@ function Staffallocationbulkupdate() {
                 >
                   <option value="">Select Branch Tower</option>
                   {towerInfo.map((tower) => (
-                    <option key={tower.id} value={tower.id}>
+                    <option key={tower.id} value={tower.mfs_tower}>
                       {tower.tower}
                     </option>
                   ))}
@@ -613,7 +621,7 @@ function Staffallocationbulkupdate() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Vendor:
                 </div>
                 <label
@@ -635,7 +643,7 @@ function Staffallocationbulkupdate() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Payable:
                 </div>
                 <label
@@ -655,7 +663,7 @@ function Staffallocationbulkupdate() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Duty:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="duty" />
@@ -675,7 +683,7 @@ function Staffallocationbulkupdate() {
                 </select>
               </div>
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Shift:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="shift" />
@@ -715,4 +723,4 @@ function Staffallocationbulkupdate() {
   );
 }
 
-export default Staffallocationbulkupdate;
+export default DependentDropdown;

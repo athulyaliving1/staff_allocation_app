@@ -107,7 +107,7 @@ function VendorRegistration({
           <p>Error: {error}</p>
         ) : (
           <div className="bg-gray-100 ">
-            <div className="container mx-auto lg:pl-60 xl:pl-20">
+            <div className="container mx-auto lg:pl-60 xl:pl-60">
               <Dashboard />
               <div>
                 <h5 className="pt-44 subheading">Vendor Registration</h5>

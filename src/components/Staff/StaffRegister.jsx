@@ -5,7 +5,7 @@ function StaffRegister() {
   return (
     <div className="bg-gray-100">
       StaffRegister
-      <div class="mt-8 p-4 container mx-auto lg:pl-60 xl:pl-20 ">
+      <div class="mt-8 p-4 container mx-auto lg:pl-60 xl:pl-60 ">
         <Dashboard />
 
         <div>
