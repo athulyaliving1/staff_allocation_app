@@ -43,6 +43,6 @@ jobs:
           if: success()
           run: |
             aws cloudfront create-invalidation \
-              --distribution-id  ${{env.DIST_ID}} \
-              --paths "/*"
+              --distribution-id ${{env.DIST_ID}} \
+              --paths "arn:aws:s3:::staff-allocation-web-server/*"
         
