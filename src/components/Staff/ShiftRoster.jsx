@@ -53,16 +53,11 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-
 const fetcher = async (url) => {
   const response = await fetch(url);
   const data = await response.json();
   return data;
 };
-
-
-
-
 
 function ShiftRoster({ initialData }) {
   // const [open, setOpen] = React.useState(false);
@@ -79,23 +74,16 @@ function ShiftRoster({ initialData }) {
   // const handleClose = () => setOpen(false);
   // const handleClickOpen = () => setOpen(true);
 
-
   const { data: shiftRoster, error } = useSWR(
     `${URLDevelopment}/api/shift/roster`,
     fetcher,
-    {
-      initialData: initialData,
-      refreshInterval: 5 * 1000, // Revalidate every 10 seconds
-    }
+    { initialData }
   );
-
-  console.log(shiftRoster);
 
   const { data: branchesData } = useSWR(
     `${URLDevelopment}/api/shift/masterbranches`,
     fetcher
   );
-// // Function to perform a mutation and trigger revalidation
 
   useEffect(() => {
     if (branchesData) {
@@ -748,20 +736,16 @@ function ShiftRoster({ initialData }) {
   );
 }
 
-
-
-
-export async function getServerSideProps() {
+export async function getStaticProps() {
+  // Fetch data from an API or any source
   const initialData = await fetcher(`${URLDevelopment}/api/shift/roster`);
+
   return {
-    props: { initialData },
+    props: {
+      initialData,
+    },
+    revalidate: 5, // Revalidate every 10 seconds
   };
 }
-
-
-
-
-
-
 
 export default ShiftRoster;

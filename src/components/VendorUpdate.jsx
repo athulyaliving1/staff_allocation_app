@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { updateVendor } from "../features/Action";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Dashboard from "./Dashboard";
 
 function VendorUpdate({ vendorData, updateVendor }) {
   const [vendor, setVendor] = useState(null);
@@ -42,7 +43,10 @@ function VendorUpdate({ vendorData, updateVendor }) {
   return (
     <div className="w-screen h-screen bg-gray-100">
       <div className="">
-        <h2 className="subheading">Update Vendor</h2>
+        <Dashboard />
+        <div>
+          <h5 className="pt-44 subheading ">Vendor Update</h5>
+        </div>
         <div className="container grid gap-6 py-5 mx-auto xl:grid-cols-6">
           {/* Render the form fields and populate them with existing vendor data */}
           <div>

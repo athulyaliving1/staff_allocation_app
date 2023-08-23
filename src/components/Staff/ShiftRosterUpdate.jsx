@@ -35,7 +35,7 @@ function ShiftRosterUpdate() {
   const [vendordata, setVendordata] = useState([]);
   const [selectedVendorId, setSelectedVendorId] = useState("");
 
-  console.log(shiftData.bed_number);
+  // console.log(shiftData.bed_number);
   // console.log(selectedStaff);
   console.log(dutyOptions);
 
@@ -90,6 +90,8 @@ function ShiftRosterUpdate() {
   }, [shiftData.branch_id]);
 
   const getMasterDutyData = async (masterId) => {
+
+    console.log(masterId);
     try {
       const response = await fetch(
         `${URLDevelopment}/api/shift/rostermasterduty/${masterId}`
@@ -102,18 +104,19 @@ function ShiftRosterUpdate() {
 
       setShiftData((prevState) => ({
         ...prevState,
-        duty_type_id: data[0].duty_name,
+        duty_type_id: data[0].id,
       }));
     } catch (error) {
       console.error("Error fetching branch data:", error);
     }
   };
 
-  useEffect(() => {
-    if (shiftData.duty_type_id) {
-      getMasterDutyData(shiftData.duty_type_id);
-    }
-  }, [shiftData.duty_type_id]);
+  // useEffect(() => {
+  //   if (shiftData.duty_type_id) {
+      
+  //     getMasterDutyData(shiftData.duty_type_id);
+  //   }
+  // }, [shiftData.duty_type_id]);
 
   const getMasterShiftData = async (shift) => {
     try {
@@ -216,7 +219,7 @@ function ShiftRosterUpdate() {
   useEffect(() => {
     if (shiftData.floor) {
       getFloorsSectionData(shiftData.floor);
-      console.log(shiftData.floor);
+      // console.log(shiftData.floor);
     }
   }, [shiftData.floor]);
 
@@ -231,7 +234,7 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch bed data");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       console.log(data[0].bed_number);
 
       setShiftData((prevState) => ({
@@ -246,14 +249,14 @@ function ShiftRosterUpdate() {
 
   useEffect(() => {
     if (shiftData.bed_id) {
-      console.log(shiftData.bed_id);
+      // console.log(shiftData.bed_id);
       getBedData(shiftData.bed_id);
-      console.log(shiftData.bed_id);
+      // console.log(shiftData.bed_id);
     }
   }, [shiftData.bed_id]);
 
   const getRoomData = async (id) => {
-    console.log(id);
+    // console.log(id);
     try {
       const response = await fetch(
         `${URLDevelopment}/api/shift/rosterroom/${id}`
@@ -263,7 +266,7 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch bed data");
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
       setShiftData((prevState) => ({
         ...prevState,
@@ -277,7 +280,7 @@ function ShiftRosterUpdate() {
   useEffect(() => {
     if (shiftData.id) {
       getRoomData(shiftData.id);
-      console.log(shiftData.id);
+      // console.log(shiftData.id);
     }
   }, [shiftData.id]);
 
@@ -311,8 +314,10 @@ function ShiftRosterUpdate() {
     // Update shiftData
     setShiftData((prevState) => ({
       ...prevState,
-      duty_name: newValue,
+      duty_type_id: newValue,
     }));
+    console.log(newValue);
+    getMasterDutyData(newValue);
   };
 
   console.log("dutyOptions:", dutyOptions);
@@ -353,7 +358,7 @@ function ShiftRosterUpdate() {
 
     // Create a new object with the fields to be updated
     const updatedData = {
-      duty: shiftData.duty_name,
+      duty: shiftData.duty_type_id,
       staff_id: selectedStaff.employee_id,
       staff_payable: shiftData.staff_payable,
       service_payable: shiftData.service_payable,
@@ -500,19 +505,20 @@ function ShiftRosterUpdate() {
                 {/* <option value={shiftData.duty_name}>{shiftData.duty_name}</option> */}
                 {dutyOptions.map(
                   (option, index) =>
-                    //   <option key={option.id} value={option.id} selected>
-                    //     {option.duty_name}
-                    //   </option>
-
-                    option.duty_name === shiftData.duty_name ? (
                       <option key={option.id} value={option.id} selected>
                         {option.duty_name}
                       </option>
-                    ) : (
-                      <option key={option.id} value={option.id}>
-                        {option.duty_name}
-                      </option>
-                    )
+
+                    // option.duty_name === shiftData.duty_name ? (
+                    //   <option key={option.id} value={option.id} selected>
+                    //     {option.duty_name}
+                    //   </option>
+                    // ) : (
+                    //   <option key={option.id} value={option.id}>
+                    //     {option.duty_name}
+                    //   </option>
+                    // )
+                    
                   //option.duty_name===shiftData.duty_name?(<option>test</option>):(<option>ttt</option>);
                 )}
               </select>
