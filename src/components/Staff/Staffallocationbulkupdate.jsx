@@ -375,7 +375,7 @@ function DependentDropdown() {
 
     try {
       const response = await axios.put(
-        `${URLDevelopment}/api/shiftallocation/floorallocationupdate`,
+        `${URLDevelopment}/api/shiftallocation/floorallocationbulkupdate`,
         jsonData, // Use the jsonData as the request body
         {
           headers: {
