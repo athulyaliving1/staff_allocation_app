@@ -53,7 +53,18 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function ShiftRoster() {
+
+const fetcher = async (url) => {
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+};
+
+
+
+
+
+function ShiftRoster({ initialData }) {
   // const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   // State to store the branches data
@@ -68,39 +79,23 @@ function ShiftRoster() {
   // const handleClose = () => setOpen(false);
   // const handleClickOpen = () => setOpen(true);
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data);
-    return data;
-  };
 
-  // UseSWR to fetch initial data and set up revalidations
   const { data: shiftRoster, error } = useSWR(
     `${URLDevelopment}/api/shift/roster`,
     fetcher,
     {
-      refreshInterval: 10000, // Revalidate every 60 seconds
+      initialData: initialData,
+      refreshInterval: 5 * 1000, // Revalidate every 10 seconds
     }
   );
+
+  console.log(shiftRoster);
 
   const { data: branchesData } = useSWR(
     `${URLDevelopment}/api/shift/masterbranches`,
     fetcher
   );
-
-  // // Function to perform a mutation and trigger revalidation
-  // const performMutationAndUpdate = async () => {
-  //   // Perform your mutation on the server
-  //   // ...
-
-  //   // After the mutation, trigger a re-fetch and update the data using 'mutate'
-  //   const url = `${URLDevelopment}/api/shift/roster`;
-  //   await mutate(url); // This will fetch and update the data for the specified URL
-  // };
-
-  // // Call the mutation function when your component mounts or as needed
-  // performMutationAndUpdate();
+// // Function to perform a mutation and trigger revalidation
 
   useEffect(() => {
     if (branchesData) {
@@ -484,8 +479,9 @@ function ShiftRoster() {
       });
 
       if (result.isConfirmed) {
-        const response = await fetch(
+        const apiresponse = await fetch(
           `${URLDevelopment}/api/shift/shiftrosterdelete/${shiftId}`,
+
           {
             method: "DELETE",
             headers: {
@@ -495,7 +491,9 @@ function ShiftRoster() {
           }
         );
 
-        if (response === "Shift deleted") {
+        console.log(apiresponse);
+
+        if (apiresponse.response.status === "Shift deleted") {
           // Successful deletion
           Swal.fire(
             "Deleted!",
@@ -749,5 +747,21 @@ function ShiftRoster() {
     </div>
   );
 }
+
+
+
+
+export async function getServerSideProps() {
+  const initialData = await fetcher(`${URLDevelopment}/api/shift/roster`);
+  return {
+    props: { initialData },
+  };
+}
+
+
+
+
+
+
 
 export default ShiftRoster;
