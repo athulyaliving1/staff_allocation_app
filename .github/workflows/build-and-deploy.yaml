@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      BUCKET: staff-allocation-web-server
+      BUCKET: athulyaseniorliving.in
       DIST: build
       REGION: ap-south-1
-      DIST_ID: EJGF78HNQCEI4
+      DIST_ID: EFN7DK67YHZ1U
 
     steps:
       - name: Checkout
