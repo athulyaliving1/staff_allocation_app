@@ -30,10 +30,10 @@ const Menu = (props) => {
               <li key={idx}>
                 <a
                   href={item.href}
-                  className="flex items-center p-2 text-gray-600 duration-150 rounded-lg gap-x-2 hover:bg-white active:bg-gray-100"
+                  className="flex items-center p-2 text-white duration-150 rounded-lg gap-x-2 hover:bg-text-gray-600 active:bg-gray-100"
                 >
                   {item.icon ? (
-                    <div className="text-gray-500">{item.icon}</div>
+                    <div className="text-white">{item.icon}</div>
                   ) : (
                     ""
                   )}
@@ -223,8 +223,8 @@ const Dashboard = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-56 h-full space-y-8 border-r bg-[#F1F6F9] xl:mt-28 lg:mt-20 shadow-2xl">
-        <div class="flex flex-col h-full px-4">
+      <nav className="fixed top-0 left-0 w-56 h-screen space-y-8 border-r shadow-2xl bg-primary">
+        <div class="flex flex-col h-screen px-4 bg-primary xl:mt-32 lg:mt-20 ">
           {/* <div className="flex items-center h-20 pl-2">
             <div className="flex items-center w-full gap-x-4">
               <img
@@ -308,9 +308,9 @@ const Dashboard = () => {
                 <li key={idx}>
                   <a
                     href={item.href}
-                    className="flex items-center p-2 text-gray-600 duration-150 rounded-lg gap-x-2 hover:bg-gray-200 active:bg-white"
+                    className="flex items-center p-2 text-white duration-150 rounded-lg gap-x-2 hover:bg-gray-500 active:bg-white"
                   >
-                    <div className="text-gray-500">{item.icon}</div>
+                    <div className="text-white">{item.icon}</div>
                     {item.name}
                   </a>
                 </li>

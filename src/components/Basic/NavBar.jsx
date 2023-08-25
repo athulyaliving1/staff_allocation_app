@@ -4,10 +4,10 @@ function NavBar() {
   return (
     <div>
       <div className="">
-        <div className="fixed z-10 hidden w-full bg-[#F1F6F9] shadow-xl md:block ">
-          <div className="container flex mx-auto justify-items-start ">
+        <div className="fixed z-10 hidden w-full shadow-xl bg-primary md:block ">
+          <div className="p-5">
             <img
-              className="w-5/12 xl:w-1/12 2xl:h-4/6 desktop:w-2/12 md:w-2/12 lg:w-2/12 "
+              className="w-5/12 bg-white rounded-md xl:w-2/12 2xl:h-5/6 desktop:w-1/12 md:w-2/12 lg:w-2/12"
               src="https://www.athulyahomecare.com/lp/ophthalmology/Assest/logo.png"
               alt="logo"
             />

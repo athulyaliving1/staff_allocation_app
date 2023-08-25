@@ -53,13 +53,7 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-const fetcher = async (url) => {
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
-};
-
-function ShiftRoster({ initialData }) {
+function ShiftRoster() {
   // const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   // State to store the branches data
@@ -74,10 +68,20 @@ function ShiftRoster({ initialData }) {
   // const handleClose = () => setOpen(false);
   // const handleClickOpen = () => setOpen(true);
 
+  const fetcher = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  };
+
+  // UseSWR to fetch initial data and set up revalidations
   const { data: shiftRoster, error } = useSWR(
     `${URLDevelopment}/api/shift/roster`,
     fetcher,
-    { initialData }
+    {
+      refreshInterval: 5000, // Revalidate every 60 seconds
+    }
   );
 
   const { data: branchesData } = useSWR(
@@ -686,9 +690,9 @@ function ShiftRoster({ initialData }) {
                       </span>
                     </td>
 
-                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
+                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack ">
                       <button
-                        className="w-full px-5 py-2 mt-4 shadow-lg xl:text-xl primary-button rounded-xl"
+                        className="  tertiary-button"
                         onClick={() => handleUpdateShiftRoster(shift.id)}
                       >
                         Edit
@@ -696,7 +700,7 @@ function ShiftRoster({ initialData }) {
 
                       <button
                         onClick={() => handleDeleteShiftRoster(shift.id)}
-                        className="w-full px-5 py-2 mt-4 shadow-lg xl:text-xl primary-button rounded-xl"
+                        className=" secondary-button "
                       >
                         Delete
                       </button>
@@ -734,18 +738,6 @@ function ShiftRoster({ initialData }) {
       </div>
     </div>
   );
-}
-
-export async function getStaticProps() {
-  // Fetch data from an API or any source
-  const initialData = await fetcher(`${URLDevelopment}/api/shift/roster`);
-
-  return {
-    props: {
-      initialData,
-    },
-    revalidate: 5, // Revalidate every 10 seconds
-  };
 }
 
 export default ShiftRoster;

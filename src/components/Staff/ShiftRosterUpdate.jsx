@@ -37,7 +37,7 @@ function ShiftRosterUpdate() {
 
   // console.log(shiftData.bed_number);
   // console.log(selectedStaff);
-  console.log(dutyOptions);
+  console.log(shiftData.duty_type_id);
 
   const { shiftId } = useParams();
   const navigate = useNavigate();
@@ -46,6 +46,12 @@ function ShiftRosterUpdate() {
     fetchvendor(selectedVendorId);
     fetchShiftData(shiftId);
   }, [shiftId, selectedVendorId]);
+
+
+  
+
+
+
 
   const fetchShiftData = async (shiftId) => {
     try {
@@ -90,7 +96,6 @@ function ShiftRosterUpdate() {
   }, [shiftData.branch_id]);
 
   const getMasterDutyData = async (masterId) => {
-
     console.log(masterId);
     try {
       const response = await fetch(
@@ -100,8 +105,8 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch branch data");
       }
       const data = await response.json();
-      // console.log(data);
-
+      console.log(data);
+      console.log(data[0].id);
       setShiftData((prevState) => ({
         ...prevState,
         duty_type_id: data[0].id,
@@ -113,7 +118,7 @@ function ShiftRosterUpdate() {
 
   // useEffect(() => {
   //   if (shiftData.duty_type_id) {
-      
+
   //     getMasterDutyData(shiftData.duty_type_id);
   //   }
   // }, [shiftData.duty_type_id]);
@@ -358,7 +363,7 @@ function ShiftRosterUpdate() {
 
     // Create a new object with the fields to be updated
     const updatedData = {
-      duty: shiftData.duty_type_id,
+      duty_type_id: shiftData.duty_type_id,
       staff_id: selectedStaff.employee_id,
       staff_payable: shiftData.staff_payable,
       service_payable: shiftData.service_payable,
@@ -489,50 +494,26 @@ function ShiftRosterUpdate() {
             {selectedContent && <div>Content for {selectedContent}</div>}
           </div> */}
 
-            <div className="mb-4">
+<div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
-                Duty Type:
+                Staff ID:
               </div>
               <label
                 className="block mb-2 text-sm text-gray-600"
-                htmlFor="duty_type_id"
+                htmlFor="staff_id"
               />
-              <select
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                id="duty_type_id"
-                onChange={handleDutyChange}
-              >
-                {/* <option value={shiftData.duty_name}>{shiftData.duty_name}</option> */}
-                {dutyOptions.map(
-                  (option, index) =>
-                      <option key={option.id} value={option.id} selected>
-                        {option.duty_name}
-                      </option>
 
-                    // option.duty_name === shiftData.duty_name ? (
-                    //   <option key={option.id} value={option.id} selected>
-                    //     {option.duty_name}
-                    //   </option>
-                    // ) : (
-                    //   <option key={option.id} value={option.id}>
-                    //     {option.duty_name}
-                    //   </option>
-                    // )
-                    
-                  //option.duty_name===shiftData.duty_name?(<option>test</option>):(<option>ttt</option>);
-                )}
-              </select>
-
-              {/* {selectedContent && <div>Content for {selectedContent}</div>} */}
+              <Select
+                className="flex-1 w-full h-10 mx-2 form-select"
+                name="staff"
+                value={selectedStaff}
+                onChange={handleStaffChange}
+                options={staffOptions}
+                required
+              />
             </div>
-            {/* <input
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              type="text"
-              id="duty_type_id"
-              name="duty_type_id"
-              value={shiftData.duty_name}
-              onChange={handleChange}
-            /> */}
+
+          
 
             <div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
@@ -587,24 +568,60 @@ function ShiftRosterUpdate() {
                 onChange={handleChange}
               />
             </div>
+            
             <div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
-                Staff ID:
+                Duty Type:
               </div>
               <label
                 className="block mb-2 text-sm text-gray-600"
-                htmlFor="staff_id"
+                htmlFor="duty_type_id"
               />
+              <select
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                id="duty_type_id"
+                onChange={handleDutyChange}
+              >
+                <option value="">Select Duty</option>
+                {dutyOptions.map((duty) => (
+                  <option value={duty.id} key={duty.id}>
+                    {duty.duty_name}
+                  </option>
+                ))}
 
-              <Select
-                className="flex-1 w-full h-10 mx-2 form-select"
-                name="staff"
-                value={selectedStaff}
-                onChange={handleStaffChange}
-                options={staffOptions}
-                required
-              />
+                {/* <option value={shiftData.duty_name}>{shiftData.duty_name}</option>
+                {dutyOptions.map(
+                  (option, index) =>
+                      // <option key={option.id} value={option.id} selected>
+                      //   {option.duty_name}
+                      // </option>
+
+                    option.duty_name === shiftData.duty_name ? (
+                      <option key={option.id} value={option.id} selected>
+                        {option.duty_name}
+                      </option>
+                    ) : (
+                      <option key={option.id} value={option.id}>
+                        {option.duty_name}
+                      </option>
+                    )
+                    
+                  //option.duty_name===shiftData.duty_name?(<option>test</option>):(<option>ttt</option>);
+                )} */}
+              </select>
+
+              {/* {selectedContent && <div>Content for {selectedContent}</div>} */}
             </div>
+            {/* <input
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              type="text"
+              id="duty_type_id"
+              name="duty_type_id"
+              value={shiftData.duty_name}
+              onChange={handleChange}
+            /> */}
+
+
             <div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Staff Source:
