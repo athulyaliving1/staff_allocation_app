@@ -5,55 +5,51 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Dashboard from "./Dashboard";
 import { useNavigate } from "react-router-dom";
+import { fetchStaff } from "./../features/Action";
 
-function DependentDropdown() {
+function Staffnurseallocation() {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [dutyMaster, setDutyMaster] = useState([]);
+  const [branchLocations, setBranchLocations] = useState([]);
+  const [towerInfo, setTowerInfo] = useState([]);
+  const [floorId, setFloorId] = useState("");
+  const [floorInfo, setFloorInfo] = useState([]);
+  const [locationId, setLocationId] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [towerId, setTowerId] = useState("");
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [staffOptions, setStaffOptions] = useState([]);
-  const [shiftOptions, setShiftOptions] = useState([]);
-  const [branchLocations, setBranchLocations] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
-  const [locationId, setLocationId] = useState("");
-  const [towerInfo, setTowerInfo] = useState([]);
-  const [floorInfo, setFloorInfo] = useState([]);
-  const [floorId, setFloorId] = useState("");
-  const [towerId, setTowerId] = useState("");
-  const [sectionId, setSectionId] = useState("");
-  const [sectioninfo, setSectionInfo] = useState([]);
-  const [selectedDuty, setSelectedDuty] = useState("");
-  const [selectedShift, setSelectedShift] = useState("");
   const [selectedVendorId, setSelectedVendorId] = useState("");
-  const [vendordata, setVendordata] = useState([]);
   const [payableInput, SetPayableInput] = useState([]);
   const [payable, setPayable] = useState([]);
   const [payVendorId, SetPayablevendorId] = useState([]);
+  const [vendordata, setVendordata] = useState([]);
+  const [selectedShift, setSelectedShift] = useState("");
+  const [shiftOptions, setShiftOptions] = useState([]);
+  const [selectedDuty, setSelectedDuty] = useState("");
+  const [servicePayable, setServicePayable] = useState("");
+  const [staffRole, setStaffRole] = useState([]);
+  const [selectedRoles, setSelectedRoles] = useState("");
 
   const navigate = useNavigate();
 
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
   useEffect(() => {
     fetchCountries();
-    fetchDutyMaster();
     fetchEmployees();
-    fetchShifts();
     fetchBranchesTower();
+    fetchShifts();
     fetchFloorInfo(locationId);
-    fetchSectionInfo(floorId, locationId);
     fetchvendor(selectedVendorId);
-    // Pass locationId as a parameter to fetchFloorInfo
-  }, [locationId, floorId, selectedVendorId]);
+    fetchDutyMaster();
+    fetchStaffRole();
 
-  // useEffect(() => {
-  //   // Check if floorId and locationId are not empty before calling fetchSectionInfo
-  //   if (floorId && locationId) {
-  //     fetchSectionInfo(floorId, locationId); // Pass floorId and locationId as parameters to fetchSectionInfo
-  //   }
-  // }, [floorId, locationId]);
+    // Pass locationId as a parameter to fetchFloorInfo
+  }, [locationId, selectedVendorId, selectedRoles]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
 
@@ -158,37 +154,6 @@ function DependentDropdown() {
     }
   };
 
-  //---------------------------------------------------------------Section data Fetching--------------------------------------------------------------------
-
-  const fetchSectionInfo = async (floorId, branchId) => {
-    console.log(floorId);
-    console.log(branchId);
-    try {
-      const response = await fetch(
-        `${URLDevelopment}/api/branches/section/${branchId}/${floorId}`
-      );
-      const data = await response.json();
-      console.log("API Response:", data); // Log the response data to see its structure
-      setSectionInfo(data); // Make sure data is an array with 'section' property
-    } catch (error) {
-      console.error("Error fetching floor info:", error);
-    }
-  };
-
-  //---------------------------------------------------------------DutyMaster data Fetching--------------------------------------------------------------------
-
-  const fetchDutyMaster = async () => {
-    try {
-      const response = await fetch(`${URLDevelopment}/api/floor/masterduty`);
-      const data = await response.json();
-      setDutyMaster(data);
-
-      console.log(data);
-    } catch (error) {
-      console.error("Error fetching master duty:", error);
-    }
-  };
-
   //---------------------------------------------------------------fetchEmployees data Fetching--------------------------------------------------------------------
 
   const fetchEmployees = async () => {
@@ -196,36 +161,22 @@ function DependentDropdown() {
       const response = await fetch(`${URLDevelopment}/api/staff/staffsearch`);
       const data = await response.json();
       console.log(data);
+    
       const staffOptions = data.map((staff) => ({
         value: staff.employee_id,
         label: `${staff.employee_id} - ${staff.full_name}`,
         vendorid: `${staff.vendor_id}`,
       }));
       setStaffOptions(staffOptions);
+      setSelectedRoles(staffOptions);
+      fetchStaffRole(1)
+      console(staffOptions.employee_id);
+    
+      console.log(data[0].id);
     } catch (error) {
       console.error("Error fetching staffs:", error);
     }
   };
-
-  //---------------------------------------------------------------Fetchshift data Fetching--------------------------------------------------------------------
-
-  const fetchShifts = async () => {
-    try {
-      const response = await fetch(`${URLDevelopment}/api/shift/shiftsearch`);
-      const data = await response.json();
-  
-      const shiftedData = data.map((shift) => ({
-        ...shift,
-        combinedDescription: `${shift.shift_name} - ${shift.description}`
-      }));
-  
-      setShiftOptions(shiftedData);
-      console.log(shiftedData);
-    } catch (error) {
-      console.log("Error fetching shifts:", error);
-    }
-  };
-  
 
   const fetchvendor = async (vendorId) => {
     console.log(vendorId);
@@ -243,6 +194,55 @@ function DependentDropdown() {
       console.log(data[0].name);
     } catch (error) {
       console.error("Error fetching vendor:", error);
+    }
+  };
+
+  const fetchStaffRole = async (staffRoleId) => {
+    console.log(staffRoleId);
+    try {
+      const response = await fetch(
+        `${URLDevelopment}/api/staff/staffrole/${staffRoleId}`
+      );
+      const data = await response.json();
+      console.log(data);
+      const staffRoledata = data.map((staff) => ({
+        value: staff.role,
+      }));
+
+      setStaffRole(staffRoledata);
+    } catch (error) {
+      console.error("Error fetching staffs:", error);
+    }
+  };
+
+  //---------------------------------------------------------------Fetchshift data Fetching--------------------------------------------------------------------
+
+  const fetchShifts = async () => {
+    try {
+      const response = await fetch(`${URLDevelopment}/api/shift/shiftsearch`);
+      const data = await response.json();
+
+      const shiftedData = data.map((shift) => ({
+        ...shift,
+        combinedDescription: `${shift.shift_name} - ${shift.description}`,
+      }));
+
+      setShiftOptions(shiftedData);
+      console.log(shiftedData);
+    } catch (error) {
+      console.log("Error fetching shifts:", error);
+    }
+  };
+
+  const fetchDutyMaster = async () => {
+    try {
+      const response = await fetch(`${URLDevelopment}/api/floor/masterduty`);
+      const data = await response.json();
+      setDutyMaster(data);
+
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching master duty:", error);
     }
   };
 
@@ -299,50 +299,20 @@ function DependentDropdown() {
     const branchId = locationId; // Use the selected locationId as the branchId
 
     setFloorId(floorId);
-    fetchSectionInfo(floorId, branchId); // Fetch section info with the selected floorId and branchId
 
     console.log(branchId);
     console.log(floorId);
   };
 
-  // ...existing code...
+  //--------------------------------------------------------------- Staff Section Id --------------------------------------------------------------------------------
+  const handleStaffChange = async (selectedOption) => {
+    setSelectedStaff(selectedOption);
+    console.log(selectedOption.vendorid);
+    setSelectedVendorId(selectedOption.vendorid);
 
-  //--------------------------------------------------------------- Get Duty Id --------------------------------------------------------------------------------
-  const handleDutyChange = (e) => {
-    const dutyId = e.target.value;
-    setSelectedDuty(dutyId);
-    console.log(dutyId);
+    await fetchStaffRole(selectedOption.value);
+    setSelectedRoles(""); 
   };
-
-  //--------------------------------------------------------------- Get Shift Id --------------------------------------------------------------------------------
-  const handleShiftChange = (e) => {
-    const shiftId = e.target.value;
-    setSelectedShift(shiftId);
-    console.log(shiftId);
-  };
-
-  // ...existing code...
-
-  //--------------------------------------------------------------- Get Section Id --------------------------------------------------------------------------------
-  const handleSectionChange = (e) => {
-    const floorId = e.target.value;
-    // const branchId = e.target.value;
-    setSectionId(floorId); // Update the sectionId state with the selected floorId
-    // fetchBranchLocations(branchId);
-
-    // Fetch section information based on the selected floorId and branchId
-    // fetchSectionInfo(floorId);
-
-    // Assuming locationId is the selected branchId
-
-    console.log(floorId);
-  };
-
-  // const handleVendorChange = (e) => {
-  //   const vendorId = e.target.value;
-  //   setSelectedVendorId(vendorId); // Update the selectedVendorId state with the selected vendorId
-  //   console.log(vendorId); // Log the selected vendorId
-  // };
 
   const handleChange = (e) => {
     // If payableInput is "Athulya", set the value to "0", otherwise use the user's input
@@ -350,11 +320,18 @@ function DependentDropdown() {
     setPayable(inputValue);
   };
 
-  //--------------------------------------------------------------- Staff Section Id --------------------------------------------------------------------------------
-  const handleStaffChange = (selectedOption) => {
-    setSelectedStaff(selectedOption);
-    console.log(selectedOption.vendorid);
-    setSelectedVendorId(selectedOption.vendorid);
+  //--------------------------------------------------------------- Get Shift Id --------------------------------------------------------------------------------
+
+  const handleShiftChange = (e) => {
+    const shiftId = e.target.value;
+    setSelectedShift(shiftId);
+    console.log(shiftId);
+  };
+
+  const handleDutyChange = (e) => {
+    const dutyId = e.target.value;
+    setSelectedDuty(dutyId);
+    console.log(dutyId);
   };
 
   const handleSubmit = async (e) => {
@@ -362,14 +339,15 @@ function DependentDropdown() {
 
     const formData = new FormData();
     formData.append("branch_id", locationId);
-    formData.append("tower", towerId);
+    // formData.append("tower", towerId);
     formData.append("floor", floorId);
-    formData.append("section", sectionId);
     formData.append("duty", selectedDuty); // Replace with the actual duty type value
     formData.append("emp_id", selectedStaff.value);
     formData.append("shift", selectedShift); // Replace with the actual shift name value
     formData.append("vendor", payVendorId);
-    formData.append("staff_payable", payableInput);
+    formData.append("staff_payable", 1000);
+    formData.append("service_payable", servicePayable);
+    formData.append("staff_source", payableInput);
 
     // Convert formData to a regular JSON object
     const jsonData = {};
@@ -379,7 +357,7 @@ function DependentDropdown() {
 
     try {
       const response = await axios.post(
-        `${URLDevelopment}/api/shiftallocation/floorallocation`,
+        `${URLDevelopment}/api/shiftallocation/staffnurseallocation`,
         jsonData, // Use the jsonData as the request body
         {
           headers: {
@@ -387,6 +365,8 @@ function DependentDropdown() {
           },
         }
       );
+
+      console.log(jsonData);
 
       if (response.status === 200) {
         console.log("Data inserted successfully");
@@ -401,7 +381,7 @@ function DependentDropdown() {
         });
 
         // Navigate to shiftroster page
-        navigate("/shiftroster");
+        navigate("/staffnurseroster");
       } else if (response.status === 204) {
         console.log(" already Record exists.");
         // Reset the form or clear the input fields if needed
@@ -436,16 +416,15 @@ function DependentDropdown() {
     }
   };
 
-
-  
   return (
-    <div className="w-screen h-screen bg-gray-100">
+    <div className="w-screen h-screen bg-gray-100 ">
       <div className="">
         <div className="container mx-auto lg:pl-60 xl:pl-60">
           <Dashboard />
           <div>
-            <h5 className="pt-44 subheading">Staff Duty Allocation</h5>
+            <h5 className="pt-44 subheading">Staff Nurse Allocation</h5>
           </div>
+
           <form onSubmit={handleSubmit}>
             <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
               <div className="mb-4">
@@ -522,6 +501,7 @@ function DependentDropdown() {
                   ))}
                 </select>
               </div>
+
               <div className="mb-4">
                 <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   Branch:
@@ -590,30 +570,6 @@ function DependentDropdown() {
 
               <div className="mb-4">
                 <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
-                  Section:
-                </div>
-                <label
-                  className="block mb-2 text-sm font-xl"
-                  htmlFor="section"
-                />
-
-                <select
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                  value={sectionId}
-                  onChange={handleSectionChange}
-                  id="section"
-                >
-                  <option value="">Select Branch Floor</option>
-                  {sectioninfo.map((sec) => (
-                    <option key={sec.id} value={sec.section}>
-                      {sec.section}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
                   Staff:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="staff" />
@@ -626,7 +582,6 @@ function DependentDropdown() {
                   options={staffOptions}
                 />
               </div>
-
               <div className="mb-4">
                 <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Vendor:
@@ -655,18 +610,55 @@ function DependentDropdown() {
                 </div>
                 <label
                   className="block mb-2 text-sm font-xl"
-                  htmlFor="staffpayable"
+                  htmlFor="staff_source"
                 />
 
                 <input
                   placeholder="type here"
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 "
                   type="text"
-                  name="staffpayable"
+                  name="staff_source"
                   disabled={payableInput === "Athulya"}
                   value={payable}
                   onChange={handleChange}
                 />
+              </div>
+
+              <div>
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                  Service Payable:
+                </div>
+                <label
+                  className="block mb-2 text-sm font-xl"
+                  htmlFor="servicepayable"
+                />
+                <input
+                  placeholder="type here"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 "
+                  type="text"
+                  name="servicepayable"
+                  value={servicePayable}
+                  onChange={(e) => setServicePayable(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                  Role:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="role" />
+
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  value={selectedRoles} // Use selectedRoles to display the roles
+                >
+                  <option value="">Select Role</option>
+                  {staffRole.map((role) => (
+                    <option value={role.value} key={role.value}>
+                      {role.value}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="mb-4">
@@ -704,13 +696,12 @@ function DependentDropdown() {
                   <option value="">Select Shift</option>
                   {shiftOptions.map((shift) => (
                     <option value={shift.id} key={shift.id}>
-                    {shift.combinedDescription}
+                      {shift.combinedDescription}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
-
             <div className="flex justify-center">
               <div>
                 <button
@@ -730,4 +721,4 @@ function DependentDropdown() {
   );
 }
 
-export default DependentDropdown;
+export default Staffnurseallocation;

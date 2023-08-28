@@ -13,12 +13,15 @@ import ShiftRosterUpdate from "./components/Staff/ShiftRosterUpdate";
 import MasterDuty from "./components/MasterDuty";
 // import Dashboard from "./components/Dashboard";
 import NavBar from "./components/Basic/NavBar";
-import Staffallocationbulkupdate from './components/Staff/Staffallocationbulkupdate';
+import Staffallocationbulkupdate from "./components/Staff/Staffallocationbulkupdate";
+import Staffnurseallocation from "./components/Staffnurseallocation";
+import StaffNurseRoster from "./components/Staff/StaffNurseRoster";
+import StaffShiftrosterUpdate from "./components/Staff/StaffShiftrosterUpdate";
 
 function App() {
   return (
     <div className="">
-    <NavBar/>
+      <NavBar />
       <HashRouter>
         <Routes>
           <Route>
@@ -39,6 +42,16 @@ function App() {
             <Route exact path="/shiftroster" element={<ShiftRoster />} />
             <Route
               exact
+              path="/staffnurseroster"
+              element={<StaffNurseRoster />}
+            />
+            <Route
+              exact
+              path="/staffnurseallocation"
+              element={<Staffnurseallocation />}
+            />
+            <Route
+              exact
               path="/VendorRegsitration"
               element={<VendorRegsitration />}
             />
@@ -47,10 +60,18 @@ function App() {
               exact
               path="/shiftrosterupdate/:shiftId"
               element={<ShiftRosterUpdate />}
-  
             />
-                <Route exact path="/staffallocationupdate" element={<Staffallocationbulkupdate />} />
-                
+            <Route
+              exact
+              path="/staffshiftrosterupdate/:shiftId"
+              element={<StaffShiftrosterUpdate />}
+            />
+
+            <Route
+              exact
+              path="/staffallocationupdate"
+              element={<Staffallocationbulkupdate />}
+            />
 
             <Route exact path="/masterduty" element={<MasterDuty />} />
           </Route>

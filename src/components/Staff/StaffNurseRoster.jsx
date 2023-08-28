@@ -1,72 +1,17 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
-// import { styled } from "@mui/material/styles";
-// import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-// import DialogContent from "@mui/material/DialogContent";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import { useNavigate } from "react-router-dom";
-// import ShiftRosterUpdate from "./ShiftRosterUpdate";
-// import MasterDuty from "./../MasterDuty";
-import { URLDevelopment } from "../../utilities/Url";
+import React, { useState, useEffect } from "react";
 import Dashboard from "../Dashboard";
 import NavBar from "../Basic/NavBar";
+import { URLDevelopment } from "../../utilities/Url";
 import useSWR from "swr";
-import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
-// const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-//   "& .MuiDialogContent-root": {
-//     padding: theme.spacing(2),
-//   },
-//   "& .MuiDialogActions-root": {
-//     padding: theme.spacing(1),
-//   },
-// }));
-
-const BootstrapDialogTitle = (props) => {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-};
-
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};
-
-function ShiftRoster() {
-  // const [open, setOpen] = React.useState(false);
+function StaffNurseRoster() {
   const navigate = useNavigate();
-  // State to store the branches data
+
   const [branches, setBranches] = React.useState([]);
+  const [dutys, setDutyData] = React.useState([]);
   const [staffs, setStaffData] = React.useState([]);
   const [shifts, setShiftData] = React.useState([]);
-  const [dutys, setDutyData] = React.useState([]);
-  const [floor, setFloorData] = React.useState([]);
-  const [beds, setBedData] = React.useState([]);
-  const [sections, setSectionData] = React.useState([]);
-
-  // const handleClose = () => setOpen(false);
-  // const handleClickOpen = () => setOpen(true);
 
   const fetcher = async (url) => {
     const response = await fetch(url);
@@ -76,8 +21,8 @@ function ShiftRoster() {
   };
 
   // UseSWR to fetch initial data and set up revalidations
-  const { data: shiftRoster, error } = useSWR(
-    `${URLDevelopment}/api/shift/roster`,
+  const { data: staffnurseshiftRoster, error } = useSWR(
+    `${URLDevelopment}/api/shift/staffnurseroster`,
     fetcher,
     {
       refreshInterval: 5000, // Revalidate every 60 seconds
@@ -102,6 +47,38 @@ function ShiftRoster() {
 
     const matchingBranch = branches.find((branch) => branch.id === branchId);
     return matchingBranch ? matchingBranch.branch_name : "Unknown Branch";
+  }
+
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
+
+  const { data: dutyData } = useSWR(
+    `${URLDevelopment}/api/floor/masterduty`,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (dutyData) {
+      setDutyData(dutyData);
+    }
+  }, [dutyData]);
+
+  function getdutyname(dutyId) {
+    console.log(dutyId);
+
+    if (!dutyData || dutyData.length === 0) {
+      return "Unknown dutydata";
+    }
+
+    const matchingduty = dutys.find((duty) => duty.id === dutyId);
+    return matchingduty ? matchingduty.duty_name : "Unknown duty";
   }
 
   const { data: staffData } = useSWR(
@@ -148,115 +125,9 @@ function ShiftRoster() {
     return matchingShift ? matchingShift.shift_name : "Unknown Shift";
   }
 
-  const { data: dutyData } = useSWR(
-    `${URLDevelopment}/api/floor/masterduty`,
-    fetcher
-  );
-
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
-
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-
-    return `${day}-${month}-${year}`;
-  }
-
-  useEffect(() => {
-    if (dutyData) {
-      setDutyData(dutyData);
-    }
-  }, [dutyData]);
-
-  function getdutyname(dutyId) {
-    console.log(dutyId);
-
-    if (!dutyData || dutyData.length === 0) {
-      return "Unknown dutydata";
-    }
-
-    const matchingduty = dutys.find((duty) => duty.id === dutyId);
-    return matchingduty ? matchingduty.duty_name : "Unknown duty";
-  }
-
-  const { data: floorData } = useSWR(
-    `${URLDevelopment}/api/shiftroster/masterfloor`,
-    fetcher
-  );
-
-  useEffect(() => {
-    if (floorData) {
-      setFloorData(floorData);
-    }
-  }, [floorData]);
-
-  function getfloorData(floorId) {
-    if (!floorData || floorData.length === 0) {
-      return "Unknown Floor";
-    }
-
-    const matchingFloor = floor.find((flr) => flr.id === floorId);
-
-    return matchingFloor ? matchingFloor.floor : "Unknown Floor";
-  }
-
-  const { data: sectionData } = useSWR(
-    `${URLDevelopment}/api/shift/masterSection`,
-    fetcher
-  );
-
-  useEffect(() => {
-    if (sectionData) {
-      setSectionData(sectionData);
-    }
-  }, [sectionData]);
-
-  
-  function getsection(sectionId) {
-    console.log(sectionId);
-    console.log(sectionData);
-    if (!sectionData || sectionData.length === 0) {
-      return "Unknown Section";
-    }
-
-    const matchingSection = sections.find(
-      (sec) => sec.id === parseInt(sectionId)
-    );
-    return matchingSection ? matchingSection.section_name : "Unknown Section";
-  }
-
-  const { data: bedData } = useSWR(
-    `${URLDevelopment}/api/shift/masterbeds`,
-    fetcher
-  );
-
-  useEffect(() => {
-    if (bedData) {
-      setBedData(bedData);
-    }
-  }, [bedData]);
-
-  function getBed(BedId) {
-    if (!bedData || bedData.length === 0) {
-      return "Unknown Bed";
-    }
-    console.log(BedId);
-    console.log(beds);
-    console.log(bedData);
-
-    const matchingBed = beds.find((bed) => bed.id === BedId);
-
-    console.log(matchingBed);
-
-    return matchingBed ? matchingBed.bed_number : "Unknown Bed";
-  }
-
-  useEffect(() => {
-    if (bedData) {
-      setBedData(bedData);
-    }
-  }, [bedData]);
+  const handleStaffsUpdateShiftRoster = (shiftId) => {
+    navigate(`/staffshiftrosterupdate/${shiftId}`);
+  };
 
   if (error) {
     return (
@@ -298,7 +169,7 @@ function ShiftRoster() {
     );
   }
 
-  if (!shiftRoster) {
+  if (!staffnurseshiftRoster) {
     return (
       <div>
         <section className="bg-white ">
@@ -455,55 +326,6 @@ function ShiftRoster() {
     );
   }
 
-  const handleUpdateShiftRoster = (shiftId) => {
-    navigate(`/shiftrosterupdate/${shiftId}`);
-  };
-
-  const handleDeleteShiftRoster = async (shiftId) => {
-    try {
-      const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "You will not be able to recover this shift roster!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      });
-
-      if (result.isConfirmed) {
-        const apiresponse = await fetch(
-          `${URLDevelopment}/api/shift/shiftrosterdelete/${shiftId}`,
-
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              // Add any other headers if needed
-            },
-          }
-        );
-
-        console.log(apiresponse);
-
-        if (apiresponse.response.status === "Shift deleted") {
-          // Successful deletion
-          Swal.fire(
-            "Deleted!",
-            "The shift roster has been deleted.",
-            "success"
-          );
-          // You can perform additional actions like updating the UI or refetching data
-        } else {
-          // Handle error cases
-          Swal.fire("Error", "Error deleting shift roster", "error");
-        }
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   return (
     <div className="">
       <NavBar />
@@ -511,7 +333,7 @@ function ShiftRoster() {
       <div className="">
         <div className="py-24 xl:py-36 pl-60">
           <div>
-            <h1 className="pb-14 subheading">Daily Staff Duty Roster</h1>
+            <h1 className="pb-14 subheading">Daily Staff Nurse Duty Roster</h1>
           </div>
           <div className="border border-gray-200 rounded-lg shadow-md ">
             <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
@@ -545,7 +367,7 @@ function ShiftRoster() {
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
-                    Bed Number
+                    Floor
                   </th>
                   <th
                     scope="col"
@@ -557,53 +379,35 @@ function ShiftRoster() {
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
-                    Floor
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Section Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Id
+                    Staff Source
                   </th>
 
                   <th
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
-                    Staff Source
+                    Staff Nurse Shift
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Shift
-                  </th>
+
                   <th
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
                     Staff Payable
                   </th>
-
                   <th
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
                     Service Payable
                   </th>
+
                   <th
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
                     Schedule Date
                   </th>
-
                   <th
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
@@ -613,7 +417,7 @@ function ShiftRoster() {
                 </tr>
               </thead>
               <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                {shiftRoster.map((shift) => (
+                {staffnurseshiftRoster.map((shift) => (
                   <tr
                     key={shift.id}
                     className="hover:bg-gray-50 odd:bg-gray-100"
@@ -637,27 +441,12 @@ function ShiftRoster() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="font-medium text-customblack">
-                        {shift.room_no}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getBed(shift.bed_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
                         {getdutyname(shift.duty_type_id)}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="font-medium text-customblack">
-                        {getfloorData(shift.floor)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getsection(shift.section_id)}
+                        {shift.floor}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -672,7 +461,7 @@ function ShiftRoster() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="font-medium text-customblack">
-                        {getshift(shift.shift)}
+                        {getshift(shift.staff_nurse_shift)}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -690,45 +479,13 @@ function ShiftRoster() {
                         {formatDate(shift.schedule_date)}
                       </span>
                     </td>
-
                     <td className="flex gap-3 px-6 py-4 font-normal text-customblack ">
                       <button
                         className="  tertiary-button"
-                        onClick={() => handleUpdateShiftRoster(shift.id)}
+                        onClick={() => handleStaffsUpdateShiftRoster(shift.id)}
                       >
                         Edit
                       </button>
-
-                      <button
-                        onClick={() => handleDeleteShiftRoster(shift.id)}
-                        className=" secondary-button "
-                      >
-                        Delete
-                      </button>
-
-                      {/* <BootstrapDialog
-                    onClose={handleClose}
-                    aria-labelledby="customized-dialog-title"
-                    open={open}
-                  >
-                    <BootstrapDialogTitle
-                      id="customized-dialog-title"
-                      onClose={handleClose}
-                    >
-                      <button
-                        onClick={() => handleUpdateShiftRoster(shift.id)}
-                        className="flex justify-center p-2 font-sans text-xl font-semibold underline md:text-xl xl:text-3xl text-sky-800 md:p-5"
-                      >
-                        Edit Details
-                      </button>
-                    </BootstrapDialogTitle>
-                    <DialogContent dividers>
-                      {open && <ShiftRosterUpdate shiftId={shift.id} />}
-
-
-                      
-                    </DialogContent>
-                  </BootstrapDialog> */}
                     </td>
                   </tr>
                 ))}
@@ -741,4 +498,4 @@ function ShiftRoster() {
   );
 }
 
-export default ShiftRoster;
+export default StaffNurseRoster;
