@@ -5,7 +5,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Dashboard from "./Dashboard";
 import { useNavigate } from "react-router-dom";
-import { fetchStaff } from "./../features/Action";
+// import { fetchStaff } from "./../features/Action";
 
 function Staffnurseallocation() {
   const [countries, setCountries] = useState([]);
