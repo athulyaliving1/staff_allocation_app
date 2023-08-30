@@ -161,7 +161,7 @@ function Staffnurseallocation() {
       const response = await fetch(`${URLDevelopment}/api/staff/staffsearch`);
       const data = await response.json();
       console.log(data);
-    
+
       const staffOptions = data.map((staff) => ({
         value: staff.employee_id,
         label: `${staff.employee_id} - ${staff.full_name}`,
@@ -169,9 +169,9 @@ function Staffnurseallocation() {
       }));
       setStaffOptions(staffOptions);
       setSelectedRoles(staffOptions);
-      fetchStaffRole(1)
+      fetchStaffRole(1);
       console(staffOptions.employee_id);
-    
+
       console.log(data[0].id);
     } catch (error) {
       console.error("Error fetching staffs:", error);
@@ -311,7 +311,7 @@ function Staffnurseallocation() {
     setSelectedVendorId(selectedOption.vendorid);
 
     await fetchStaffRole(selectedOption.value);
-    setSelectedRoles(""); 
+    setSelectedRoles("");
   };
 
   const handleChange = (e) => {

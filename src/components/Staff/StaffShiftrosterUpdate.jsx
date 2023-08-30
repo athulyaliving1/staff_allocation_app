@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Dashboard from "../Dashboard";
+// import Dashboard from "../Dashboard";
 import Select from "react-select";
 import { URLDevelopment } from "../../utilities/Url";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +32,7 @@ function StaffShiftrosterUpdate() {
 
   useEffect(() => {
     fetchvendor(selectedVendorId);
+
     fetchShiftData(shiftId);
   }, [shiftId, selectedVendorId]);
 
@@ -129,8 +130,8 @@ function StaffShiftrosterUpdate() {
   };
 
   const handleInputChange = (event) => {
-    const { name, value} = event.target;
-    console.log("Input Change - leave_reason:", value); // Add this line
+    const { name, value } = event.target;
+    console.log("Input Change - leave_reason:", value); // Add this line for debugging
     setShiftData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -155,21 +156,35 @@ function StaffShiftrosterUpdate() {
       });
 
       if (result.isConfirmed) {
-        const updatedData = {
-          emp_id: selectedStaff.value,
-          leave_reason: shiftData.leave_reason,
-          ot_shift: shiftData.staff_nurse_shift,
-          ot_type: shiftData.ot_type,
-          ot_hrs_shift: shiftData.ot_hrs_shift,
-          staff_payable: shiftData.staff_payable,
-          service_payable: shiftData.service_payable,
-        };
+        const formData = new FormData();
 
-        console.log(updatedData); // Move this line here to log the data before the request
+        formData.append("ot_shift", shiftData.staff_nurse_shift);
+        formData.append("leave_reason", shiftData.leave_reason);
+        formData.append("ot_type", shiftData.ot_type);
+        formData.append("ot_hrs_shift", shiftData.ot_hrs_shift);
+        formData.append("emp_id", selectedStaff.value);
+        formData.append("staff_payable", shiftData.staff_payable);
+        // formData.append("service_payable", shiftData.service_payable);
+
+        // Log individual values just before appending
+        console.log("emp_id:", selectedStaff.value);
+        console.log("leave_reason:", shiftData.leave_reason);
+        console.log("ot_hrs_shift:", shiftData.staff_nurse_shift);
+        console.log(shiftData.ot_type);
+        // ... log other values
+
+        console.log("FormData before request:", formData);
+        // ... Append form data here
+
+        // Convert formData to a regular JSON object
+        const jsonData = {};
+        formData.forEach((value, key) => {
+          jsonData[key] = value;
+        });
 
         const response = await axios.post(
           `http://localhost:4040/api/shift/staffnurserosterotupdate/${shiftId}`,
-          updatedData,
+          JSON.stringify(jsonData),
           {
             headers: {
               "Content-Type": "application/json",
@@ -177,23 +192,37 @@ function StaffShiftrosterUpdate() {
           }
         );
 
-        if (response.status !== 200) {
+        if (response.status === 200) {
+          console.log("Shift updated successfully!");
+          Swal.fire(
+            "Updated!",
+            "The shift has been updated successfully.",
+            "success"
+          );
+
+          // Access the response message and display it
+          const responseData = response.data;
+          Swal.fire("Success!", responseData.response, "success");
+
+          // Navigate to shiftroster page
+          navigate("/staffnurseroster");
+        } else if (response.status === 204) {
+          // Handle the case where data is not present
+          Swal.fire("Error!", "Data not present.", "error");
+        } else {
           throw new Error("Failed to update shift");
         }
-
-        console.log("Shift updated successfully!");
-        Swal.fire(
-          "Updated!",
-          "The shift has been updated successfully.",
-          "success"
-        );
-
-        // Navigate to shiftroster page
-        navigate("/staffnurseroster");
       }
     } catch (error) {
       console.error("Error updating shift:", error);
       Swal.fire("Error!", "Failed to update shift.", "error");
+
+      // Show specific error message if available
+      if (error.response && error.response.data) {
+        Swal.fire("Error!", error.response.data, "error");
+      } else {
+        Swal.fire("Error!", "Internal Server Error", "error");
+      }
       // ... handle error, e.g., show error message to the user
     }
   };
@@ -201,7 +230,7 @@ function StaffShiftrosterUpdate() {
   return (
     <div className="w-screen h-screen bg-gray-100">
       <div className="container mx-auto">
-        <Dashboard />
+     
         <div>
           <h5 className="pt-44 subheading ">Staff Nurse Allocation Update</h5>
         </div>
@@ -223,23 +252,6 @@ function StaffShiftrosterUpdate() {
                 id="ot_shift"
                 name="ot_shift"
                 value={getshift(shiftData.staff_nurse_shift)}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="mb-4">
-              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
-                Reason:
-              </div>
-              <label
-                className="block mb-2 text-sm text-gray-600"
-                htmlFor="leave_reason"
-              />
-              <input
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                type="text"
-                id="leave_reason"
-                name="leave_reason"
-                value={shiftData.leave_reason}
                 onChange={handleInputChange}
               />
             </div>
@@ -338,8 +350,8 @@ function StaffShiftrosterUpdate() {
                 onChange={handleInputChange}
               >
                 <option value="">Select</option>
-                <option value="Extended_OT_Hours">Hours OT </option>
-                <option value="Extended_OT_Shift">Shift OT</option>
+                <option value="Extended">Hours OT</option>
+                <option value="Shift">Shift OT</option>
               </select>
             </div>
 
@@ -357,6 +369,23 @@ function StaffShiftrosterUpdate() {
                 id=" ot_hrs_shift"
                 name="ot_hrs_shift"
                 value={shiftData.ot_hrs_shift}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="mb-4">
+              <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                Reason:
+              </div>
+              <label
+                className="block mb-2 text-sm text-gray-600"
+                htmlFor="leave_reason"
+              />
+              <input
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                type="text"
+                id="leave_reason"
+                name="leave_reason"
+                value={shiftData.leave_reason}
                 onChange={handleInputChange}
               />
             </div>

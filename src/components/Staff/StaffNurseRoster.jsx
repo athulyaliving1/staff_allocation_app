@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Dashboard from "../Dashboard";
 import NavBar from "../Basic/NavBar";
 import { URLDevelopment } from "../../utilities/Url";
@@ -100,6 +100,28 @@ function StaffNurseRoster() {
 
     const matchingStaff = staffs.find((staff) => staff.id === staffId);
     return matchingStaff ? matchingStaff.full_name : "Unknown Staff";
+  }
+
+  function getAttendanceStatus(status, otType) {
+    if (status === 0 || otType === 0) {
+      return "Leave";
+    } else if (status === 1) {
+      return "Present";
+    } else {
+      return "Unknown";
+    }
+  }
+
+  function getTypeOtHrsShift(status, extendedHours) {
+    if (status === 0 || extendedHours === 0) {
+      return "Nil";
+    } else if (status === "Extended") {
+      return `${extendedHours} Hrs Extended`;
+    } else if (status === "Shift") {
+      return `${extendedHours} Shift`;
+    } else {
+      return "Unknown";
+    }
   }
 
   const { data: shiftData } = useSWR(
@@ -412,6 +434,19 @@ function StaffNurseRoster() {
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
+                    Attendance Status
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    OT Shift/Hrs
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
                     Action
                   </th>
                 </tr>
@@ -479,9 +514,20 @@ function StaffNurseRoster() {
                         {formatDate(shift.schedule_date)}
                       </span>
                     </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getAttendanceStatus(shift.status)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getTypeOtHrsShift(shift.ot_type, shift.ot_hrs_shift)}
+                      </span>
+                    </td>
+
                     <td className="flex gap-3 px-6 py-4 font-normal text-customblack ">
                       <button
-                        className="  tertiary-button"
+                        className=" tertiary-button"
                         onClick={() => handleStaffsUpdateShiftRoster(shift.id)}
                       >
                         Edit
