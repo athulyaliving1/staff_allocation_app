@@ -4,6 +4,12 @@ import { updateVendor } from "../features/Action";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Dashboard from "./Dashboard";
+import PropTypes from "prop-types";
+
+VendorUpdate.propTypes = {
+  vendorData: PropTypes.array.isRequired,
+  updateVendor: PropTypes.func.isRequired,
+};
 
 function VendorUpdate({ vendorData, updateVendor }) {
   const [vendor, setVendor] = useState(null);
@@ -51,7 +57,7 @@ function VendorUpdate({ vendorData, updateVendor }) {
           {/* Render the form fields and populate them with existing vendor data */}
           <div>
             <label
-              for="name"
+              htmlFor="name"
               className="text-sm font-semibold text-customblack"
             >
               Vendor Name:

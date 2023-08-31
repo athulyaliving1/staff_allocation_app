@@ -1,6 +1,18 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { fetchStaff } from "../../features/Action";
+import PropTypes from "prop-types";
+
+StaffProfile.propTypes = {
+  fetchStaff: PropTypes.func.isRequired,
+  staffData: PropTypes.shape({
+    employee_id: PropTypes.string.isRequired,
+    full_name: PropTypes.string.isRequired,
+    // Add more PropTypes for other staff profile fields if needed
+  }),
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+};
 
 function StaffProfile({ fetchStaff, staffData, loading, error }) {
   useEffect(() => {

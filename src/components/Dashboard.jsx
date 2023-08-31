@@ -1,4 +1,12 @@
 import { useState } from "react";
+import React from "react";
+import PropTypes from "prop-types";
+
+Menu.propTypes = {
+  children: PropTypes.node,
+  items: PropTypes.arrayOf(PropTypes.string),
+  // Other prop validations
+};
 
 const Menu = (props) => {
   const { children, items } = props;
@@ -264,7 +272,7 @@ const Dashboard = () => {
   return (
     <>
       <nav className="fixed top-0 left-0 w-56 h-screen space-y-8 border-r shadow-2xl bg-primary">
-        <div class="flex flex-col h-screen px-4 bg-primary xl:mt-32 lg:mt-20 ">
+        <div className="flex flex-col h-screen px-4 bg-primary xl:mt-32 lg:mt-20 ">
           {/* <div className="flex items-center h-20 pl-2">
             <div className="flex items-center w-full gap-x-4">
               <img

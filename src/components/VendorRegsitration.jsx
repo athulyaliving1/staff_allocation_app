@@ -11,6 +11,8 @@ import {
 import Swal from "sweetalert2";
 import Dashboard from "./Dashboard";
 // import NavBar from "./Basic/NavBar";
+import PropTypes from "prop-types"; 
+
 
 function VendorRegistration({
   createVendor,
@@ -115,7 +117,7 @@ function VendorRegistration({
               <div className="grid w-full gap-6 py-5 mx-auto bg-gray-100 xl:grid-cols-3">
                 <div className="flex flex-col space-y-1 ">
                   <label
-                    for="name"
+                   htmlFor="name"
                     className="text-sm font-semibold text-customblack"
                   >
                     Name
@@ -133,7 +135,7 @@ function VendorRegistration({
 
                 <div className="flex flex-col space-y-1">
                   <label
-                    for="address"
+                    htmlFor="address"
                     className="text-sm font-semibold text-customblack"
                   >
                     Address
@@ -150,7 +152,7 @@ function VendorRegistration({
                 </div>
                 <div className="flex flex-col space-y-1">
                   <label
-                    for="email"
+                    htmlFor="email"
                     className="text-sm font-semibold text-customblack"
                   >
                     Email
@@ -168,7 +170,7 @@ function VendorRegistration({
 
                 <div className="flex flex-col space-y-1">
                   <label
-                    for="email"
+                    htmlFor="email"
                     className="text-sm font-semibold text-customblack"
                   >
                     Abbr
@@ -185,7 +187,7 @@ function VendorRegistration({
                 </div>
                 <div className="flex flex-col space-y-1">
                   <label
-                    for="email"
+                    htmlFor="email"
                     className="text-sm font-semibold text-customblack"
                   >
                     Contact
@@ -326,6 +328,21 @@ function VendorRegistration({
     </div>
   );
 }
+
+
+
+VendorRegistration.propTypes = {
+  createVendor: PropTypes.func.isRequired,
+  vendorData: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  fetchvendorlist: PropTypes.func.isRequired,
+  vendorDelete: PropTypes.func.isRequired,
+};
+
+
+
+
 
 const mapStateToProps = (state) => ({
   vendorData: state.vendor.vendorData,

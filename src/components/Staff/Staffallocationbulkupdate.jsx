@@ -495,7 +495,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   City:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="city" />
@@ -518,7 +518,7 @@ function DependentDropdown() {
                 </select>
               </div>
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Branch:
                 </div>
                 <label
@@ -542,7 +542,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Tower:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="tower" />
@@ -563,7 +563,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Floor:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="floor" />
@@ -584,7 +584,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Section:
                 </div>
                 <label
@@ -608,7 +608,7 @@ function DependentDropdown() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Staff:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="staff" />

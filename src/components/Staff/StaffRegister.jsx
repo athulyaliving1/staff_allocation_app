@@ -5,364 +5,359 @@ function StaffRegister() {
   return (
     <div className="bg-gray-100">
       StaffRegister
-      <div class="mt-8 p-4 container mx-auto lg:pl-60 xl:pl-60 ">
+      <div className="container p-4 mx-auto mt-8 lg:pl-60 xl:pl-60 ">
         <Dashboard />
 
         <div>
           <h5 className="pt-24 subheading">Staff Register</h5>
         </div>
         <div>
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full flex-1 mx-2 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 First Name
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="FirstName"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
-            <div class="w-full flex-1 mx-2 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Last Name
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="Last Name"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Designation
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="Just a hint.."
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 D.O.B
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Employee Id
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="Just a hint.."
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 D.O.B
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Gender
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Blood Group
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Marital Status
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Religion
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Food Habits
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Mobile Number
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 Email
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 {" "}
                 personal Email
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Current Address
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Current Area
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Current city
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Current Pin code
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Current State
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Current country
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Permanent address
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Permanent city
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
 
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Permanent pin code
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Permanent state
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
-          <div class="flex flex-col md:flex-row">
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Permanent country
               </div>
-              <div class="my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
 
-            <div class="w-full mx-2 flex-1 svelte-1l8159u">
-              <div class="font-bold h-6 mt-3 text-gray-600 text-xs leading-8 uppercase">
+            <div className="flex-1 w-full mx-2 svelte-1l8159u">
+              <div className="h-6 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Permanent area
               </div>
-              <div class=" my-2  flex  svelte-1l8159u">
+              <div className="flex my-2 svelte-1l8159u">
                 <input
                   placeholder="john"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />{" "}
               </div>
             </div>
           </div>
         </div>
-        <div class="flex p-2 mt-4">
+        <div className="flex p-2 mt-4">
           <button
-            className="text-base hover:scale-110 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer 
-        hover:bg-gray-200  
-        bg-gray-100 
-        text-gray-700 
-        border duration-200 ease-in-out 
-        border-gray-600 transition"
+            className="flex justify-center px-4 py-2 text-base font-bold text-gray-700 transition duration-200 ease-in-out bg-gray-100 border border-gray-600 rounded cursor-pointer hover:scale-110 focus:outline-none hover:bg-gray-200"
           >
             Submit
           </button>

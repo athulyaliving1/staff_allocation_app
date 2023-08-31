@@ -5,14 +5,12 @@ import {
   FETCH_VENDOR_SUCCESS,
   UPDATE_VENDOR_FAILURE,
   UPDATE_VENDOR_SUCCESS,
-  DELETE_VENDOR_SUCCESS, DELETE_VENDOR_FAILURE,
+  DELETE_VENDOR_SUCCESS,
+  DELETE_VENDOR_FAILURE,
   UPDATE_VENDOR,
   FETCH_STAFFPROFILE_SUCCESS,
-  FETCH_STAFFPROFILE_FAILURE
-
-
-} from './Constants.js'
-
+  FETCH_STAFFPROFILE_FAILURE,
+} from "./Constants.js";
 
 const initialState = {
   vendorData: [],
@@ -20,7 +18,6 @@ const initialState = {
   loading: false,
   error: null,
 };
-
 
 export const vendorReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -52,7 +49,7 @@ export const vendorReducer = (state = initialState, action) => {
         loading: true,
         error: null,
       };
-    case UPDATE_VENDOR_SUCCESS:
+    case UPDATE_VENDOR_SUCCESS: {
       const updatedVendorData = state.vendorData.map((vendor) =>
         vendor.id === action.payload.id ? action.payload : vendor
       );
@@ -63,6 +60,8 @@ export const vendorReducer = (state = initialState, action) => {
         loading: false,
         error: null,
       };
+    }
+
     case UPDATE_VENDOR_FAILURE:
       return {
         ...state,
@@ -78,15 +77,11 @@ export const vendorReducer = (state = initialState, action) => {
         loading: false,
         error: null,
       };
-      
-      
+
     default:
       return state;
   }
 };
-
-
-
 
 export const staffReducer = (state = initialState, action) => {
   switch (action.type) {

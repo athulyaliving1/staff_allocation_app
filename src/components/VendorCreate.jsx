@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { createVendor } from "../features/Action";
+import PropTypes from "prop-types";
 
 const VendorCreate = ({ createVendor }) => {
   const [vendorData, setVendorData] = useState({
@@ -67,6 +68,11 @@ const VendorCreate = ({ createVendor }) => {
       </div>
     </div>
   );
+};
+
+
+VendorCreate.propTypes = {
+  createVendor: PropTypes.func.isRequired,
 };
 
 export default connect(null, { createVendor })(VendorCreate);
