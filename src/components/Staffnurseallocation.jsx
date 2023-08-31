@@ -40,13 +40,14 @@ function Staffnurseallocation() {
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
   useEffect(() => {
     fetchCountries();
+    fetchEmployees(); // Include fetchEmployees here
     fetchBranchesTower();
     fetchShifts();
     fetchFloorInfo(locationId);
     fetchvendor(selectedVendorId);
     fetchDutyMaster();
     fetchStaffRole();
-  }, [locationId, selectedVendorId, selectedRoles]);
+  }, [locationId, selectedVendorId, selectedRoles, fetchEmployees]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
 
@@ -476,7 +477,7 @@ function Staffnurseallocation() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   City:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="city" />
@@ -500,7 +501,7 @@ function Staffnurseallocation() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Branch:
                 </div>
                 <label
@@ -524,7 +525,7 @@ function Staffnurseallocation() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Tower:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="tower" />
@@ -545,7 +546,7 @@ function Staffnurseallocation() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Floor:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="floor" />
@@ -566,7 +567,7 @@ function Staffnurseallocation() {
               </div>
 
               <div className="mb-4">
-                <div class="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Staff:
                 </div>
                 <label className="block mb-2 text-sm font-xl" htmlFor="staff" />
