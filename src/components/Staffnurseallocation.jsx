@@ -40,15 +40,12 @@ function Staffnurseallocation() {
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
   useEffect(() => {
     fetchCountries();
-    fetchEmployees();
     fetchBranchesTower();
     fetchShifts();
     fetchFloorInfo(locationId);
     fetchvendor(selectedVendorId);
     fetchDutyMaster();
     fetchStaffRole();
-
-    // Pass locationId as a parameter to fetchFloorInfo
   }, [locationId, selectedVendorId, selectedRoles]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
