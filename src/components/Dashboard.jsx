@@ -2,11 +2,8 @@ import { useState } from "react";
 import React from "react";
 import PropTypes from "prop-types";
 
-Menu.propTypes = {
-  children: PropTypes.node,
-  items: PropTypes.arrayOf(PropTypes.string),
-  // Other prop validations
-};
+
+
 
 const Menu = (props) => {
   const { children, items } = props;
@@ -57,6 +54,16 @@ const Menu = (props) => {
     </div>
   );
 };
+
+
+
+Menu.propTypes = {
+  children: PropTypes.node,
+  items: PropTypes.arrayOf(PropTypes.string),
+  // Other prop validations
+};
+
+
 
 const Dashboard = () => {
   const navigation = [

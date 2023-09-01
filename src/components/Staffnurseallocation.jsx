@@ -32,22 +32,53 @@ function Staffnurseallocation() {
   const [shiftOptions, setShiftOptions] = useState([]);
   const [selectedDuty, setSelectedDuty] = useState("");
   const [servicePayable, setServicePayable] = useState("");
-  const [staffRole, setStaffRole] = useState([]);
+  const [fetchEmployeesCalled, setFetchEmployeesCalled] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState("");
+  const [staffRoles, setStaffRoles] = useState([]);
 
+  console.log(selectedRoles);
   const navigate = useNavigate();
 
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
   useEffect(() => {
     fetchCountries();
-    fetchEmployees(); // Include fetchEmployees here
-    fetchBranchesTower();
-    fetchShifts();
-    fetchFloorInfo(locationId);
-    fetchvendor(selectedVendorId);
-    fetchDutyMaster();
-    fetchStaffRole();
-  }, [locationId, selectedVendorId, selectedRoles, fetchEmployees]);
+
+    if (!fetchEmployeesCalled) {
+      fetchEmployees(selectedStaff);
+      setFetchEmployeesCalled(true);
+    }
+
+    // if (branchLocations) {
+    //   fetchBranchLocations();
+    // }
+
+    // if (floorId) {
+    //   fetchBranchesTower(locationId);
+    // }
+
+    if (selectedVendorId) {
+      fetchvendor(selectedVendorId);
+      // fetchStaffRole(staffRoles);
+    }
+
+    if (dutyMaster) {
+      fetchShifts();
+    }
+
+    // if (floorId) {
+    //   fetchEmployees(selectedStaff);
+    // }
+
+    // if (towerId) {
+    //   fetchFloorInfo(locationId);
+    // }
+
+    if (dutyMaster) {
+      fetchDutyMaster();
+    }
+
+    // Pass locationId as a parameter to fetchFloorInfo
+  }, [locationId, selectedVendorId, selectedRoles, fetchEmployeesCalled]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
 
@@ -164,11 +195,12 @@ function Staffnurseallocation() {
         value: staff.employee_id,
         label: `${staff.employee_id} - ${staff.full_name}`,
         vendorid: `${staff.vendor_id}`,
+        empId: `${staff.employee_id}`,
       }));
       setStaffOptions(staffOptions);
       setSelectedRoles(staffOptions);
-      fetchStaffRole(1);
-      console(staffOptions.employee_id);
+
+      console(data[0].employee_id);
 
       console.log(data[0].id);
     } catch (error) {
@@ -195,19 +227,20 @@ function Staffnurseallocation() {
     }
   };
 
-  const fetchStaffRole = async (staffRoleId) => {
-    console.log(staffRoleId);
+  const fetchStaffRole = async (employeeId) => {
+    console.log(employeeId);
     try {
       const response = await fetch(
-        `${URLDevelopment}/api/staff/staffrole/${staffRoleId}`
+        `${URLDevelopment}/api/staff/staffrole/${employeeId}`
       );
       const data = await response.json();
       console.log(data);
-      const staffRoledata = data.map((staff) => ({
-        value: staff.role,
-      }));
 
-      setStaffRole(staffRoledata);
+      if (data.length > 0) {
+        console.log(data[0].role);
+        setStaffRoles(data); // Store the fetched roles in the state
+        setSelectedRoles(data[0].role); // Set the selected role
+      }
     } catch (error) {
       console.error("Error fetching staffs:", error);
     }
@@ -297,7 +330,6 @@ function Staffnurseallocation() {
     const branchId = locationId; // Use the selected locationId as the branchId
 
     setFloorId(floorId);
-
     console.log(branchId);
     console.log(floorId);
   };
@@ -307,9 +339,8 @@ function Staffnurseallocation() {
     setSelectedStaff(selectedOption);
     console.log(selectedOption.vendorid);
     setSelectedVendorId(selectedOption.vendorid);
-
-    await fetchStaffRole(selectedOption.value);
-    setSelectedRoles("");
+    console.log(selectedOption.empId);
+    fetchStaffRole(selectedOption.empId);
   };
 
   const handleChange = (e) => {
@@ -602,6 +633,26 @@ function Staffnurseallocation() {
                 </select>
               </div>
 
+              <div>
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                  Role:
+                </div>
+                <label className="block mb-2 text-sm font-xl" htmlFor="role" />
+
+                <select
+                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  value={selectedRoles} // Use selectedRoles to display the selected role
+                  // Use this if you want to allow changing the selected role
+                >
+                  <option value="">Select Role</option>
+                  {staffRoles.map((role) => (
+                    <option key={role.id} value={role.role}>
+                      {role.role}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="mb-4">
                 <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Payable:
@@ -638,25 +689,6 @@ function Staffnurseallocation() {
                   value={servicePayable}
                   onChange={(e) => setServicePayable(e.target.value)}
                 />
-              </div>
-
-              <div>
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
-                  Role:
-                </div>
-                <label className="block mb-2 text-sm font-xl" htmlFor="role" />
-
-                <select
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                  value={selectedRoles} // Use selectedRoles to display the roles
-                >
-                  <option value="">Select Role</option>
-                  {staffRole.map((role) => (
-                    <option value={role.value} key={role.value}>
-                      {role.value}
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <div className="mb-4">
