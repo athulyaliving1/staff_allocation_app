@@ -17,6 +17,8 @@ import Staffallocationbulkupdate from "./components/Staff/Staffallocationbulkupd
 import Staffnurseallocation from "./components/Staffnurseallocation";
 import StaffNurseRoster from "./components/Staff/StaffNurseRoster";
 import StaffShiftrosterUpdate from "./components/Staff/StaffShiftrosterUpdate";
+import StaffAllocationFilter from "./Filter/StaffAllocationFilter"
+
 
 function App() {
   return (
@@ -40,6 +42,11 @@ function App() {
             <Route exact path="/staffregister" element={<StaffRegister />} />
             <Route exact path="/staffprofile" element={<StaffProfile />} />
             <Route exact path="/shiftroster" element={<ShiftRoster />} />
+            <Route
+              exact
+              path="/shifterrosterfilter"
+              element={<StaffAllocationFilter />}
+            />
             <Route
               exact
               path="/staffnurseroster"

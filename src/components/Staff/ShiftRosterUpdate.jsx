@@ -127,7 +127,7 @@ function ShiftRosterUpdate() {
         throw new Error("Failed to fetch shift data");
       }
       const data = await response.json();
-      // console.log(data);
+      console.log(data);
 
       setShiftData((prevState) => ({
         ...prevState,
