@@ -69,16 +69,22 @@ function Staffnurseallocation() {
     //   fetchEmployees(selectedStaff);
     // }
 
-    // if (towerId) {
-    //   fetchFloorInfo(locationId);
-    // }
+    if (towerId) {
+      fetchFloorInfo(locationId, towerId);
+    }
 
     if (dutyMaster) {
       fetchDutyMaster();
     }
 
     // Pass locationId as a parameter to fetchFloorInfo
-  }, [locationId, selectedVendorId, selectedRoles, fetchEmployeesCalled]);
+  }, [
+    locationId,
+    selectedVendorId,
+    selectedRoles,
+    fetchEmployeesCalled,
+    towerId,
+  ]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
 
@@ -162,20 +168,16 @@ function Staffnurseallocation() {
 
   //---------------------------------------------------------------Floor data Fetching--------------------------------------------------------------------
 
-  const fetchFloorInfo = async (branchId) => {
+  const fetchFloorInfo = async (branchId, towerId) => {
     console.log(branchId);
+    console.log(towerId);
+
     try {
       const response = await fetch(
-        `${URLDevelopment}/api/branches/floor?branch_id=${branchId}`
+        `${URLDevelopment}/api/branches/floor?branch_id=${branchId}&tower_id=${towerId}`
       );
       const data = await response.json();
       setFloorInfo(data);
-
-      // Logging branch_id values from the data array
-      // data.forEach((item) => {
-      //   console.log("branch_id:", item.branch_id);
-      //   fetchSectionInfo(item.floor, item.branch_id);
-      // });
 
       console.log(data);
     } catch (error) {
@@ -313,14 +315,18 @@ function Staffnurseallocation() {
     const branchId = e.target.value;
     setLocationId(branchId);
     fetchBranchesTower(branchId);
+
+    // fetchFloorInfo(locationId);
+    console.log(locationId);
     console.log(branchId);
   };
 
   //--------------------------------------------------------------- Get Tower Id --------------------------------------------------------------------------------
-  const handleTowerChange = (e) => {
+  const handleTowerChange = async (e) => {
     const towerId = e.target.value;
     setTowerId(towerId);
-    fetchFloorInfo(towerId);
+
+    console.log(towerId);
     console.log(towerId);
   };
 
@@ -444,6 +450,10 @@ function Staffnurseallocation() {
       });
     }
   };
+
+
+  
+
 
   return (
     <div className="w-screen h-screen bg-gray-100 ">

@@ -693,7 +693,7 @@ function ShiftRoster() {
 
                     <td className="flex gap-3 px-6 py-4 font-normal text-customblack ">
                       <button
-                        className="  tertiary-button"
+                        className=" tertiary-button"
                         onClick={() => handleUpdateShiftRoster(shift.id)}
                       >
                         Edit
@@ -701,7 +701,7 @@ function ShiftRoster() {
 
                       <button
                         onClick={() => handleDeleteShiftRoster(shift.id)}
-                        className=" secondary-button "
+                        className=" secondary-button"
                       >
                         Delete
                       </button>

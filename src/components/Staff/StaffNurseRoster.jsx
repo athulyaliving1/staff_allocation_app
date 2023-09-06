@@ -4,6 +4,7 @@ import NavBar from "../Basic/NavBar";
 import { URLDevelopment } from "../../utilities/Url";
 import useSWR from "swr";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function StaffNurseRoster() {
   const navigate = useNavigate();
@@ -149,6 +150,51 @@ function StaffNurseRoster() {
 
   const handleStaffsUpdateShiftRoster = (shiftId) => {
     navigate(`/staffshiftrosterupdate/${shiftId}`);
+  };
+
+  const handleDeleteStaffShiftRoster = async (shiftId) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You will not be able to recover this shift roster!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
+        const apiresponse = await fetch(
+          `${URLDevelopment}/api/shift/staffshiftrosterdelete/${shiftId}`,
+
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              // Add any other headers if needed
+            },
+          }
+        );
+
+        console.log(apiresponse);
+
+        if (apiresponse.response.status === "Shift deleted") {
+          // Successful deletion
+          Swal.fire(
+            "Deleted!",
+            "The shift roster has been deleted.",
+            "success"
+          );
+          // You can perform additional actions like updating the UI or refetching data
+        } else {
+          // Handle error cases
+          Swal.fire("Error", "Error deleting shift roster", "error");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   if (error) {
@@ -531,6 +577,12 @@ function StaffNurseRoster() {
                         onClick={() => handleStaffsUpdateShiftRoster(shift.id)}
                       >
                         Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteStaffShiftRoster(shift.id)}
+                        className=" secondary-button"
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>

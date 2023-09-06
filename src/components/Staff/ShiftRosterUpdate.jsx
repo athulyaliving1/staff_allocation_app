@@ -47,12 +47,6 @@ function ShiftRosterUpdate() {
     fetchShiftData(shiftId);
   }, [shiftId, selectedVendorId]);
 
-
-  
-
-
-
-
   const fetchShiftData = async (shiftId) => {
     try {
       const response = await fetch(
@@ -494,7 +488,7 @@ function ShiftRosterUpdate() {
             {selectedContent && <div>Content for {selectedContent}</div>}
           </div> */}
 
-<div className="mb-4">
+            <div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Staff ID:
               </div>
@@ -512,8 +506,6 @@ function ShiftRosterUpdate() {
                 required
               />
             </div>
-
-          
 
             <div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
@@ -568,7 +560,7 @@ function ShiftRosterUpdate() {
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Duty Type:
@@ -620,7 +612,6 @@ function ShiftRosterUpdate() {
               value={shiftData.duty_name}
               onChange={handleChange}
             /> */}
-
 
             <div className="mb-4">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">

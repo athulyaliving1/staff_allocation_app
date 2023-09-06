@@ -32,28 +32,51 @@ function DependentDropdown() {
   const [payableInput, SetPayableInput] = useState([]);
   const [payable, setPayable] = useState([]);
   const [payVendorId, SetPayablevendorId] = useState([]);
+  const [fetchEmployeesCalled, setFetchEmployeesCalled] = useState(false);
 
   const navigate = useNavigate();
 
   //----------------------------------------------------------------fetching data, directly from  Function ----------------------------------------------------------------
+  // useEffect(() => {
+  //   fetchCountries();
+  //   fetchDutyMaster();
+  //   fetchEmployees();
+  //   fetchShifts();
+  //   fetchBranchesTower();
+  //   fetchFloorInfo(locationId);
+  //   fetchSectionInfo(floorId, locationId);
+  //   fetchvendor(selectedVendorId);
+  //   // Pass locationId as a parameter to fetchFloorInfo
+  // }, [locationId, floorId, selectedVendorId]);
+
   useEffect(() => {
     fetchCountries();
-    fetchDutyMaster();
-    fetchEmployees();
-    fetchShifts();
-    fetchBranchesTower();
-    fetchFloorInfo(locationId);
-    fetchSectionInfo(floorId, locationId);
-    fetchvendor(selectedVendorId);
-    // Pass locationId as a parameter to fetchFloorInfo
-  }, [locationId, floorId, selectedVendorId]);
 
-  // useEffect(() => {
-  //   // Check if floorId and locationId are not empty before calling fetchSectionInfo
-  //   if (floorId && locationId) {
-  //     fetchSectionInfo(floorId, locationId); // Pass floorId and locationId as parameters to fetchSectionInfo
-  //   }
-  // }, [floorId, locationId]);
+    if (!fetchEmployeesCalled) {
+      fetchEmployees(selectedStaff);
+      setFetchEmployeesCalled(true);
+    }
+
+    if (selectedVendorId) {
+      fetchvendor(selectedVendorId);
+      // fetchStaffRole(staffRoles);
+    }
+
+    if (dutyMaster) {
+      fetchShifts();
+    }
+    if (dutyMaster) {
+      fetchDutyMaster();
+    }
+
+    if (towerId) {
+      fetchFloorInfo(locationId, floorId);
+
+      if (floorId) {
+        fetchSectionInfo(locationId, floorId);
+      }
+    }
+  }, [locationId, floorId, selectedVendorId, fetchEmployeesCalled]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
 
@@ -137,30 +160,25 @@ function DependentDropdown() {
 
   //---------------------------------------------------------------Floor data Fetching--------------------------------------------------------------------
 
-  const fetchFloorInfo = async (branchId) => {
+  const fetchFloorInfo = async (branchId, towerId) => {
     console.log(branchId);
+    console.log(towerId);
+
     try {
       const response = await fetch(
-        `${URLDevelopment}/api/branches/floor?branch_id=${branchId}`
+        `${URLDevelopment}/api/branches/floor?branch_id=${branchId}&tower_id=${towerId}`
       );
       const data = await response.json();
       setFloorInfo(data);
-
-      // Logging branch_id values from the data array
-      // data.forEach((item) => {
-      //   console.log("branch_id:", item.branch_id);
-      //   fetchSectionInfo(item.floor, item.branch_id);
-      // });
 
       console.log(data);
     } catch (error) {
       console.error("Error fetching floor info:", error);
     }
   };
-
   //---------------------------------------------------------------Section data Fetching--------------------------------------------------------------------
 
-  const fetchSectionInfo = async (floorId, branchId) => {
+  const fetchSectionInfo = async (branchId, floorId) => {
     console.log(floorId);
     console.log(branchId);
     try {
@@ -213,19 +231,18 @@ function DependentDropdown() {
     try {
       const response = await fetch(`${URLDevelopment}/api/shift/shiftsearch`);
       const data = await response.json();
-  
+
       const shiftedData = data.map((shift) => ({
         ...shift,
-        combinedDescription: `${shift.shift_name} - ${shift.description}`
+        combinedDescription: `${shift.shift_name} - ${shift.description}`,
       }));
-  
+
       setShiftOptions(shiftedData);
       console.log(shiftedData);
     } catch (error) {
       console.log("Error fetching shifts:", error);
     }
   };
-  
 
   const fetchvendor = async (vendorId) => {
     console.log(vendorId);
@@ -289,7 +306,9 @@ function DependentDropdown() {
   const handleTowerChange = (e) => {
     const towerId = e.target.value;
     setTowerId(towerId);
-    fetchFloorInfo(towerId);
+
+    fetchFloorInfo(locationId, towerId);
+    // Fetch section info with the selected floorId and branchId
     console.log(towerId);
   };
 
@@ -299,8 +318,7 @@ function DependentDropdown() {
     const branchId = locationId; // Use the selected locationId as the branchId
 
     setFloorId(floorId);
-    fetchSectionInfo(floorId, branchId); // Fetch section info with the selected floorId and branchId
-
+    fetchSectionInfo(branchId, floorId);
     console.log(branchId);
     console.log(floorId);
   };
@@ -436,8 +454,6 @@ function DependentDropdown() {
     }
   };
 
-
-  
   return (
     <div className="w-screen h-screen bg-gray-100">
       <div className="">
@@ -704,7 +720,7 @@ function DependentDropdown() {
                   <option value="">Select Shift</option>
                   {shiftOptions.map((shift) => (
                     <option value={shift.id} key={shift.id}>
-                    {shift.combinedDescription}
+                      {shift.combinedDescription}
                     </option>
                   ))}
                 </select>
