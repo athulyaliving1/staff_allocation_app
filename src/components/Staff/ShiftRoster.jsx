@@ -64,6 +64,7 @@ function ShiftRoster() {
   const [floor, setFloorData] = React.useState([]);
   const [beds, setBedData] = React.useState([]);
   const [sections, setSectionData] = React.useState([]);
+  const [towers, setTowerData] = React.useState([]);
 
   // const handleClose = () => setOpen(false);
   // const handleClickOpen = () => setOpen(true);
@@ -75,6 +76,8 @@ function ShiftRoster() {
     return data;
   };
 
+  //------------------------------------------------------------------------------------------------ Roster Fetch---------------------------------------------------------------------------------------
+
   // UseSWR to fetch initial data and set up revalidations
   const { data: shiftRoster, error } = useSWR(
     `${URLDevelopment}/api/shift/roster`,
@@ -83,6 +86,8 @@ function ShiftRoster() {
       refreshInterval: 5000, // Revalidate every 60 seconds
     }
   );
+
+  //-------------------------------------------------------------------------------------------------- Master Branch---------------------------------------------------------------------------------------
 
   const { data: branchesData } = useSWR(
     `${URLDevelopment}/api/shift/masterbranches`,
@@ -95,6 +100,8 @@ function ShiftRoster() {
     }
   }, [branchesData]);
 
+  //-------------------------------------------------------------------------------------------------- Find Branch------------------------------------------------------------------------------------
+
   function getBranchName(branchId) {
     if (!branches || branches.length === 0) {
       return "Unknown Branch";
@@ -103,6 +110,8 @@ function ShiftRoster() {
     const matchingBranch = branches.find((branch) => branch.id === branchId);
     return matchingBranch ? matchingBranch.branch_name : "Unknown Branch";
   }
+
+  //-------------------------------------------------------------------------------------------------- Staff Search-------------------------------------------------------------------------------------
 
   const { data: staffData } = useSWR(
     `${URLDevelopment}/api/staff/staffsearch`,
@@ -115,6 +124,8 @@ function ShiftRoster() {
     }
   }, [staffData]);
 
+  //-------------------------------------------------------------------------------------------------- Find Staff---------------------------------------------------------------------------------------------
+
   function getStaff(staffId) {
     console.log(staffId);
     if (!staffData || staffData.length === 0) {
@@ -124,6 +135,8 @@ function ShiftRoster() {
     const matchingStaff = staffs.find((staff) => staff.id === staffId);
     return matchingStaff ? matchingStaff.full_name : "Unknown Staff";
   }
+
+  //------------------------------------------------------------------------------------------------ Shift Search------------------------------------------------------------------------------------
 
   const { data: shiftData } = useSWR(
     `${URLDevelopment}/api/shift/shiftsearch`,
@@ -135,6 +148,8 @@ function ShiftRoster() {
       setShiftData(shiftData);
     }
   }, [shiftData]);
+
+  //------------------------------------------------------------------------------------------------- Find Shift-----------------------------------------------------------------------------------------
 
   function getshift(shiftId) {
     console.log(shiftId);
@@ -148,26 +163,20 @@ function ShiftRoster() {
     return matchingShift ? matchingShift.shift_name : "Unknown Shift";
   }
 
+  //-------------------------------------------------------------------------------------------------Fetch Duty-----------------------------------------------------------------------------
+
   const { data: dutyData } = useSWR(
     `${URLDevelopment}/api/floor/masterduty`,
     fetcher
   );
-
-  function formatDate(inputDate) {
-    const date = new Date(inputDate);
-
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-
-    return `${day}-${month}-${year}`;
-  }
 
   useEffect(() => {
     if (dutyData) {
       setDutyData(dutyData);
     }
   }, [dutyData]);
+
+  //--------------------------------------------------------------------------------------------------Find Duty------------------------------------------------------------------------------
 
   function getdutyname(dutyId) {
     console.log(dutyId);
@@ -180,6 +189,8 @@ function ShiftRoster() {
     return matchingduty ? matchingduty.duty_name : "Unknown duty";
   }
 
+  //--------------------------------------------------------------------------------------------------Fetch Floor-----------------------------------------------------------------------------
+
   const { data: floorData } = useSWR(
     `${URLDevelopment}/api/shiftroster/masterfloor`,
     fetcher
@@ -191,6 +202,8 @@ function ShiftRoster() {
     }
   }, [floorData]);
 
+  //--------------------------------------------------------------------------------------------------Find Floor---------------------------------------------------------------------------------
+
   function getfloorData(floorId) {
     if (!floorData || floorData.length === 0) {
       return "Unknown Floor";
@@ -201,6 +214,7 @@ function ShiftRoster() {
     return matchingFloor ? matchingFloor.floor : "Unknown Floor";
   }
 
+  //--------------------------------------------------------------------------------------------------Fetch Sections-----------------------------------------------------------------------------
   const { data: sectionData } = useSWR(
     `${URLDevelopment}/api/shift/masterSection`,
     fetcher
@@ -212,7 +226,8 @@ function ShiftRoster() {
     }
   }, [sectionData]);
 
-  
+  //-------------------------------------------------------------------------------------------------- Find Section-------------------------------------------------------------------------------
+
   function getsection(sectionId) {
     console.log(sectionId);
     console.log(sectionData);
@@ -226,6 +241,8 @@ function ShiftRoster() {
     return matchingSection ? matchingSection.section_name : "Unknown Section";
   }
 
+  //--------------------------------------------------------------------------------------------------Fetch MasterBeds--------------------------------------------------------------------------------
+
   const { data: bedData } = useSWR(
     `${URLDevelopment}/api/shift/masterbeds`,
     fetcher
@@ -236,6 +253,8 @@ function ShiftRoster() {
       setBedData(bedData);
     }
   }, [bedData]);
+
+  //--------------------------------------------------------------------------------------------------Find Beds--------------------------------------------------------------------------------
 
   function getBed(BedId) {
     if (!bedData || bedData.length === 0) {
@@ -252,11 +271,42 @@ function ShiftRoster() {
     return matchingBed ? matchingBed.bed_number : "Unknown Bed";
   }
 
-  useEffect(() => {
-    if (bedData) {
-      setBedData(bedData);
+  //------------------------------------------------------------------------------------------------
+
+  const { data: towerData } = useSWR(
+    `${URLDevelopment}/api/branches/masterTower`,
+    fetcher
+  );
+
+  function getTower(TowerId) {
+    if (!towerData || towerData.length === 0) {
+      return "Unknown Tower";
     }
-  }, [bedData]);
+
+    console.log(TowerId);
+    console.log(towerData);
+
+    const matchingTower = towers.find((tower) => tower.id === TowerId);
+    return matchingTower ? matchingTower.tower : "Unknown Tower";
+    
+  }
+
+  useEffect(() => {
+    if (towerData) {
+      setTowerData(towerData);
+    }
+  }, [towerData]);
+
+  //------------------------------------------------------------------------------------------------Formatt Date------------------------------
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
 
   if (error) {
     return (
@@ -557,6 +607,12 @@ function ShiftRoster() {
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
+                    Tower
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
                     Floor
                   </th>
                   <th
@@ -648,6 +704,11 @@ function ShiftRoster() {
                     <td className="px-6 py-4">
                       <span className="font-medium text-customblack">
                         {getdutyname(shift.duty_type_id)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-medium text-customblack">
+                        {getTower(shift.tower)}
                       </span>
                     </td>
                     <td className="px-6 py-4">
