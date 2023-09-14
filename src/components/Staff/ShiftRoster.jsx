@@ -288,7 +288,6 @@ function ShiftRoster() {
 
     const matchingTower = towers.find((tower) => tower.id === TowerId);
     return matchingTower ? matchingTower.tower : "Unknown Tower";
-    
   }
 
   useEffect(() => {
