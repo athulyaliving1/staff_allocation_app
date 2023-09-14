@@ -33,7 +33,6 @@ function DependentDropdown() {
   const [payable, setPayable] = useState([]);
   const [payVendorId, SetPayablevendorId] = useState([]);
   const [fetchEmployeesCalled, setFetchEmployeesCalled] = useState(false);
- 
 
   const navigate = useNavigate();
 
@@ -77,13 +76,7 @@ function DependentDropdown() {
     }
 
     // Pass locationId as a parameter to fetchFloorInfo
-  }, [
-    locationId,
-    selectedVendorId,
-
-    fetchEmployeesCalled,
-    towerId,
-  ]);
+  }, [locationId, selectedVendorId, fetchEmployeesCalled, towerId]);
   //----------------------------------------------------------------Coutries data Fetching----------------------------------------------------------------
 
   const fetchCountries = async () => {
@@ -248,6 +241,7 @@ function DependentDropdown() {
     }
   };
 
+  //------------------------------------------------------------------------Fetch Vendor--------------------------------------------------------------------------------
   const fetchvendor = async (vendorId) => {
     console.log(vendorId);
 
@@ -379,7 +373,7 @@ function DependentDropdown() {
     setSelectedVendorId(selectedOption.vendorid);
   };
 
-
+  //------------------------------------------------------------------ Post Api Data
   const handleSubmit = async (e) => {
     e.preventDefault();
 

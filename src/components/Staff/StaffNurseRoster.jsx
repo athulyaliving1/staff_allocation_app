@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 
 function StaffNurseRoster() {
   const navigate = useNavigate();
-
   const [branches, setBranches] = React.useState([]);
   const [dutys, setDutyData] = React.useState([]);
   const [staffs, setStaffData] = React.useState([]);
@@ -21,6 +20,7 @@ function StaffNurseRoster() {
     return data;
   };
 
+  //-------------------------------------------------------------------------------------------------Fetch Staff Nurse Roster------------------------------------------------------------------------------------------------
   // UseSWR to fetch initial data and set up revalidations
   const { data: staffnurseshiftRoster, error } = useSWR(
     `${URLDevelopment}/api/shift/staffnurseroster`,
@@ -29,7 +29,7 @@ function StaffNurseRoster() {
       refreshInterval: 5000, // Revalidate every 60 seconds
     }
   );
-
+  //------------------------------------------------------------------------------------------------Fetch Branch Data--------------------------------------------------------------
   const { data: branchesData } = useSWR(
     `${URLDevelopment}/api/shift/masterbranches`,
     fetcher
@@ -41,6 +41,8 @@ function StaffNurseRoster() {
     }
   }, [branchesData]);
 
+  //------------------------------------------------------------------------------------------------- Find Branch------------------------------------------------------------------
+
   function getBranchName(branchId) {
     if (!branches || branches.length === 0) {
       return "Unknown Branch";
@@ -49,7 +51,7 @@ function StaffNurseRoster() {
     const matchingBranch = branches.find((branch) => branch.id === branchId);
     return matchingBranch ? matchingBranch.branch_name : "Unknown Branch";
   }
-
+  //-------------------------------------------------------------------------------------------------Formate Date---------------------------------------------------------------------
   function formatDate(inputDate) {
     const date = new Date(inputDate);
 
@@ -60,6 +62,7 @@ function StaffNurseRoster() {
     return `${day}-${month}-${year}`;
   }
 
+  //-------------------------------------------------------------------------------------------------Fetch Duty-------------------------------------------------------------------------
   const { data: dutyData } = useSWR(
     `${URLDevelopment}/api/floor/masterduty`,
     fetcher
@@ -71,6 +74,7 @@ function StaffNurseRoster() {
     }
   }, [dutyData]);
 
+  //-------------------------------------------------------------------------------------------------find Duty----------------------------------------------------------------------------
   function getdutyname(dutyId) {
     console.log(dutyId);
 
@@ -82,6 +86,7 @@ function StaffNurseRoster() {
     return matchingduty ? matchingduty.duty_name : "Unknown duty";
   }
 
+  //-------------------------------------------------------------------------------------------------Fetch Staff-------------------------------------------------------------------------------
   const { data: staffData } = useSWR(
     `${URLDevelopment}/api/staff/staffsearch`,
     fetcher
@@ -93,6 +98,7 @@ function StaffNurseRoster() {
     }
   }, [staffData]);
 
+  //------------------------------------------------------------------------------------------------Find the Staff---------------------------------------------------------------------------
   function getStaff(staffId) {
     console.log(staffId);
     if (!staffData || staffData.length === 0) {
@@ -103,6 +109,7 @@ function StaffNurseRoster() {
     return matchingStaff ? matchingStaff.full_name : "Unknown Staff";
   }
 
+  //------------------------------------------------------------------------------------------------Get Attendance Status---------------------------------------------------------------------
   function getAttendanceStatus(status, otType) {
     if (status === 0 || otType === 0) {
       return "Leave";
@@ -113,6 +120,7 @@ function StaffNurseRoster() {
     }
   }
 
+  //--------------------------------------------------------------------------------------------------Get OT type --------------------------------------------------------------------------------
   function getTypeOtHrsShift(status, extendedHours) {
     if (status === 0 || extendedHours === 0) {
       return "Nil";
@@ -125,6 +133,7 @@ function StaffNurseRoster() {
     }
   }
 
+  //------------------------------------------------------------------------------------------------ Fetch Shift Search ----------------------------------------------------------------------------
   const { data: shiftData } = useSWR(
     `${URLDevelopment}/api/shift/shiftsearch`,
     fetcher
@@ -136,6 +145,7 @@ function StaffNurseRoster() {
     }
   }, [shiftData]);
 
+  //------------------------------------------------------------------------------------------------ Find Shift -- ----------------------------------------------------------------------------------
   function getshift(shiftId) {
     console.log(shiftId);
     console.log(shifts);
@@ -148,10 +158,11 @@ function StaffNurseRoster() {
     return matchingShift ? matchingShift.shift_name : "Unknown Shift";
   }
 
+  //------------------------------------------------------------------------------------------------ Update Shift -- --------------------------------------------------------------------------------
   const handleStaffsUpdateShiftRoster = (shiftId) => {
     navigate(`/staffshiftrosterupdate/${shiftId}`);
   };
-
+  //------------------------------------------------------------------------------------------------ Delete Shift ------------------------------------------------------------------------
   const handleDeleteStaffShiftRoster = async (shiftId) => {
     try {
       const result = await Swal.fire({

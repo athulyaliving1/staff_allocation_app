@@ -17,9 +17,20 @@ import Staffallocationbulkupdate from "./components/Staff/Staffallocationbulkupd
 import Staffnurseallocation from "./components/Staffnurseallocation";
 import StaffNurseRoster from "./components/Staff/StaffNurseRoster";
 import StaffShiftrosterUpdate from "./components/Staff/StaffShiftrosterUpdate";
-import StaffAllocationFilter from "./Filter/StaffAllocationFilter"
+import DutywiseFilter from "./Filter/DutywiseFilter";
+import ShiftDetails from "./Filter/ShiftDetails";
+import ShiftReport from "./Filter/ShiftReport";
+import StaffbaseReport from "./Filter/StaffbaseReport";
+import StaffShiftDetails from "./Filter/StaffShiftDetails";
+import StaffAllocationFilter from "./Filter/StaffAllocationFilter";
 
 
+// import Footer from "./components/Basic/Footer";
+/**
+ *
+ *
+ * @return {*}
+ */
 function App() {
   return (
     <div className="">
@@ -42,11 +53,7 @@ function App() {
             <Route exact path="/staffregister" element={<StaffRegister />} />
             <Route exact path="/staffprofile" element={<StaffProfile />} />
             <Route exact path="/shiftroster" element={<ShiftRoster />} />
-            <Route
-              exact
-              path="/shifterrosterfilter"
-              element={<StaffAllocationFilter />}
-            />
+           
             <Route
               exact
               path="/staffnurseroster"
@@ -79,6 +86,22 @@ function App() {
               path="/staffallocationupdate"
               element={<Staffallocationbulkupdate />}
             />
+
+            <Route exact path="/dutywisefilter" element={<DutywiseFilter />} />
+            <Route exact path="/shiftdetails" element={<ShiftDetails />} />
+            <Route exact path="/shiftreport" element={<ShiftReport />} />
+            <Route
+              exact
+              path="/staffbasereport"
+              element={<StaffbaseReport />}
+            />
+            <Route
+              exact
+              path="/staffshiftdetails"
+              element={<StaffShiftDetails />}
+            />
+             <Route exact path="/staffallocationfilter" element={<StaffAllocationFilter/>}/>
+            
 
             <Route exact path="/masterduty" element={<MasterDuty />} />
           </Route>

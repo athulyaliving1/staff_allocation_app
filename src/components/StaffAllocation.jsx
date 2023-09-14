@@ -51,27 +51,22 @@ function DependentDropdown() {
 
   useEffect(() => {
     fetchCountries();
-
     if (!fetchEmployeesCalled) {
       fetchEmployees(selectedStaff);
       setFetchEmployeesCalled(true);
     }
-
     if (selectedVendorId) {
       fetchvendor(selectedVendorId);
       // fetchStaffRole(staffRoles);
     }
-
     if (dutyMaster) {
       fetchShifts();
     }
     if (dutyMaster) {
       fetchDutyMaster();
     }
-
     if (towerId) {
       fetchFloorInfo(locationId, floorId);
-
       if (floorId) {
         fetchSectionInfo(locationId, floorId);
       }
@@ -243,7 +238,7 @@ function DependentDropdown() {
       console.log("Error fetching shifts:", error);
     }
   };
-
+  //-------------------------------------------------------------------------------------------------Fetch Vendor ----------------------------------------------------------------
   const fetchvendor = async (vendorId) => {
     console.log(vendorId);
 
@@ -375,6 +370,7 @@ function DependentDropdown() {
     setSelectedVendorId(selectedOption.vendorid);
   };
 
+  //--------------------------------------------------------------- Post Data Api --------------------------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -413,21 +409,65 @@ function DependentDropdown() {
         // Show SweetAlert2 success message
         Swal.fire({
           icon: "success",
-          title: "Data Inserted Successfully",
+          title: "Staff Duty Allocated Successfully",
           showConfirmButton: false,
           timer: 1500,
         });
 
         // Navigate to shiftroster page
         navigate("/shiftroster");
-      } else if (response.status === 204) {
+      } else if (response.status === 202) {
         console.log(" already Record exists.");
         // Reset the form or clear the input fields if needed
 
         // Show SweetAlert2 success message
         Swal.fire({
           icon: "error",
-          title: "already Record exists",
+          title: "Error fetching shift",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else if (response.status === 203) {
+        console.log(" Error in configuring rooms and beds.");
+        // Reset the form or clear the input fields if needed
+
+        // Show SweetAlert2 success message
+        Swal.fire({
+          icon: "error",
+          title: "Error in configuring rooms and beds",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else if (response.status === 204) {
+        console.log(" Error fetching shift");
+        // Reset the form or clear the input fields if needed
+
+        // Show SweetAlert2 success message
+        Swal.fire({
+          icon: "error",
+          title: "Error fetching shift",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else if (response.status === 400) {
+        console.log(" Record exists.");
+        // Reset the form or clear the input fields if needed
+
+        // Show SweetAlert2 success message
+        Swal.fire({
+          icon: "error",
+          title: "Record exists.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else if (response.status === 500) {
+        console.log(" Error.");
+        // Reset the form or clear the input fields if needed
+
+        // Show SweetAlert2 success message
+        Swal.fire({
+          icon: "error",
+          title: "Error",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -576,7 +616,7 @@ function DependentDropdown() {
                 >
                   <option value="">Select Branch Tower</option>
                   {towerInfo.map((tower) => (
-                    <option key={tower.id} value={tower.towerno}>
+                    <option key={tower.id} value={tower.id}>
                       {tower.tower}
                     </option>
                   ))}

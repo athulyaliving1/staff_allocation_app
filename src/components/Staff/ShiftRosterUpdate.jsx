@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
 import Select from "react-select";
 import { URLDevelopment } from "../../utilities/Url";
 import Dashboard from "../Dashboard";
@@ -37,16 +36,13 @@ function ShiftRosterUpdate() {
 
   // console.log(shiftData.bed_number);
   // console.log(selectedStaff);
-  console.log(shiftData.duty_type_id);
-
-  const { shiftId } = useParams();
+  // console.log(shiftData.duty_type_id);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchvendor(selectedVendorId);
-    fetchShiftData(shiftId);
-  }, [shiftId, selectedVendorId]);
+  //-------
+  const { shiftId } = useParams();
 
+  //------------------------------------------------------------------------------------------------FetchShift----------------------------------------------------------------
   const fetchShiftData = async (shiftId) => {
     try {
       const response = await fetch(
@@ -64,6 +60,12 @@ function ShiftRosterUpdate() {
     }
   };
 
+  useEffect(() => {
+    fetchvendor(selectedVendorId);
+    fetchShiftData(shiftId);
+  }, [shiftId, selectedVendorId]);
+
+  //------------------------------------------------------------------------------------------------FetchBranch-----------------------------------------------------------------
   const fetchBranchData = async (branchId) => {
     try {
       const response = await fetch(
@@ -88,6 +90,8 @@ function ShiftRosterUpdate() {
       fetchBranchData(shiftData.branch_id);
     }
   }, [shiftData.branch_id]);
+
+  //--------------------------------------------------------------------------------------------------Fetch Master Duty----------------------------------------------------------------------
 
   const getMasterDutyData = async (masterId) => {
     console.log(masterId);
@@ -117,6 +121,8 @@ function ShiftRosterUpdate() {
   //   }
   // }, [shiftData.duty_type_id]);
 
+  //-------------------------------------------------------------------------------------------------- Get Master Shift---------------------------------------------------------------------------------------
+
   const getMasterShiftData = async (shift) => {
     try {
       const response = await fetch(
@@ -143,6 +149,8 @@ function ShiftRosterUpdate() {
       getMasterShiftData(shiftData.shift);
     }
   }, [shiftData.shift]);
+
+  //-------------------------------------------------------------------------------------------------- Staff Data ------------------------------------------------------------------------------------------------
 
   const getmasterStaffData = async (staff_id) => {
     try {
@@ -171,6 +179,8 @@ function ShiftRosterUpdate() {
     }
   }, [shiftData.staff_id]);
 
+  //--------------------------------------------------------------------------------------------------Fetch Vendor Details Assosoicate with  EmpID-----------------------------------------
+
   const fetchvendor = async (vendorId) => {
     console.log(vendorId);
 
@@ -187,12 +197,14 @@ function ShiftRosterUpdate() {
     }
   };
 
+  //------------------------------------------------------------------------------------------------OnChange Selection  Staff Change vendor------------------------------------------------------------------------------------------------------
   const handleStaffChange = (selectedOption) => {
     setSelectedStaff(selectedOption);
     console.log(selectedOption.vendorid);
     setSelectedVendorId(selectedOption.vendorid);
   };
 
+  //--------------------------------------------------------------------------------------------------Fetch Floor Section-----------------------------------------------------------------------------------------------------------------
   const getFloorsSectionData = async (floor) => {
     try {
       const response = await fetch(
@@ -222,6 +234,7 @@ function ShiftRosterUpdate() {
     }
   }, [shiftData.floor]);
 
+  //--------------------------------------------------------------------------------------------------Fetch Bed Data----------------------------------------------------------------
   const getBedData = async (bed_no) => {
     console.log(bed_no);
     try {
@@ -254,6 +267,7 @@ function ShiftRosterUpdate() {
     }
   }, [shiftData.bed_id]);
 
+  //--------------------------------------------------------------------------------------------------Fetch Room Data------------------------------------------------------------------------------------------------
   const getRoomData = async (id) => {
     // console.log(id);
     try {
@@ -291,6 +305,7 @@ function ShiftRosterUpdate() {
     }));
   };
 
+  //--------------------------------------------------------------------------------------------------Fetch Duty options ---------------------------------------------------------------------------
   useEffect(() => {
     const fetchDutyOptions = async () => {
       try {
@@ -321,6 +336,7 @@ function ShiftRosterUpdate() {
 
   console.log("dutyOptions:", dutyOptions);
 
+  //------------------------------------------------------------------------------------------------- Fetch Employee------------------------------------------------------------------------------------------------
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -351,6 +367,7 @@ function ShiftRosterUpdate() {
   //   setSelectedContent(selectedOption ? selectedOption.duty_name : "");
   // };
 
+  //-------------------------------------------------------------------------------------------------- Post Data  API ------------------------------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting:", shiftData); // Check if the data is correct

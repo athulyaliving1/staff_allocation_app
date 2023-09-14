@@ -47,7 +47,6 @@ function Staffnurseallocation() {
       fetchEmployees(selectedStaff);
       setFetchEmployeesCalled(true);
     }
-
     // if (branchLocations) {
     //   fetchBranchLocations();
     // }
@@ -55,28 +54,22 @@ function Staffnurseallocation() {
     // if (floorId) {
     //   fetchBranchesTower(locationId);
     // }
-
     if (selectedVendorId) {
       fetchvendor(selectedVendorId);
       // fetchStaffRole(staffRoles);
     }
-
     if (dutyMaster) {
       fetchShifts();
     }
-
     // if (floorId) {
     //   fetchEmployees(selectedStaff);
     // }
-
     if (towerId) {
       fetchFloorInfo(locationId, towerId);
     }
-
     if (dutyMaster) {
       fetchDutyMaster();
     }
-
     // Pass locationId as a parameter to fetchFloorInfo
   }, [
     locationId,
@@ -210,6 +203,7 @@ function Staffnurseallocation() {
     }
   };
 
+  //-------------------------------------------------------------------------------------------------Fetch Vendor -------------------------------------------------------------
   const fetchvendor = async (vendorId) => {
     console.log(vendorId);
 
@@ -229,6 +223,7 @@ function Staffnurseallocation() {
     }
   };
 
+  //--------------------------------------------------------------------------------------------------Fetch Staff Role -------------------------------------------------------------
   const fetchStaffRole = async (employeeId) => {
     console.log(employeeId);
     try {
@@ -266,7 +261,7 @@ function Staffnurseallocation() {
       console.log("Error fetching shifts:", error);
     }
   };
-
+  //----------------------------------------------------------------------------------------------- Fetch Duty Master----------------------------------------------------------------
   const fetchDutyMaster = async () => {
     try {
       const response = await fetch(`${URLDevelopment}/api/floor/masterduty`);
@@ -369,6 +364,7 @@ function Staffnurseallocation() {
     console.log(dutyId);
   };
 
+  //------------------------------------------------------------------- Post Data to  Api ----------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -404,13 +400,13 @@ function Staffnurseallocation() {
       console.log(jsonData);
 
       if (response.status === 200) {
-        console.log("Data inserted successfully");
+        // console.log("Data inserted successfully");
         // Reset the form or clear the input fields if needed
 
         // Show SweetAlert2 success message
         Swal.fire({
           icon: "success",
-          title: "Data Inserted Successfully",
+          title: "Staff Nurse Data Added Successfully",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -747,7 +743,7 @@ function Staffnurseallocation() {
                   <span className="relative z-0 text-black transition duration-500 ease-in-out group-hover:text-gray-200">
                     Submit
                   </span>
-                </button>
+                </button> 
               </div>
             </div>
           </form>
