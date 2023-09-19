@@ -160,6 +160,7 @@ function StaffbaseReport() {
     e.preventDefault();
 
     try {
+      setIsLoading(true); // Set loading state to true
       // Build the URL with query parameters
       const apiUrl = `${URLDevelopment}/api/staff_base_report/reports?from_date=${
         value.startDate
