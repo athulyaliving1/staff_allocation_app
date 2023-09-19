@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Dashboard from "../components/Dashboard";
 import { URLDevelopment } from "../utilities/Url";
 import Datepicker from "react-tailwindcss-datepicker";
-import Swal from "sweetalert2";
+
 import axios from "axios";
 
 function StaffbaseReport() {
@@ -16,6 +16,8 @@ function StaffbaseReport() {
   const [sectionId, setSectionId] = useState("");
   const [floorInfo, setFloorInfo] = useState([]);
   const [sectioninfo, setSectionInfo] = useState([]);
+  const [baseReport, setBaseReport] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [value, setValue] = useState({
     startDate: new Date(),
@@ -159,26 +161,25 @@ function StaffbaseReport() {
 
     try {
       // Build the URL with query parameters
-      const apiUrl = `http://localhost:4040/api/staff_base_report/reports?from_date=${value.startDate}&to_date=${value.endDate}&branch_id=${selectedCity}&tower=${towerId}${floorId ? `&floor=${floorId}` : ''}${sectionId ? `&section=${sectionId}` : ''}`;
-
+      const apiUrl = `${URLDevelopment}/api/staff_base_report/reports?from_date=${
+        value.startDate
+      }&to_date=${value.endDate}&branch_id=${selectedCity}&tower=${towerId}${
+        floorId ? `&floor=${floorId}` : ""
+      }${sectionId ? `&section=${sectionId}` : ""}`;
 
       // Send a GET request with Axios
       const response = await axios.post(apiUrl);
-
-      // Handle the API response here, e.g., update the table with the response data
-      console.log("API Response:", response.data);
-      console.log(response.Result);
-
-      // You can update your table with the response data here
+      if (response.status === 200) {
+        const responseData = response.data.Result;
+        setBaseReport(responseData);
+        console.log(responseData);
+      } else {
+        console.error("API Request Failed:", response.statusText);
+      }
     } catch (error) {
-      console.error("Error inserting data:", error);
-      // Show SweetAlert2 error message
-      Swal.fire({
-        icon: "error",
-        title: "Error inserting data",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -301,7 +302,114 @@ function StaffbaseReport() {
             </div>
           </div>
         </form>
-        <div></div>
+        <div>
+          <div className="border border-gray-200 rounded-lg shadow-md ">
+            <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
+              <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Employee ID
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Full Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Branch Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Duty Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Tower
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Master Floor
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Section Id
+                  </th>
+                </tr>
+              </thead>
+              {isLoading ? (
+                <div>
+                  <div className="grid justify-items-center">
+                    <div className="w-20 h-20 border-8 border-gray-300 rounded-full animate-spin border-t-sky-600" />
+                  </div>
+                </div>
+              ) : (
+                <tbody className="border-t border-gray-300 divide-y divide-gray-100">
+                  {baseReport.map((shift) => (
+                    <tr
+                      key={shift.id}
+                      className="hover:bg-gray-50 odd:bg-gray-100"
+                    >
+                      <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
+                        <div className="text-sm">
+                          <div className="font-medium text-gray-700">
+                            {shift.employee_id}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.full_name}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.branch_name}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.duty_name}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.tower}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.master_floor}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.section_id}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              )}
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

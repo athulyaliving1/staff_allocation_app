@@ -23,7 +23,7 @@ function StaffAllocationFilter() {
   const [bedsInfo, setBedsInfo] = useState([]);
   const [roomId, setRoomId] = useState("");
   const [SelectedRoomId, setSelectedRoomId] = useState("");
-  const [bedId, setBeds] = useState("");
+  // const [bedId, setBeds] = useState("");
   const [selectedBedId, setSelectedBedId] = useState("");
 
   console.log(countries);
@@ -42,7 +42,7 @@ function StaffAllocationFilter() {
   console.log(roomId);
   console.log(roominfo);
   console.log(SelectedRoomId);
-  console.log(bedId);
+  // console.log(bedId);
 
   useEffect(() => {
     fetchCountries();
@@ -59,9 +59,9 @@ function StaffAllocationFilter() {
         fetchRoomInfo(roomId);
       }
       console.log(SelectedRoomId);
-      console.log(bedId);
+      // console.log(bedId);
     }
-  }, [locationId, floorId, sectionId, roomId, SelectedRoomId, bedId]);
+  }, [locationId, floorId, sectionId, roomId, SelectedRoomId]);
 
   //----------------------------------------------------------------API data Fetching----------------------------------------------------------------
 
@@ -189,7 +189,7 @@ function StaffAllocationFilter() {
     console.log(roomId);
     try {
       const response = await fetch(
-        `http://localhost:4040/api/branches/rooms/${roomId}`
+        `${URLDevelopment}/api/branches/rooms/${roomId}`
       );
       console.log(response);
       const data = await response.json();
@@ -312,7 +312,7 @@ function StaffAllocationFilter() {
   const handleBedsChange = (e) => {
     const selectedBedId = e.target.value;
     setSelectedBedId(selectedBedId);
-    console.log("Selected Bed ID:", bedId);
+    // console.log("Selected Bed ID:", bedId);
   };
 
   return (
@@ -441,7 +441,7 @@ function StaffAllocationFilter() {
                       {tower.tower}
                     </option>
                   ))}
-                </select> 
+                </select>
               </div>
 
               <div className="mb-4">

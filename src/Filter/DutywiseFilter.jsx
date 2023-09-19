@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Dashboard from "../components/Dashboard";
 import { URLDevelopment } from "../utilities/Url";
 import Datepicker from "react-tailwindcss-datepicker";
-import Swal from "sweetalert2";
+
 import axios from "axios";
 
 function DutywiseFilter() {
@@ -11,6 +11,8 @@ function DutywiseFilter() {
   const [towerInfo, setTowerInfo] = useState([]);
   const [towerId, setTowerId] = useState("");
   const [dutyFilter, setDutyFilter] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [value, setValue] = useState({
     startDate: new Date(),
     endDate: new Date().setMonth(11),
@@ -63,6 +65,17 @@ function DutywiseFilter() {
     }
   };
 
+  //------------------------------------------------------------------------------------------------Formatt Date------------------------------
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  }
+
   //--------------------------------------------------------------- Get City Id --------------------------------------------------------------------------------
   const handleCityChange = (e) => {
     const cityId = e.target.value;
@@ -88,26 +101,26 @@ function DutywiseFilter() {
     e.preventDefault();
 
     try {
-      // Build the URL with query parameters
-      const apiUrl = `http://localhost:4040/api/dutywisereport/reports?from_date=${value.startDate}&to_date=${value.endDate}&branch_id=${selectedCity}&tower=${towerId}`;
+      setIsLoading(true); // Set loading state to true
 
-      // Send a GET request with Axios
+      // Build the URL with query parameters
+      const apiUrl = `${URLDevelopment}/api/dutywisereport/reports?from_date=${value.startDate}&to_date=${value.endDate}&branch_id=${selectedCity}&tower=${towerId}`;
+
+      // Send a POST request with Axios
       const response = await axios.post(apiUrl);
 
-      // Handle the API response here, e.g., update the table with the response data
-      console.log("API Response:", response.data);
-      console.log(response[0].Result);
-      setDutyFilter(response.data.Result);
-      // You can update your table with the response data here
+      // Handle the API response here
+      if (response.status === 200) {
+        const responseData = response.data.Result;
+        setDutyFilter(responseData);
+      } else {
+        console.error("API Request Failed");
+      }
     } catch (error) {
       console.error("Error inserting data:", error);
-      // Show SweetAlert2 error message
-      Swal.fire({
-        icon: "error",
-        title: "Error inserting data",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      // Handle any errors here, such as displaying an error message to the user.
+    } finally {
+      setIsLoading(false); // Set loading state to false regardless of success or error
     }
   };
 
@@ -176,8 +189,6 @@ function DutywiseFilter() {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="flex justify-center">
             <div>
               <button
                 type="submit"
@@ -199,51 +210,80 @@ function DutywiseFilter() {
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
-                    Id
+                    Date
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
-                    Branch Id
+                    Duty Name
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
-                    User Id
+                    Branch Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Shift Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Total Staff Deployed
                   </th>
                 </tr>
               </thead>
-              <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                {dutyFilter.map((shift) => (
-                  <tr
-                    key={shift.id}
-                    className="hover:bg-gray-50 odd:bg-gray-100"
-                  >
-                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
-                      <div className="text-sm">
-                        <div className="font-medium text-gray-700">
-                          {shift.schedule_date}
+              {isLoading ? (
+                <div>
+                  <div className="grid justify-items-center">
+                    <div className="w-20 h-20 border-8 border-gray-300 rounded-full animate-spin border-t-sky-600" />
+                  </div>
+                </div>
+              ) : (
+                <tbody className="border-t border-gray-300 divide-y divide-gray-100">
+                  {dutyFilter.map((shift) => (
+                    <tr
+                      key={shift.id}
+                      className="hover:bg-gray-50 odd:bg-gray-100"
+                    >
+                      <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
+                        <div className="text-sm">
+                          <div className="font-medium text-gray-700">
+                            {formatDate(shift.schedule_date)}
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack"></span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.duty_name}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.branch_name}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.duty_name}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.branch_name}
+                        </span>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.shift_name}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.total_staff_deployed}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              )}
             </table>
           </div>
         </div>
