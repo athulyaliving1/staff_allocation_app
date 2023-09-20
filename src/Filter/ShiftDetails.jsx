@@ -38,7 +38,6 @@ function ShiftDetails() {
     }
   };
 
-
   const fetchShifts = async () => {
     try {
       const response = await fetch(`${URLDevelopment}/api/shift/shiftsearch`);
@@ -56,8 +55,6 @@ function ShiftDetails() {
     }
   };
 
-
-  
   //--------------------------------------------------------------- Get City Id --------------------------------------------------------------------------------
   const handleCityChange = (e) => {
     const cityId = e.target.value;
@@ -66,17 +63,11 @@ function ShiftDetails() {
     console.log(cityId);
   };
 
-
- 
   const handleShiftChange = (e) => {
     const shiftId = e.target.value;
     setSelectedShift(shiftId);
     console.log(shiftId);
   };
-
-  
-
-  
 
   return (
     <div className="w-screen h-screen bg-gray-100">
@@ -151,31 +142,117 @@ function ShiftDetails() {
                 </select>
               </div>
               <div>
-              <div className="mb-4">
-                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
-                  Duty Shift:
+                <div className="mb-4">
+                  <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                    Duty Shift:
+                  </div>
+                  <label
+                    className="block mb-2 text-sm text-gray-600"
+                    htmlFor="country"
+                  />
+                  <select
+                    value={selectedShift}
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    id="shift"
+                    onChange={handleShiftChange}
+                  >
+                    <option value="">Select Shift</option>
+                    {shiftOptions.map((shift) => (
+                      <option value={shift.id} key={shift.id}>
+                        {shift.combinedDescription}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <label
-                  className="block mb-2 text-sm text-gray-600"
-                  htmlFor="country"
-                />
-                <select
-                  value={selectedShift}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                  id="shift"
-                  onChange={handleShiftChange}
-                >
-                  <option value="">Select Shift</option>
-                  {shiftOptions.map((shift) => (
-                    <option value={shift.id} key={shift.id}>
-                      {shift.combinedDescription}
-                    </option>
-                  ))}
-                </select>
-              </div>
               </div>
             </div>
           </form>
+          <div className="border border-gray-200 rounded-lg shadow-md ">
+            <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
+              <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Id
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Shift Type
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Category
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Staff Resource
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Location
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Shift
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Shift Type
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Shift Type
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Allocated Location
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    Shift Hours
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
+                    OT Hours
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
         </div>
       </div>
     </div>

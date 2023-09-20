@@ -616,7 +616,7 @@ function DependentDropdown() {
                 >
                   <option value="">Select Branch Tower</option>
                   {towerInfo.map((tower) => (
-                    <option key={tower.id} value={tower.id}>
+                    <option key={tower.id} value={tower.towerno}>
                       {tower.tower}
                     </option>
                   ))}

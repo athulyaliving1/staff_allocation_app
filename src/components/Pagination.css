@@ -1,0 +1,54 @@
+/* Pagination container */
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Pagination item */
+.pagination li {
+  list-style-type: none;
+  margin-right: 6px;
+  cursor: pointer;
+  padding: 2px 12px;
+  font-size: medium;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+/* Active pagination item */
+.pagination li.active {
+  background-color: #075985;
+  color: #fff;
+  border: 1px solid #075985;
+}
+
+/* Previous and Next buttons */
+.pagination li.previous,
+.pagination li.next {
+  background-color: #075985;
+  color: #fff;
+  border: 1px solid #075985;
+}
+
+/* Disabled pagination item */
+.pagination li.disabled {
+  pointer-events: none;
+  color: #ccc;
+}
+/* Hover effect for pagination items */
+.pagination li:not(.active):not(.disabled):hover {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #333;
+}
+
+.pagination li a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%; /* Ensure the link takes the full width of the parent li */
+    height: 100%; /* Ensure the link takes the full height of the parent li */
+  }

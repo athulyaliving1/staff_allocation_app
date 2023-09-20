@@ -14,6 +14,8 @@ import Dashboard from "../Dashboard";
 import NavBar from "../Basic/NavBar";
 import useSWR from "swr";
 import Swal from "sweetalert2";
+import ReactPaginate from "react-paginate";
+import "../Pagination.css";
 
 // const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 //   "& .MuiDialogContent-root": {
@@ -65,6 +67,7 @@ function ShiftRoster() {
   const [beds, setBedData] = React.useState([]);
   const [sections, setSectionData] = React.useState([]);
   const [towers, setTowerData] = React.useState([]);
+  const [currentPage, setCurrentPage] = React.useState(0);
 
   // const handleClose = () => setOpen(false);
   // const handleClickOpen = () => setOpen(true);
@@ -307,6 +310,24 @@ function ShiftRoster() {
     return `${day}-${month}-${year}`;
   }
 
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const itemsPerPage = 7;
+
+  const startIndex = currentPage * itemsPerPage;
+  console.log("startIndex:", startIndex);
+
+  const endIndex = startIndex + itemsPerPage;
+  console.log("endIndex:", endIndex);
+
+  const displayedShiftRoster = shiftRoster
+    ? shiftRoster.slice(startIndex, endIndex)
+    : [];
+  console.log("displayedShiftRoster:", displayedShiftRoster);
+
+  console.log(displayedShiftRoster);
   if (error) {
     return (
       <div>
@@ -668,7 +689,7 @@ function ShiftRoster() {
                 </tr>
               </thead>
               <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                {shiftRoster.map((shift) => (
+                {displayedShiftRoster.map((shift) => (
                   <tr
                     key={shift.id}
                     className="hover:bg-gray-50 odd:bg-gray-100"
@@ -794,6 +815,14 @@ function ShiftRoster() {
                 ))}
               </tbody>
             </table>
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageCount={Math.ceil(shiftRoster.length / itemsPerPage)}
+              onPageChange={handlePageChange}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
           </div>
         </div>
       </div>
