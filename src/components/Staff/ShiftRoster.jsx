@@ -14,7 +14,9 @@ import Dashboard from "../Dashboard";
 import NavBar from "../Basic/NavBar";
 import useSWR from "swr";
 import Swal from "sweetalert2";
-import ReactPaginate from "react-paginate";
+import DataTable from "react-data-table-component";
+import Papa from "papaparse";
+
 import "../Pagination.css";
 
 // const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -25,6 +27,37 @@ import "../Pagination.css";
 //     padding: theme.spacing(1),
 //   },
 // }));
+
+const customStyles = {
+  rows: {
+    style: {
+      minHeight: "60px", // override the row height
+      backgroundColor: "#f0f0f0", // Background color for header cells
+    },
+  },
+  headCells: {
+    style: {
+      paddingLeft: "8px", // override the cell padding for head cells
+      paddingRight: "8px",
+      fontSize: "16px", // Font size for header cells
+      fontWeight: "bold",
+      backgroundColor: "#166291", // Background color fo
+      textAlign: "center",
+      color: "white",
+      whiteSpace: "nowrap",
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: "8px", // override the cell padding for data cells
+      paddingRight: "8px",
+      fontSize: "16px",
+      fontWeight: "normal",
+    },
+  },
+  
+};
+
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -67,10 +100,108 @@ function ShiftRoster() {
   const [beds, setBedData] = React.useState([]);
   const [sections, setSectionData] = React.useState([]);
   const [towers, setTowerData] = React.useState([]);
-  const [currentPage, setCurrentPage] = React.useState(0);
+  const [selectedRows, setSelectedRows] = React.useState([]);
 
   // const handleClose = () => setOpen(false);
   // const handleClickOpen = () => setOpen(true);
+
+  const columns = [
+    {
+      name: "Id",
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: "BRANCH ID",
+      selector: (row) => getBranchName(row.branch_id),
+      sortable: true,
+    },
+    {
+      name: "USER ID",
+      selector: (row) => row.user_id,
+      sortable: true,
+    },
+    {
+      name: "ROOM NO",
+      selector: (row) => row.room_no,
+      sortable: true,
+    },
+    {
+      name: "BED NUMBER",
+      selector: (row) => getBed(row.bed_id),
+      sortable: true,
+    },
+    {
+      name: "Duty TYPE",
+      selector: (row) => getdutyname(row.duty_type_id),
+      sortable: true,
+    },
+    {
+      name: "TOWER",
+      selector: (row) => getTower(row.tower),
+      sortable: true,
+    },
+    {
+      name: "FLOOR",
+      selector: (row) => getfloorData(row.floor),
+      sortable: true,
+    },
+    {
+      name: "SECTION ID",
+      selector: (row) => getsection(row.section_id),
+      sortable: true,
+    },
+    {
+      name: "STAFF ID",
+      selector: (row) => getStaff(row.staff_id),
+      sortable: true,
+    },
+    {
+      name: "STAFF SOURCE",
+      selector: (row) => row.staff_source,
+      sortable: true,
+    },
+    {
+      name: "STAFF SHIFT",
+      selector: (row) => getshift(row.shift),
+      sortable: true,
+    },
+    {
+      name: "STAFF PAYABLE",
+      selector: (row) => row.staff_payable,
+      sortable: true,
+    },
+    {
+      name: "SERVICE PAYABLE",
+      selector: (row) => row.service_payable,
+      sortable: true,
+    },
+    {
+      name: "SCHEDULE DATE",
+      selector: (row) => formatDate(row.schedule_date),
+      sortable: true,
+    },
+    {
+      name: "Action",
+      cell: (row) => (
+        <div className="grid grid-cols-1 gap-3 py-4 font-normal text-customblack">
+          <button
+            className="primary-button"
+            onClick={() => handleUpdateShiftRoster(row.id)}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDeleteShiftRoster(row.id)}
+            className="secondary-button"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+      button: true, // Indicates this is a button column
+    },
+  ];
 
   const fetcher = async (url) => {
     const response = await fetch(url);
@@ -309,25 +440,46 @@ function ShiftRoster() {
 
     return `${day}-${month}-${year}`;
   }
+  const handleExportToCSV = () => {
+    if (!selectedRows.length) {
+      console.log("No rows selected for export.");
+      return;
+    }
+    console.log(selectedRows);
+    // Filter the shiftRoster based on selectedRows
+    const selectedData = shiftRoster.filter((row) =>
+      selectedRows.includes(row.id)
+    );
 
-  const handlePageChange = ({ selected }) => {
-    setCurrentPage(selected);
+    console.log("Selected Data for CSV Export:", selectedData);
+
+    const csvData = Papa.unparse(selectedData, {
+      quotes: true,
+      header: true,
+    });
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "shift_roster.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
-  const itemsPerPage = 7;
+  const handleRowSelected = (rows) => {
+    const selectedRowIds = rows.selectedRows.map((row) => row.id);
+    setSelectedRows(selectedRowIds);
+  };
 
-  const startIndex = currentPage * itemsPerPage;
-  console.log("startIndex:", startIndex);
+  console.log("Shift Roster Data:", shiftRoster);
+  console.log("Selected Data:", selectedRows);
 
-  const endIndex = startIndex + itemsPerPage;
-  console.log("endIndex:", endIndex);
-
-  const displayedShiftRoster = shiftRoster
-    ? shiftRoster.slice(startIndex, endIndex)
-    : [];
-  console.log("displayedShiftRoster:", displayedShiftRoster);
-
-  console.log(displayedShiftRoster);
   if (error) {
     return (
       <div>
@@ -583,247 +735,32 @@ function ShiftRoster() {
           <div>
             <h1 className="pb-14 subheading">Daily Staff Duty Roster</h1>
           </div>
-          <div className="border border-gray-200 rounded-lg shadow-md ">
-            <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
-              <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Branch Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    User Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Room No
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Bed Number
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Duty
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Tower
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Floor
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Section Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Id
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Source
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Shift
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Payable
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Service Payable
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Schedule Date
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                {displayedShiftRoster.map((shift) => (
-                  <tr
-                    key={shift.id}
-                    className="hover:bg-gray-50 odd:bg-gray-100"
-                  >
-                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
-                      <div className="text-sm">
-                        <div className="font-medium text-gray-700">
-                          {shift.id}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getBranchName(shift.branch_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.user_id}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.room_no}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getBed(shift.bed_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getdutyname(shift.duty_type_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getTower(shift.tower)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getfloorData(shift.floor)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getsection(shift.section_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getStaff(shift.staff_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.staff_source}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getshift(shift.shift)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.staff_payable}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.service_payable}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {formatDate(shift.schedule_date)}
-                      </span>
-                    </td>
-
-                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack ">
-                      <button
-                        className=" tertiary-button"
-                        onClick={() => handleUpdateShiftRoster(shift.id)}
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => handleDeleteShiftRoster(shift.id)}
-                        className=" secondary-button"
-                      >
-                        Delete
-                      </button>
-
-                      {/* <BootstrapDialog
-                    onClose={handleClose}
-                    aria-labelledby="customized-dialog-title"
-                    open={open}
-                  >
-                    <BootstrapDialogTitle
-                      id="customized-dialog-title"
-                      onClose={handleClose}
-                    >
-                      <button
-                        onClick={() => handleUpdateShiftRoster(shift.id)}
-                        className="flex justify-center p-2 font-sans text-xl font-semibold underline md:text-xl xl:text-3xl text-sky-800 md:p-5"
-                      >
-                        Edit Details
-                      </button>
-                    </BootstrapDialogTitle>
-                    <DialogContent dividers>
-                      {open && <ShiftRosterUpdate shiftId={shift.id} />}
-
-
-                      
-                    </DialogContent>
-                  </BootstrapDialog> */}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <ReactPaginate
-              previousLabel={"Previous"}
-              nextLabel={"Next"}
-              pageCount={Math.ceil(shiftRoster.length / itemsPerPage)}
-              onPageChange={handlePageChange}
-              containerClassName={"pagination"}
-              activeClassName={"active"}
-            />
-          </div>
+          <button
+            className="group [transform:translateZ(0)] px-6 py-3 rounded-lg overflow-hidden bg-gray-300 relative before:absolute before:bg-[#ed4880] before:top-1/2 before:left-1/2 before:h-8 before:w-8 before:-translate-y-1/2 before:-translate-x-1/2 before:rounded-full before:scale-[0] before:opacity-0 hover:before:scale-[6] hover:before:opacity-100 before:transition before:ease-in-out before:duration-500"
+            onClick={handleExportToCSV}
+          >
+            {" "}
+            <span className="relative z-0 text-black transition duration-500 ease-in-out group-hover:text-gray-200">
+              Export to CSV
+            </span>
+          </button>
+          <DataTable
+            columns={columns}
+            data={shiftRoster}
+            pagination
+            paginationRowsPerPageOptions={[5, 10, 15, 20]}
+            paginationTotalRows={shiftRoster ? shiftRoster.length : 0}
+            paginationComponentOptions={{
+              rowsPerPageText: "Rows per page:",
+              rangeSeparatorText: "of",
+              noRowsPerPage: false,
+              selectAllRowsItem: true,
+              selectAllRowsItemText: "All",
+            }}
+            selectableRows // Enable row selection
+            onSelectedRowsChange={handleRowSelected}
+            customStyles={customStyles} // Handle selected rows change
+          />
         </div>
       </div>
     </div>
