@@ -162,11 +162,9 @@ function StaffbaseReport() {
     try {
       setIsLoading(true); // Set loading state to true
       // Build the URL with query parameters
-      const apiUrl = `${URLDevelopment}/api/staff_base_report/reports?from_date=${
-        value.startDate
-      }&to_date=${value.endDate}&branch_id=${selectedCity}&tower=${towerId}${
-        floorId ? `&floor=${floorId}` : ""
-      }${sectionId ? `&section=${sectionId}` : ""}`;
+      const apiUrl = `${URLDevelopment}/api/staff_base_report/reports?from_date=${value.startDate
+        }&to_date=${value.endDate}&branch_id=${selectedCity}&tower=${towerId}${floorId ? `&floor=${floorId}` : ""
+        }${sectionId ? `&section=${sectionId}` : ""}`;
 
       // Send a GET request with Axios
       const response = await axios.post(apiUrl);
@@ -193,6 +191,7 @@ function StaffbaseReport() {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
+
             <div className="mb-4">
               <div>
                 <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
@@ -249,14 +248,14 @@ function StaffbaseReport() {
                 ))}
               </select>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 hidden" >
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Floor:
               </div>
-              <label className="block mb-2 text-sm font-xl" htmlFor="floor" />
+              <label className=" mb-2 text-sm font-xl hidden" htmlFor="floor" />
 
               <select
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 hidden"
                 value={floorId}
                 onChange={handleFloorsChange}
                 id="floor"
@@ -269,7 +268,7 @@ function StaffbaseReport() {
                 ))}
               </select>
             </div>
-            <div className="mb-4">
+            <div className="mb-4 hidden">
               <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                 Section:
               </div>
@@ -324,6 +323,12 @@ function StaffbaseReport() {
                     scope="col"
                     className="px-6 py-4 font-semibold text-customblack"
                   >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 font-semibold text-customblack"
+                  >
                     Branch Name
                   </th>
                   <th
@@ -365,6 +370,7 @@ function StaffbaseReport() {
                       key={shift.id}
                       className="hover:bg-gray-50 odd:bg-gray-100"
                     >
+
                       <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
                         <div className="text-sm">
                           <div className="font-medium text-gray-700">
@@ -377,6 +383,12 @@ function StaffbaseReport() {
                           {shift.full_name}
                         </span>
                       </td>
+                      <td className="px-6 py-4">
+                        <span className="font-medium text-customblack">
+                          {shift.schedule_date}
+                        </span>
+                      </td>
+
 
                       <td className="px-6 py-4">
                         <span className="font-medium text-customblack">

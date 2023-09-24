@@ -35,6 +35,8 @@ function Staffnurseallocation() {
   const [fetchEmployeesCalled, setFetchEmployeesCalled] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState("");
   const [staffRoles, setStaffRoles] = useState([]);
+  const [date, setDate] = useState(new Date());
+
 
   console.log(selectedRoles);
   const navigate = useNavigate();
@@ -364,13 +366,21 @@ function Staffnurseallocation() {
     console.log(dutyId);
   };
 
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+
+
   //------------------------------------------------------------------- Post Data to  Api ----------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
+    formData.append("date", date);
     formData.append("branch_id", locationId);
-    // formData.append("tower", towerId);
+    formData.append("tower", towerId);
     formData.append("floor", floorId);
     formData.append("duty", selectedDuty); // Replace with the actual duty type value
     formData.append("emp_id", selectedStaff.value);
@@ -458,6 +468,21 @@ function Staffnurseallocation() {
 
           <form onSubmit={handleSubmit}>
             <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
+
+              <div className="mb-4">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                  Date:
+                </div>
+                <label
+                  className="block mb-2 text-sm text-gray-600"
+                  htmlFor="date"
+                />
+                <input onChange={handleDateChange} type="date" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+
+              </div>
+
+
+
               <div className="mb-4">
                 <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Country:
@@ -644,7 +669,7 @@ function Staffnurseallocation() {
                 <select
                   className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   value={selectedRoles} // Use selectedRoles to display the selected role
-                  // Use this if you want to allow changing the selected role
+                // Use this if you want to allow changing the selected role
                 >
                   <option value="">Select Role</option>
                   {staffRoles.map((role) => (
@@ -743,7 +768,7 @@ function Staffnurseallocation() {
                   <span className="relative z-0 text-black transition duration-500 ease-in-out group-hover:text-gray-200">
                     Submit
                   </span>
-                </button> 
+                </button>
               </div>
             </div>
           </form>

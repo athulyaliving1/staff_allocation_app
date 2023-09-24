@@ -33,6 +33,7 @@ function DependentDropdown() {
   const [payable, setPayable] = useState([]);
   const [payVendorId, SetPayablevendorId] = useState([]);
   const [fetchEmployeesCalled, setFetchEmployeesCalled] = useState(false);
+  const [date, setDate] = useState(new Date());
 
   const navigate = useNavigate();
 
@@ -370,11 +371,19 @@ function DependentDropdown() {
     setSelectedVendorId(selectedOption.vendorid);
   };
 
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+
+
+
   //--------------------------------------------------------------- Post Data Api --------------------------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
+    formData.append("date", date);
     formData.append("branch_id", locationId);
     formData.append("tower", towerId);
     formData.append("floor", floorId);
@@ -494,6 +503,9 @@ function DependentDropdown() {
     }
   };
 
+
+
+
   return (
     <div className="w-screen h-screen bg-gray-100">
       <div className="">
@@ -504,6 +516,23 @@ function DependentDropdown() {
           </div>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-3 xl:grid-cols-4 lg:grid-cols-2">
+
+
+              <div className="mb-4">
+                <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
+                  Date:
+                </div>
+                <label
+                  className="block mb-2 text-sm text-gray-600"
+                  htmlFor="date"
+                />
+
+                <input onChange={handleDateChange} type="date" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+
+              </div>
+
+
+
               <div className="mb-4">
                 <div className="h-6 mx-2 mt-3 text-xs font-bold leading-8 text-gray-600 uppercase">
                   Country:

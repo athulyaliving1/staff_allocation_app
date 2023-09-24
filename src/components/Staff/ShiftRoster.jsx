@@ -55,9 +55,7 @@ const customStyles = {
       fontWeight: "normal",
     },
   },
-  
 };
-
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -440,6 +438,7 @@ function ShiftRoster() {
 
     return `${day}-${month}-${year}`;
   }
+
   const handleExportToCSV = () => {
     if (!selectedRows.length) {
       console.log("No rows selected for export.");

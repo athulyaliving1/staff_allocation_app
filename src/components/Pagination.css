@@ -1,4 +1,3 @@
-
 .pagination {
   display: flex;
   justify-content: flex-end;
@@ -6,12 +5,10 @@
   margin-top: 20px;
 }
 
-
 .pagination li {
   list-style-type: none;
   margin-right: 6px;
 }
-
 
 .pagination li a {
   display: inline-block;
@@ -21,17 +18,15 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  text-decoration: none; 
+  text-decoration: none;
   color: #333;
 }
-
 
 .pagination li.active a {
   background-color: #075985;
   color: #fff;
   border: 1px solid #075985;
 }
-
 
 .pagination li.previous a,
 .pagination li.next a {
@@ -40,15 +35,20 @@
   border: 1px solid #075985;
 }
 
-
 .pagination li.disabled a {
   pointer-events: none;
   color: #ccc;
 }
 
-
 .pagination li:not(.active):not(.disabled) a:hover {
   background-color: #ccc;
   border-color: #ccc;
   color: #333;
+}
+
+.rdt_TableHeader {
+  background-color: #95A5A6;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
