@@ -5,6 +5,8 @@ import { URLDevelopment } from "../../utilities/Url";
 import useSWR from "swr";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import DataTable from "react-data-table-component";
+import Papa from "papaparse";
 
 function StaffNurseRoster() {
   const navigate = useNavigate();
@@ -12,6 +14,161 @@ function StaffNurseRoster() {
   const [dutys, setDutyData] = React.useState([]);
   const [staffs, setStaffData] = React.useState([]);
   const [shifts, setShiftData] = React.useState([]);
+  const [selectedRows, setSelectedRows] = React.useState([]);
+
+  const columns = [
+    {
+      name: "Id",
+      selector: (row) => row.id,
+      sortable: true,
+    },
+    {
+      name: "Branch Id",
+      selector: (row) => getBranchName(row.branch_id),
+      sortable: true,
+    },
+    {
+      name: "User Id",
+      selector: (row) => row.user_id,
+      sortable: true,
+    },
+    {
+      name: "Room No",
+      selector: (row) => getdutyname(row.duty_type_id),
+      sortable: true,
+    },
+    {
+      name: "Floor",
+      selector: (row) => row.floor,
+      sortable: true,
+    },
+    {
+      name: "Duty",
+      selector: (row) => getStaff(row.staff_id),
+      sortable: true,
+    },
+    {
+      name: "Staff Source",
+      selector: (row) => row.staff_source,
+      sortable: true,
+    },
+    {
+      name: "Staff Nurse Shift",
+      selector: (row) => getshift(row.staff_nurse_shift),
+      sortable: true,
+    },
+    {
+      name: "Staff Payable",
+      selector: (row) => row.staff_payable,
+      sortable: true,
+    },
+    {
+      name: "Service Payable",
+      selector: (row) => row.service_payable,
+      sortable: true,
+    },
+    {
+      name: "Schedule Date ",
+      selector: (row) => formatDate(row.schedule_date),
+      sortable: "true",
+    },
+    {
+      name: "ATTENDANCE STATUS",
+      selector: (row) => getAttendanceStatus(row.status),
+      sortable: "true",
+    },
+    {
+      name: "OT SHIFT/HRS",
+      selector: (row) => getTypeOtHrsShift(row.ot_type, row.ot_hrs_shift),
+      sortable: "true",
+    },
+    {
+      name: "Action",
+      cell: (row) => (
+        <div className="grid grid-cols-1 gap-3 py-4 font-normal text-customblack">
+          <button
+            className="primary-button"
+            onClick={() => handleStaffsUpdateShiftRoster(row.id)}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDeleteStaffShiftRoster(row.id)}
+            className="secondary-button"
+          >
+            Delete
+          </button>
+        </div>
+      ),
+      button: true, // Indicates this is a button column
+    },
+  ];
+
+  const handleExportToCSV = () => {
+    if (!selectedRows.length) {
+      console.log("No rows selected for export.");
+      return;
+    }
+    console.log(selectedRows);
+    // Filter the shiftRoster based on selectedRows
+    const selectedData = staffnurseshiftRoster.filter((row) =>
+      selectedRows.includes(row.id)
+    );
+
+    console.log("Selected Data for CSV Export:", selectedData);
+
+    const csvData = Papa.unparse(selectedData, {
+      quotes: true,
+      header: true,
+    });
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "shift_roster.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleRowSelected = (rows) => {
+    const selectedRowIds = rows.selectedRows.map((row) => row.id);
+    setSelectedRows(selectedRowIds);
+  };
+
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: "60px", // override the row height
+        backgroundColor: "#f0f0f0", // Background color for header cells
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: "8px", // override the cell padding for head cells
+        paddingRight: "8px",
+        fontSize: "16px", // Font size for header cells
+        fontWeight: "bold",
+        backgroundColor: "#166291", // Background color fo
+        textAlign: "center",
+        color: "white",
+        whiteSpace: "nowrap",
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: "8px", // override the cell padding for data cells
+        paddingRight: "8px",
+        fontSize: "16px",
+        fontWeight: "normal",
+      },
+    },
+  };
 
   const fetcher = async (url) => {
     const response = await fetch(url);
@@ -414,193 +571,34 @@ function StaffNurseRoster() {
           <div>
             <h1 className="pb-14 subheading">Daily Staff Nurse Duty Roster</h1>
           </div>
-          <div className="border border-gray-200 rounded-lg shadow-md ">
-            <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
-              <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Branch Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    User Id
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Room No
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Floor
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Duty
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Source
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Nurse Shift
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Payable
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Service Payable
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Schedule Date
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Attendance Status
-                  </th>
-
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    OT Shift/Hrs
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                {staffnurseshiftRoster.map((shift) => (
-                  <tr
-                    key={shift.id}
-                    className="hover:bg-gray-50 odd:bg-gray-100"
-                  >
-                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
-                      <div className="text-sm">
-                        <div className="font-medium text-gray-700">
-                          {shift.id}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getBranchName(shift.branch_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.user_id}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getdutyname(shift.duty_type_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.floor}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getStaff(shift.staff_id)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.staff_source}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getshift(shift.staff_nurse_shift)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.staff_payable}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {shift.service_payable}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {formatDate(shift.schedule_date)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getAttendanceStatus(shift.status)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="font-medium text-customblack">
-                        {getTypeOtHrsShift(shift.ot_type, shift.ot_hrs_shift)}
-                      </span>
-                    </td>
-
-                    <td className="flex gap-3 px-6 py-4 font-normal text-customblack ">
-                      <button
-                        className=" tertiary-button"
-                        onClick={() => handleStaffsUpdateShiftRoster(shift.id)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteStaffShiftRoster(shift.id)}
-                        className=" secondary-button"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <button
+            className="group [transform:translateZ(0)] px-6 py-3 rounded-lg overflow-hidden bg-gray-300 relative before:absolute before:bg-[#ed4880] before:top-1/2 before:left-1/2 before:h-8 before:w-8 before:-translate-y-1/2 before:-translate-x-1/2 before:rounded-full before:scale-[0] before:opacity-0 hover:before:scale-[6] hover:before:opacity-100 before:transition before:ease-in-out before:duration-500"
+            onClick={handleExportToCSV}
+          >
+            {" "}
+            <span className="relative z-0 text-black transition duration-500 ease-in-out group-hover:text-gray-200">
+              Export to CSV
+            </span>
+          </button>
+          <DataTable
+            columns={columns}
+            data={staffnurseshiftRoster}
+            pagination
+            paginationRowsPerPageOptions={[5, 10, 15, 20]}
+            paginationTotalRows={
+              staffnurseshiftRoster ? staffnurseshiftRoster.length : 0
+            }
+            paginationComponentOptions={{
+              rowsPerPageText: "Rows per page:",
+              rangeSeparatorText: "of",
+              noRowsPerPage: false,
+              selectAllRowsItem: true,
+              selectAllRowsItemText: "All",
+            }}
+            selectableRows // Enable row selection
+            onSelectedRowsChange={handleRowSelected}
+            customStyles={customStyles} // Handle selected rows change
+          />
         </div>
       </div>
     </div>

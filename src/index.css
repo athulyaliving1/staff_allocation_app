@@ -16,19 +16,13 @@
     @apply text-[#000000];
   }
   .primary-button {
-    @apply px-6 py-3  transition-all duration-100 ease-in-out bg-gray-200 border-b-4 rounded-lg border-b-gray-400 hover:border-b-0;
+    @apply px-6 py-3 transition-all duration-100 ease-in-out bg-gray-200 border-b-4 rounded-lg border-b-gray-400 hover:border-b-0;
   }
   .secondary-button {
-    @apply px-6 py-3 text-white transition-transform duration-200 ease-in-out rounded-lg bg-red-500/80 hover:scale-110 active:scale-90 shadow-lg ;
+    @apply px-6 py-3 text-white transition-transform duration-200 ease-in-out rounded-lg shadow-lg bg-red-500/80 hover:scale-110 active:scale-90 ;
   }
   .tertiary-button {
-    @apply hover:scale-110 focus:outline-none flex justify-center px-4 py-3 rounded font-bold cursor-pointer 
-      hover:bg-gradient-to-r from-matisse-400 to-matisse-700
-       hover:text-white
-      bg-gray-100 
-      text-gray-700 
-      border duration-200 ease-in-out 
-      border-gray-600 transition  ;
+    @apply flex justify-center px-4 py-3 font-bold text-gray-700 transition duration-200 ease-in-out bg-gray-100 border border-gray-600 rounded cursor-pointer hover:scale-110 focus:outline-none hover:bg-gradient-to-r from-matisse-400 to-matisse-700 hover:text-white ;
   }
 
   .bg-primary {
