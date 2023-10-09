@@ -7,24 +7,14 @@ module.exports = {
   darkMode: "class",
   theme: {
     screens: {
-      ss: "320px",
-      // => @media (min-width: 640px) { ... }
-
-      sm: "375px",
-      sl: "425px",
-
-      md: "768px",
-      // => @media (min-width: 768px) { ... }
-
-      lg: "1024px",
-      // => @media (min-width: 1024px) { ... }
-
-      xl: "1280px",
-      // => @media (min-width: 1280px) { ... }
-
-      desktop: "1440px",
-      // => @media (min-width: 1536px) { ... }
+      sm: '480px',
+      md: '768px',
+      lg: '976px',
+      xl: '1440px'
     },
+    //   backgroundColor: {
+    //   primarycolor: '#3490dc' 
+    // },
 
     extend: {
       colors: {
