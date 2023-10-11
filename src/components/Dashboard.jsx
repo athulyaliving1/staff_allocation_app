@@ -325,6 +325,9 @@ const Dashboard = () => {
               </div>
             </div>
           </div> */}
+          <div className="pt-2 mt-8 border-t">
+
+          </div>
           <div className="overflow-auto">
             <ul className="flex-1 text-sm font-medium">
               {navigation.map((item, idx) => (
