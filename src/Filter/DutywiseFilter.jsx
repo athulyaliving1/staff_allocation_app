@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import Dashboard from "../components/Dashboard";
 import { URLDevelopment } from "../utilities/Url";
 import Datepicker from "react-tailwindcss-datepicker";
-
+import DataTable from "react-data-table-component";
+import Papa from "papaparse";
 import axios from "axios";
+
+
+
 
 function DutywiseFilter() {
   const [selectedCity, setSelectedCity] = useState("");
@@ -12,6 +16,8 @@ function DutywiseFilter() {
   const [towerId, setTowerId] = useState("");
   const [dutyFilter, setDutyFilter] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRows, setSelectedRows] = React.useState([]);
+
 
   const [value, setValue] = useState({
     startDate: new Date(),
@@ -23,6 +29,112 @@ function DutywiseFilter() {
 
   console.log(selectedCity);
   console.log(towerId);
+
+
+
+  const columns = [
+
+    {
+      name: "Date",
+      selector: (row) => formatDate(row.schedule_date),
+      sortable: true,
+    },
+    {
+      name: "Duty Name",
+      selector: (row) => row.duty_name,
+      sortable: true,
+    },
+    {
+      name: "Branch Name",
+      selector: (row) => row.branch_name,
+      sortable: true,
+    },
+    {
+      name: "Shift Name",
+      selector: (row) => row.shift_name,
+      sortable: true,
+    },
+    {
+      name: "Total Staff Deployed",
+      selector: (row) => row.total_staff_deployed,
+      sortable: true,
+    }
+
+  ]
+
+
+
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: "60px", // override the row height
+        backgroundColor: "#f0f0f0", // Background color for header cells
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: "8px", // override the cell padding for head cells
+        paddingRight: "8px",
+        fontSize: "16px", // Font size for header cells
+        fontWeight: "bold",
+        backgroundColor: "#166291", // Background color fo
+        textAlign: "center",
+        color: "white",
+        whiteSpace: "nowrap",
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: "8px", // override the cell padding for data cells
+        paddingRight: "8px",
+        fontSize: "16px",
+        fontWeight: "normal",
+      },
+    },
+  };
+
+
+
+
+  const handleExportToCSV = () => {
+    if (!selectedRows.length) {
+      console.log("No rows selected for export.");
+      return;
+    }
+    console.log(selectedRows);
+    // Filter the shiftRoster based on selectedRows
+    const selectedData = dutyFilter.filter((row) =>
+      selectedRows.includes(row.id)
+    );
+
+    console.log("Selected Data for CSV Export:", selectedData);
+
+    const csvData = Papa.unparse(selectedData, {
+      quotes: true,
+      header: true,
+    });
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "shift_roster.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleRowSelected = (rows) => {
+    const selectedRowIds = rows.selectedRows.map((row) => row.id);
+    setSelectedRows(selectedRowIds);
+  };
+
+
+
 
   const handleValueChange = (newValue) => {
     console.log("newValue:", newValue);
@@ -119,7 +231,8 @@ function DutywiseFilter() {
     } catch (error) {
       console.error("Error inserting data:", error);
       // Handle any errors here, such as displaying an error message to the user.
-    } finally {
+    }
+    finally {
       setIsLoading(false); // Set loading state to false regardless of success or error
     }
   };
@@ -204,90 +317,56 @@ function DutywiseFilter() {
             </div>
           </div>
         </form>
-        <div>
-          <div className="border border-gray-200 rounded-lg shadow-md ">
-            <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
-              <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Date
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Duty Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Branch Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Shift Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Total Staff Deployed
-                  </th>
-                </tr>
-              </thead>
-              {isLoading ? (
-                <div>
-                  <div className="grid justify-items-center">
-                    <div className="w-20 h-20 border-8 border-gray-300 rounded-full animate-spin border-t-sky-600" />
-                  </div>
+        <div className="my-10">
+          <div className="">
+            <button
+              className="my-5  group [transform:translateZ(0)] px-6 py-3 rounded-lg overflow-hidden bg-gray-300 relative before:absolute before:bg-[#ed4880] before:top-1/2 before:left-1/2 before:h-8 before:w-8 before:-translate-y-1/2 before:-translate-x-1/2 before:rounded-full before:scale-[0] before:opacity-0 hover:before:scale-[6] hover:before:opacity-100 before:transition before:ease-in-out before:duration-500"
+              onClick={handleExportToCSV}
+            >
+              {" "}
+              <span className="relative z-0 text-black transition duration-500 ease-in-out group-hover:text-gray-200">
+                Export to CSV
+              </span>
+            </button>
+
+            {isLoading ? (
+
+              <div className="flex">
+                <div className="w-full mt-2 ml-4">
+                  <h3 className="h-4 bg-gray-200 rounded-md " ></h3>
+                  <ul className="mt-5 space-y-3">
+                    <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                    <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                    <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                    <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                  </ul>
                 </div>
-              ) : (
-                <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                  {dutyFilter.map((shift) => (
-                    <tr
-                      key={shift.id}
-                      className="hover:bg-gray-50 odd:bg-gray-100"
-                    >
-                      <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
-                        <div className="text-sm">
-                          <div className="font-medium text-gray-700">
-                            {formatDate(shift.schedule_date)}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.duty_name}
-                        </span>
-                      </td>
+              </div>
 
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.branch_name}
-                        </span>
-                      </td>
+            ) : (
 
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.shift_name}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.total_staff_deployed}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
-            </table>
+
+              <DataTable
+                columns={columns}
+                data={dutyFilter}
+                pagination
+                paginationPerPage={5}
+                paginationRowsPerPageOptions={[5, 10, 15, 20]}
+                paginationTotalRows={dutyFilter ? dutyFilter.length : 0}
+                paginationComponentOptions={{
+                  rowsPerPageText: "Rows per page:",
+                  rangeSeparatorText: "of",
+                  noRowsPerPage: false,
+                  selectAllRowsItem: true,
+                  selectAllRowsItemText: "All",
+                }}
+                selectableRows // Enable row selection
+                onSelectedRowsChange={handleRowSelected}
+                customStyles={customStyles} // Handle selected rows change
+              />
+
+            )}
+
           </div>
         </div>
       </div>

@@ -38,7 +38,7 @@ function App() {
       <HashRouter>
         <Routes>
           <Route>
-            <Route exact path="/" element={<VendorRegsitration />} />
+            <Route exact path="/" element={<ShiftRoster />} />
             <Route
               exact
               path="/staffallocation"
@@ -53,7 +53,7 @@ function App() {
             <Route exact path="/staffregister" element={<StaffRegister />} />
             <Route exact path="/staffprofile" element={<StaffProfile />} />
             <Route exact path="/shiftroster" element={<ShiftRoster />} />
-           
+
             <Route
               exact
               path="/staffnurseroster"
@@ -100,8 +100,8 @@ function App() {
               path="/staffshiftdetails"
               element={<StaffShiftDetails />}
             />
-             <Route exact path="/staffallocationfilter" element={<StaffAllocationFilter/>}/>
-            
+            <Route exact path="/staffallocationfilter" element={<StaffAllocationFilter />} />
+
 
             <Route exact path="/masterduty" element={<MasterDuty />} />
           </Route>

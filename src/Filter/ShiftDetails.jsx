@@ -3,8 +3,12 @@ import Dashboard from "../components/Dashboard";
 import { URLDevelopment } from "../utilities/Url";
 import Datepicker from "react-tailwindcss-datepicker";
 import axios from "axios";
-
+import DataTable from "react-data-table-component";
+import Papa from "papaparse"
 import Select from "react-select";
+
+
+
 function StaffShiftDetails() {
   const [selectedCity, setSelectedCity] = useState("");
   const [branchLocations, setBranchLocations] = useState([]);
@@ -16,12 +20,108 @@ function StaffShiftDetails() {
     startDate: new Date(),
     endDate: new Date().setMonth(11),
   });
+  const [selectedRows, setSelectedRows] = React.useState([]);
+
+
 
   useEffect(() => {
     fetchBranchLocations();
     fetchEmployees();
 
   }, []);
+
+
+  const columns = [
+    {
+      name: "EMPLOYEE ID",
+      selector: (row) => row.employee_id,
+      sortable: true,
+    },
+    {
+      name: "FULL NAME",
+      selector: (row) => row.full_name,
+      sortable: true,
+    },
+    {
+      name: "BRANCH NAME",
+      selector: (row) => row.branch_name,
+      sortable: true,
+    },
+    {
+      name: "RESOURCE",
+      selector: (row) => row.resource,
+      sortable: true,
+    },
+    {
+      name: "STAFF TYPE",
+      selector: (row) => row.staff_type,
+      sortable: true,
+    },
+    {
+      name: "STAFF CATEGORY",
+      selector: (row) => row.staff_category,
+      sortable: true,
+    },
+    {
+      name: "WORKED",
+      selector: (row) => row.worked,
+      sortable: true,
+    },
+    {
+      name: "SHIFT",
+      selector: (row) => row.shift,
+      sortable: true,
+    },
+    {
+      name: "OT HOURS",
+      selector: (row) => row.OT_Hours,
+      sortable: true,
+    },
+    {
+      name: "LEAVE",
+      selector: (row) => row.leave,
+      sortable: true,
+    },
+    {
+      name: "TOTAL PAYABLE",
+      selector: (row) => row.total_payable,
+      sortable: true,
+    }
+  ]
+
+
+
+  const customStyles = {
+    rows: {
+      style: {
+        minHeight: "60px", // override the row height
+        backgroundColor: "#f0f0f0", // Background color for header cells
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: "8px", // override the cell padding for head cells
+        paddingRight: "8px",
+        fontSize: "16px", // Font size for header cells
+        fontWeight: "bold",
+        backgroundColor: "#166291", // Background color fo
+        textAlign: "center",
+        color: "white",
+        whiteSpace: "nowrap",
+
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: "8px", // override the cell padding for data cells
+        paddingRight: "8px",
+        fontSize: "16px",
+        fontWeight: "normal",
+      },
+    },
+  };
+
+
 
 
 
@@ -66,7 +166,7 @@ function StaffShiftDetails() {
       const data = await response.json();
       console.log(data);
       const staffOptions = data.map((staff) => ({
-        value: staff.employee_id,
+        value: staff.id,
         label: `${staff.employee_id} - ${staff.full_name}`,
         vendorid: `${staff.vendor_id}`,
       }));
@@ -77,15 +177,68 @@ function StaffShiftDetails() {
   };
 
 
+  const handleExportToCSV = () => {
+    if (!selectedRows.length) {
+      console.log("No rows selected for export.");
+      return;
+    }
+    console.log(selectedRows);
+    // Filter the shiftRoster based on selectedRows
+    const selectedData = ShiftDetails.filter((row) =>
+      selectedRows.includes(row.id)
+    );
+
+    console.log("Selected Data for CSV Export:", selectedData);
+
+    const csvData = Papa.unparse(selectedData, {
+      quotes: true,
+      header: true,
+    });
+
+    const blob = new Blob([csvData], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "shift_roster.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleRowSelected = (rows) => {
+    const selectedRowIds = rows.selectedRows.map((row) => row.id);
+    setSelectedRows(selectedRowIds);
+  };
+
+  console.log("Shift Roster Data:", ShiftDetails);
+  console.log("Selected Data:", selectedRows);
+
+
+
+
+
+
+
   //-------
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true); // Set loading state to true
+      setIsLoading(true); //Set loading state to true
       // Build the URL with query parameters
-      const apiUrl = `${URLDevelopment}/api/shiftdetails/reports?from_date=2023-09-01&to_date=2023-09-30&branch_id=9&staff_id=1`;
+
+      console.log(value.startDate);
+      console.log(value.endDate);
+      console.log(selectedCity);
+      console.log(selectedStaff);
+
+
+      const apiUrl = `${URLDevelopment}/api/shiftdetails/reports?from_date=${value.startDate}&to_date=${value.endDate}&branch_id=${selectedCity}&staff_id=${selectedStaff.value}`;
 
       // Send a GET request with Axios
       const response = await axios.post(apiUrl);
@@ -98,7 +251,8 @@ function StaffShiftDetails() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
 
@@ -179,161 +333,54 @@ function StaffShiftDetails() {
             </div>
           </div>
         </form>
-        <div>
-          <div className="border border-gray-200 rounded-lg shadow-md ">
-            <table className="w-full text-sm font-semibold text-left bg-white border-collapse table-auto text-customblack">
-              <thead className="text-xl uppercase bg-gray-50 whitespace-nowrap">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Employee ID
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Full Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Branch Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Resource
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Type
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Staff Category
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Worked
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Shift
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    OT Hours
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Leave 
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 font-semibold text-customblack"
-                  >
-                    Total Payable
-                  </th>
+        <div className="my-10">
+          <button
+            className="my-5   group [transform:translateZ(0)] px-6 py-3 rounded-lg overflow-hidden bg-gray-300 relative before:absolute before:bg-[#ed4880] before:top-1/2 before:left-1/2 before:h-8 before:w-8 before:-translate-y-1/2 before:-translate-x-1/2 before:rounded-full before:scale-[0] before:opacity-0 hover:before:scale-[6] hover:before:opacity-100 before:transition before:ease-in-out before:duration-500"
+            onClick={handleExportToCSV}
+          >
+            {" "}
+            <span className="relative z-0 text-black transition duration-500 ease-in-out group-hover:text-gray-200">
+              Export to CSV
+            </span>
+          </button>
+
+          {isLoading ? (
+
+            <div className="flex my-5">
+              <div className="w-full mt-2 ml-4">
+                <h3 className="h-4 bg-gray-200 rounded-md " ></h3>
+                <ul className="mt-5 space-y-3">
+                  <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                  <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                  <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                  <li className="w-full h-4 bg-gray-200 rounded-md "></li>
+                </ul>
+              </div>
+            </div>
+
+          ) : (
 
 
-                </tr>
-              </thead>
-              {isLoading ? (
-                <div>
-                  <div className="grid justify-items-center">
-                    <div className="w-20 h-20 border-8 border-gray-300 rounded-full animate-spin border-t-sky-600" />
-                  </div>
-                </div>
-              ) : (
-                <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                  {ShiftDetails.map((shift, index) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-gray-50 odd:bg-gray-100"
-                    >
 
-                      <td className="flex gap-3 px-6 py-4 font-normal text-customblack">
-                        <div className="text-sm">
-                          <div className="font-medium text-gray-700">
-                            {shift.full_name}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.employee_id}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.branch_name}
-                        </span>
-                      </td>
-
-
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.resource}
-                        </span>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.staff_type}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.staff_category}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.worked}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.shift}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.OT_Hours}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.leave}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-customblack">
-                          {shift.total_payable}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
-            </table>
-          </div>
+            <DataTable
+              columns={columns}
+              data={ShiftDetails}
+              pagination
+              paginationPerPage={5}
+              paginationRowsPerPageOptions={[5, 10, 15, 20]}
+              paginationTotalRows={ShiftDetails ? ShiftDetails.length : 0}
+              paginationComponentOptions={{
+                rowsPerPageText: "Rows per page:",
+                rangeSeparatorText: "of",
+                noRowsPerPage: false,
+                selectAllRowsItem: true,
+                selectAllRowsItemText: "All",
+              }}
+              selectableRows // Enable row selection
+              onSelectedRowsChange={handleRowSelected}
+              customStyles={customStyles} // Handle selected rows change
+            />
+          )}
         </div>
       </div>
     </div>

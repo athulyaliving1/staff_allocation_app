@@ -242,7 +242,7 @@ function StaffShiftDetails() {
                 </div>
               ) : (
                 <tbody className="border-t border-gray-300 divide-y divide-gray-100">
-                  {ShiftDetails.map((shift,index) => (
+                  {ShiftDetails.map((shift, index) => (
                     <tr
                       key={index}
                       className="hover:bg-gray-50 odd:bg-gray-100"
